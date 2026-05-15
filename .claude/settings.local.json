@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Set-Location C:\\\\Users\\\\kjho\\\\fjelltopper; Get-ChildItem node_modules | Where-Object { $_.Name -match \"shadcn|base-ui|tw-animate\" } | Select-Object Name)",
+      "WebFetch(domain:no.wikipedia.org)",
+      "Bash(node -e \"console.log\\(typeof fetch\\)\")",
+      "Bash(node scripts/import-peaks.mjs)",
+      "Bash(node -e ' *)",
+      "Bash(node scripts/supabase-import.mjs)",
+      "Bash(node scripts/generate-sql.mjs)",
+      "Bash(node *)",
+      "Bash(npx tsc *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://waapi.webatlas.no/maptiles/basemaps/orto/webmercator/10/570/285.jpeg?api_key=b8e36d51-119a-423b-b156-d744d54123d5\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://caltopo.com/tile/wmk/10/570/285.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://waapi.webatlas.no/maptiles/basemaps/orto/webmercator/10/288/535.jpeg?api_key=b8e36d51-119a-423b-b156-d744d54123d5\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://caltopo.com/tile/wmk/10/535/288.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://cache.kartverket.no/v1/wmts/1.0.0/nib/default/webmercator/10/288/535.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://cache.kartverket.no/v1/wmts/1.0.0/nib/default/webmercator/10/288/535.jpeg\")",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' https://cache.kartverket.no/v1/wmts/1.0.0/__TRACKED_VAR__/default/webmercator/10/288/535.png)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/10/288/535\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://a.tile.opentopomap.org/10/535/288.png\")",
+      "Bash(git add *)"
+    ]
+  }
+}

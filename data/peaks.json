@@ -1,0 +1,112 @@
+[
+  {
+    "id": "1",
+    "name": "Galdhøpiggen",
+    "height": 2469,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "lat": 61.6362,
+    "lng": 8.3124,
+    "description": "Norges og Nordeuropas høyeste fjell, beliggende i Jotunheimen nasjonalpark.",
+    "image_url": null
+  },
+  {
+    "id": "2",
+    "name": "Glittertind",
+    "height": 2465,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "lat": 61.6534,
+    "lng": 8.5481,
+    "description": "Norges nest høyeste fjell, kjent for sin markante pyramideform.",
+    "image_url": null
+  },
+  {
+    "id": "3",
+    "name": "Store Skagastølstind",
+    "height": 2405,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "lat": 61.5349,
+    "lng": 7.8887,
+    "description": "Krevende tind i Hurrungane, regnes som en av de mest teknisk utfordrende toppene i Norge.",
+    "image_url": null
+  },
+  {
+    "id": "4",
+    "name": "Store Styggedalstind",
+    "height": 2387,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "lat": 61.5614,
+    "lng": 7.9423,
+    "description": "Høy og utilgjengelig topp i Hurrungane, krever alpinteknisk erfaring.",
+    "image_url": null
+  },
+  {
+    "id": "5",
+    "name": "Surtningssue",
+    "height": 2368,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "lat": 61.6712,
+    "lng": 8.4234,
+    "description": "Flott utsiktstopp i Jotunheimen med god adkomst fra Spiterstulen.",
+    "image_url": null
+  },
+  {
+    "id": "6",
+    "name": "Memurutinden",
+    "height": 2366,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "lat": 61.7234,
+    "lng": 8.5612,
+    "description": "Markant topp ved Gjende i Jotunheimen, populær blant erfarne fjellvandrere.",
+    "image_url": null
+  },
+  {
+    "id": "7",
+    "name": "Store Memurutinden",
+    "height": 2355,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "lat": 61.7312,
+    "lng": 8.5789,
+    "description": "Nabofjell til Memurutinden, med lik karakter og høydeprofil.",
+    "image_url": null
+  },
+  {
+    "id": "8",
+    "name": "Semeltinden",
+    "height": 2348,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "lat": 61.6489,
+    "lng": 8.3876,
+    "description": "Krevende tindetopp i Jotunheimen, best bestiget fra Juvasshytta.",
+    "image_url": null
+  },
+  {
+    "id": "9",
+    "name": "Skarstind",
+    "height": 2373,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "lat": 61.6134,
+    "lng": 8.2987,
+    "description": "Flott fjell i Jotunheimen med panoramautsikt over nabofjellene.",
+    "image_url": null
+  },
+  {
+    "id": "10",
+    "name": "Storjuvtinden",
+    "height": 2344,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "lat": 61.6023,
+    "lng": 8.3201,
+    "description": "Lite besøkt topp i Jotunheimen, krever lengre tur fra nærmeste hytte.",
+    "image_url": null
+  }
+]
