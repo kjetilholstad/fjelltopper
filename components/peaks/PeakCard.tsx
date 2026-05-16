@@ -25,7 +25,7 @@ export function PeakCard({ peak, rank, isAscended = false }: PeakCardProps) {
           </span>
         )}
 
-        {/* Name row */}
+        {/* Name */}
         <div className="flex items-start gap-2 mb-3 pr-8">
           <Mountain size={16} className="text-forest mt-0.5 shrink-0" strokeWidth={1.75} />
           <span className="font-bold text-[#1A1A1A] text-sm leading-tight">{peak.name}</span>
@@ -38,25 +38,22 @@ export function PeakCard({ peak, rank, isAscended = false }: PeakCardProps) {
           <span className="text-xs text-text-warm font-light">moh</span>
         </div>
 
-        {/* Primary factor */}
-        {peak.primary_factor != null && (
-          <div className="flex items-center gap-2 mb-1">
-            <Navigation size={13} className="text-[#8B6914] shrink-0" strokeWidth={1.75} />
-            <span className="text-xs text-text-warm">
-              PF: <span className="font-medium text-[#1A1A1A]">{peak.primary_factor.toLocaleString('no')} m</span>
-            </span>
-          </div>
-        )}
-
-        {/* Secondary factor */}
-        {peak.secondary_factor != null && (
-          <div className="flex items-center gap-2 mb-1">
-            <Navigation size={13} className="text-text-warm shrink-0" strokeWidth={1.75} />
-            <span className="text-xs text-text-warm">
-              SF: <span className="font-medium">{peak.secondary_factor.toLocaleString('no')} m</span>
-            </span>
-          </div>
-        )}
+        {/* PF / SF / parent peak */}
+        <div className="flex items-center gap-2 mb-1">
+          <Navigation size={13} className="text-[#8B6914] shrink-0" strokeWidth={1.75} />
+          <span className="text-xs text-text-warm">
+            PF: <span className="font-medium text-[#1A1A1A]">{peak.primary_factor.toLocaleString('no')} m</span>
+            {peak.secondary_factor != null && (
+              <>
+                <span className="mx-1.5 text-border-warm">·</span>
+                SF: <span className="font-medium text-[#1A1A1A]">{peak.secondary_factor.toLocaleString('no')} m</span>
+              </>
+            )}
+            {peak.parent_peak && (
+              <span className="ml-1.5 text-text-warm">→ {peak.parent_peak}</span>
+            )}
+          </span>
+        </div>
 
         {/* Location */}
         <div className="flex items-center gap-2 mt-2">
@@ -65,6 +62,33 @@ export function PeakCard({ peak, rank, isAscended = false }: PeakCardProps) {
             {peak.municipality && peak.municipality !== 'Ukjent' ? `${peak.municipality}, ` : ''}{peak.county}
           </span>
         </div>
+
+        {/* Sub-peaks */}
+        {subPeaks.length > 0 && (
+          <div className="mt-3">
+            <button
+              onClick={e => { e.preventDefault(); e.stopPropagation(); setOpen(o => !o) }}
+              className="flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full transition-opacity hover:opacity-80"
+              style={{ color: '#8B6914', background: '#FDF8EE', border: '1px solid #E8D5A3' }}
+            >
+              {open ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
+              {subPeaks.length} sub-topper
+            </button>
+            {open && (
+              <div className="mt-1.5 rounded-lg bg-[#F7F4EF] px-2.5 py-2 flex flex-col gap-1">
+                {subPeaks.map(sp => (
+                  <div key={sp.id} className="flex items-baseline justify-between gap-2">
+                    <span className="text-[11px] text-[#1A1A1A] truncate">{sp.name}</span>
+                    <span className="text-[11px] text-text-warm shrink-0">
+                      {sp.height.toLocaleString('no')} moh
+                      <span className="text-[#8B6914] ml-1.5">PF {sp.pf.toLocaleString('no')} m</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Footer */}
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-border-warm">
@@ -75,34 +99,6 @@ export function PeakCard({ peak, rank, isAscended = false }: PeakCardProps) {
           />
           <ChevronRight size={15} className="text-border-warm group-hover:text-forest transition-colors" strokeWidth={1.75} />
         </div>
-
-        {/* Sub-peaks */}
-        {subPeaks.length > 0 && (
-          <div className="mt-2">
-            <button
-              onClick={e => { e.preventDefault(); e.stopPropagation(); setOpen(o => !o) }}
-              className="flex items-center gap-1 text-[11px] text-text-warm hover:text-forest transition-colors w-full"
-            >
-              {open ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-              {subPeaks.length} undertopper
-            </button>
-            {open && (
-              <div className="mt-1.5 rounded-lg bg-[#F7F4EF] px-2.5 py-2 flex flex-col gap-1">
-                {subPeaks.map((sp, i) => (
-                  <div key={i} className="flex items-baseline justify-between gap-2">
-                    <span className="text-[11px] text-[#1A1A1A] truncate">{sp.name}</span>
-                    <span className="text-[11px] text-text-warm shrink-0">
-                      {sp.height.toLocaleString('no')} moh
-                      {sp.primary_factor != null && (
-                        <span className="text-[#8B6914] ml-1.5">PF {sp.primary_factor.toLocaleString('no')} m</span>
-                      )}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </Link>
   )

@@ -1,11 +1,10 @@
 'use client'
 
 import { useMemo, useState, useEffect, useRef } from 'react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
-import Link from 'next/link'
 import { Layers } from 'lucide-react'
-import type { Peak } from '@/types'
+import type { Peak, SubPeak } from '@/types'
 import 'leaflet/dist/leaflet.css'
 
 const LAYERS = [
@@ -32,34 +31,54 @@ const LAYERS = [
   },
 ]
 
-function makeIcon() {
+function makeIcon(size: number, bg: string): L.DivIcon {
+  const half = size / 2
   return L.divIcon({
-    html: `<div style="
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #2D5016;
-      border: 2px solid white;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.35);
-    "></div>`,
+    html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${bg};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.35)"></div>`,
     className: '',
-    iconSize: [10, 10],
-    iconAnchor: [5, 5],
-    popupAnchor: [0, -8],
+    iconSize: [size, size],
+    iconAnchor: [half, half],
+    popupAnchor: [0, -(half + 2)],
   })
+}
+
+const ICON_REGULAR    = makeIcon(10, '#2D5016')
+const ICON_PARENT     = makeIcon(12, '#2D5016')
+const ICON_SUB        = makeIcon(8,  '#5A8A30')
+const ICON_SELECTED   = makeIcon(14, '#1A3A0A')
+const ICON_ACTIVE_SUB = makeIcon(10, '#E8671A')
+
+function peakIcon(peak: Peak, selectedPeakId: string | null): L.DivIcon {
+  if (peak.id === selectedPeakId) return ICON_SELECTED
+  if (peak.parent_peak) return ICON_SUB
+  if (peak.sub_peaks && peak.sub_peaks.length > 0) return ICON_PARENT
+  return ICON_REGULAR
+}
+
+function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
+  useMapEvents({ click: onMapClick })
+  return null
 }
 
 interface PeakMapProps {
   peaks: Peak[]
+  selectedPeakId: string | null
+  onSelectPeak: (peak: Peak | null) => void
 }
 
-export function PeakMap({ peaks }: PeakMapProps) {
-  const icon = useMemo(() => makeIcon(), [])
+export function PeakMap({ peaks, selectedPeakId, onSelectPeak }: PeakMapProps) {
   const [activeLayerId, setActiveLayerId] = useState('topo')
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const selectorRef = useRef<HTMLDivElement>(null)
 
   const activeLayer = LAYERS.find(l => l.id === activeLayerId) ?? LAYERS[0]
+
+  const activeSubs = useMemo<SubPeak[]>(() => {
+    if (!selectedPeakId) return []
+    const sel = peaks.find(p => p.id === selectedPeakId)
+    if (!sel?.sub_peaks) return []
+    return sel.sub_peaks.filter(sp => sp.lat != null && sp.lng != null)
+  }, [peaks, selectedPeakId])
 
   useEffect(() => {
     if (!dropdownOpen) return
@@ -85,51 +104,32 @@ export function PeakMap({ peaks }: PeakMapProps) {
           url={activeLayer.url}
           {...(activeLayer.subdomains ? { subdomains: activeLayer.subdomains } : {})}
         />
-        {peaks.map((peak) => (
-          <Marker key={peak.id} position={[peak.lat!, peak.lng!]} icon={icon}>
-            <Popup>
-              <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif', minWidth: '140px' }}>
-                <p style={{ fontWeight: 700, fontSize: '13px', marginBottom: '6px', color: '#1A1A1A' }}>
-                  {peak.name}
-                </p>
-                <p style={{ fontSize: '12px', color: '#6B6560', marginBottom: '2px' }}>
-                  ↑ {peak.height.toLocaleString('no')} moh
-                </p>
-                {peak.primary_factor != null && (
-                  <p style={{ fontSize: '12px', color: '#6B6560', marginBottom: '2px' }}>
-                    PF: {peak.primary_factor.toLocaleString('no')} m
-                  </p>
-                )}
-                {peak.secondary_factor != null && (
-                  <p style={{ fontSize: '12px', color: '#6B6560', marginBottom: '2px' }}>
-                    SF: {peak.secondary_factor.toLocaleString('no')} m
-                  </p>
-                )}
-                {peak.municipality && peak.municipality !== 'Ukjent' && (
-                  <p style={{ fontSize: '11px', color: '#6B6560', marginTop: '4px' }}>
-                    {peak.municipality}, {peak.county}
-                  </p>
-                )}
-                <Link
-                  href={`/peaks/${peak.id}`}
-                  style={{ fontSize: '12px', color: '#2D5016', fontWeight: 600, display: 'block', marginTop: '6px' }}
-                >
-                  Se detaljer →
-                </Link>
-              </div>
-            </Popup>
-          </Marker>
+
+        <MapClickHandler onMapClick={() => onSelectPeak(null)} />
+
+        {peaks.map(peak => (
+          <Marker
+            key={peak.id}
+            position={[peak.lat!, peak.lng!]}
+            icon={peakIcon(peak, selectedPeakId)}
+            eventHandlers={{ click: () => onSelectPeak(peak) }}
+          />
+        ))}
+
+        {activeSubs.map(sp => (
+          <Marker
+            key={`sub-${sp.id}`}
+            position={[sp.lat!, sp.lng!]}
+            icon={ICON_ACTIVE_SUB}
+          />
         ))}
       </MapContainer>
 
-      {/* Layer selector */}
-      <div
-        ref={selectorRef}
-        style={{ position: 'absolute', top: 12, right: 12, zIndex: 1000 }}
-      >
+      {/* Kartlag-velger — øverst til høyre */}
+      <div ref={selectorRef} style={{ position: 'absolute', top: 12, right: 12, zIndex: 1000 }}>
         <button
           onClick={() => setDropdownOpen(o => !o)}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-white shadow-md transition-colors"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-white shadow-md"
           style={{ background: '#2D5016' }}
         >
           <Layers size={13} />
@@ -137,7 +137,7 @@ export function PeakMap({ peaks }: PeakMapProps) {
         </button>
 
         {dropdownOpen && (
-          <div className="mt-1 bg-white rounded-lg shadow-lg border border-border-warm overflow-hidden min-w-[160px]">
+          <div className="mt-1 bg-white rounded-xl shadow-md border border-border-warm overflow-hidden min-w-[160px]">
             {LAYERS.map(layer => (
               <button
                 key={layer.id}

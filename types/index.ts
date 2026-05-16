@@ -1,15 +1,25 @@
+export interface SubPeak {
+  id: string
+  name: string
+  height: number
+  pf: number
+  lat?: number
+  lng?: number
+}
+
 export interface Peak {
   id: string
   name: string
   height: number
-  county: string
-  municipality: string
-  lat: number
-  lng: number
-  primary_factor: number | null
+  primary_factor: number
   secondary_factor: number | null
   parent_peak: string | null
-  sub_peaks: Array<{ name: string; height: number; primary_factor?: number | null }> | null
+  county: string | null
+  municipality: string | null
+  lat: number | null
+  lng: number | null
+  peakbagger_id: number | null
+  sub_peaks: SubPeak[] | null
   topo_map: string | null
   description: string | null
   image_url: string | null
