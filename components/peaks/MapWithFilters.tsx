@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Search, ChevronDown } from 'lucide-react'
@@ -31,12 +31,20 @@ const PF_OPTIONS = [
   { label: 'PF over 2000 m', value: '2000' },
 ]
 
-const LEGEND = [
-  { color: '#1A3A0A', size: 14, label: 'Valgt topp' },
-  { color: '#2D5016', size: 12, label: 'Moderfjell' },
-  { color: '#2D5016', size: 10, label: 'Topp' },
-  { color: '#5A8A30', size: 8,  label: 'Sub-topp' },
-  { color: '#E8671A', size: 10, label: 'Sub-topper av valgt' },
+type LineType = 'higher' | 'nearest2000' | 'nearby'
+
+const LEGEND_ITEMS: {
+  color: string
+  size: number
+  label: string
+  lineType: LineType | null
+  dash: boolean
+}[] = [
+  { color: '#1A3A0A', size: 18, label: 'Valgt topp',             lineType: null,          dash: false },
+  { color: '#D4A017', size: 13, label: 'Nærmeste høyere fjell',  lineType: 'higher',      dash: true  },
+  { color: '#E8671A', size: 13, label: 'Nærmeste over 2000 m',   lineType: 'nearest2000', dash: true  },
+  { color: '#DC2626', size: 11, label: 'Nærliggende topper',     lineType: 'nearby',      dash: false },
+  { color: '#2D5016', size: 9,  label: 'Topp',                   lineType: null,          dash: false },
 ]
 
 function Select({
@@ -75,6 +83,19 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
   const [county, setCounty] = useState('')
   const [municipality, setMunicipality] = useState('')
   const [selectedPeak, setSelectedPeak] = useState<EnrichedPeak | null>(null)
+  const [activeLines, setActiveLines] = useState<Set<LineType>>(new Set())
+
+  function toggleLine(type: LineType) {
+    setActiveLines(prev => {
+      const next = new Set(prev)
+      next.has(type) ? next.delete(type) : next.add(type)
+      return next
+    })
+  }
+
+  useEffect(() => {
+    setActiveLines(new Set())
+  }, [selectedPeak?.id])
 
   const counties = useMemo(() => {
     const set = new Set<string>()
@@ -123,6 +144,46 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
     return nearestPeak(selectedPeak, peaks)
   }, [selectedPeak, peaks])
 
+  const higherPeakId = useMemo(() => {
+    if (!selectedPeak?.nearest_higher_peak) return null
+    return peaks.find(p => p.name === selectedPeak.nearest_higher_peak)?.id ?? null
+  }, [selectedPeak, peaks])
+
+  const nearest2000Id = useMemo(() => nearest?.peak.id ?? null, [nearest])
+
+  const nearbyIds = useMemo<Set<string>>(() => {
+    if (!selectedPeak?.sub_peaks) return new Set()
+    return new Set(selectedPeak.sub_peaks.map(sp => sp.id))
+  }, [selectedPeak])
+
+  const lineData = useMemo(() => {
+    if (!selectedPeak?.lat || !selectedPeak?.lng) return null
+    const from: [number, number] = [selectedPeak.lat, selectedPeak.lng]
+
+    const higherPeakEntry = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
+    const toHigher = higherPeakEntry?.lat && higherPeakEntry?.lng
+      ? [[from, [higherPeakEntry.lat, higherPeakEntry.lng]]] as [number, number][][]
+      : null
+
+    const nearestResult = nearestPeak(selectedPeak, peaks)
+    const toNearest2000 = nearestResult?.peak.lat && nearestResult?.peak.lng
+      ? [[from, [nearestResult.peak.lat, nearestResult.peak.lng]]] as [number, number][][]
+      : null
+
+    const toNearby = selectedPeak.sub_peaks
+      ?.filter(sp => sp.lat && sp.lng)
+      .map(sp => [from, [sp.lat!, sp.lng!]] as [number, number][]) ?? null
+
+    return { toHigher, toNearest2000, toNearby }
+  }, [selectedPeak, peaks])
+
+  function lineAvailable(lineType: LineType): boolean {
+    if (lineType === 'higher')      return !!lineData?.toHigher
+    if (lineType === 'nearest2000') return !!lineData?.toNearest2000
+    if (lineType === 'nearby')      return !!(lineData?.toNearby?.length)
+    return false
+  }
+
   const location = selectedPeak
     ? [
         selectedPeak.municipality && selectedPeak.municipality !== 'Ukjent'
@@ -138,6 +199,11 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
         peaks={filtered}
         selectedPeakId={selectedPeak?.id ?? null}
         onSelectPeak={setSelectedPeak}
+        activeLines={activeLines}
+        lineData={lineData}
+        higherPeakId={higherPeakId}
+        nearest2000Id={nearest2000Id}
+        nearbyIds={nearbyIds}
       />
 
       {/* Venstre kolonne: filter + tegnforklaring + detaljpanel */}
@@ -182,20 +248,66 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
         </div>
 
         {/* Tegnforklaring */}
-        <div className="bg-white rounded-xl shadow-md border border-border-warm px-3 py-2.5 flex flex-col gap-1.5">
-          <p className="text-[10px] font-semibold text-text-warm uppercase tracking-wide mb-0.5">
+        <div className="bg-white rounded-xl shadow-md border border-border-warm px-3 py-2.5 flex flex-col gap-0.5">
+          <p className="text-[10px] font-semibold text-text-warm uppercase tracking-wide mb-1">
             Tegnforklaring
           </p>
-          {LEGEND.map(({ color, size, label }) => (
-            <div key={label} className="flex items-center gap-2">
-              <div style={{
-                width: size, height: size, borderRadius: '50%',
-                background: color, border: '1.5px solid white',
-                boxShadow: '0 1px 3px rgba(0,0,0,.25)', flexShrink: 0,
-              }} />
-              <span className="text-xs text-[#1A1A1A]">{label}</span>
-            </div>
-          ))}
+
+          {LEGEND_ITEMS.map(({ color, size, label, lineType, dash }) => {
+            const isToggleable = lineType !== null
+            const available = isToggleable ? lineAvailable(lineType) : true
+            const isActive = isToggleable && activeLines.has(lineType)
+
+            if (isToggleable) {
+              return (
+                <button
+                  key={label}
+                  onClick={() => available && toggleLine(lineType)}
+                  disabled={!selectedPeak || !available}
+                  className={[
+                    'flex items-center gap-2 rounded-lg px-1.5 py-1 -mx-1.5 transition-colors text-left w-full',
+                    !selectedPeak || !available ? 'opacity-35 cursor-not-allowed' : 'cursor-pointer hover:bg-parchment',
+                    isActive ? 'bg-parchment' : '',
+                  ].join(' ')}
+                >
+                  <div style={{
+                    width: size, height: size, borderRadius: '50%', flexShrink: 0,
+                    background: color, border: '1.5px solid white',
+                    boxShadow: '0 1px 3px rgba(0,0,0,.25)',
+                  }} />
+                  <svg width="20" height="10" viewBox="0 0 20 10" style={{ flexShrink: 0 }}>
+                    <line
+                      x1="0" y1="5" x2="20" y2="5"
+                      stroke={color}
+                      strokeWidth="2"
+                      strokeDasharray={dash ? '4 3' : undefined}
+                    />
+                  </svg>
+                  <span className="text-xs text-[#1A1A1A]">{label}</span>
+                  {isActive && (
+                    <span className="ml-auto text-[10px] font-semibold" style={{ color }}>PÅ</span>
+                  )}
+                </button>
+              )
+            }
+
+            return (
+              <div key={label} className="flex items-center gap-2 px-1.5 py-1">
+                <div style={{
+                  width: size, height: size, borderRadius: '50%', flexShrink: 0,
+                  background: color, border: '1.5px solid white',
+                  boxShadow: '0 1px 3px rgba(0,0,0,.25)',
+                }} />
+                <span className="text-xs text-[#1A1A1A]">{label}</span>
+              </div>
+            )
+          })}
+
+          {!selectedPeak && (
+            <p className="text-[10px] text-text-warm italic mt-0.5">
+              Velg en topp for å aktivere linjer
+            </p>
+          )}
         </div>
 
         {/* Detaljpanel for valgt topp */}
@@ -247,7 +359,7 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
             {/* Nærliggende topper — fra Peakbagger */}
             {selectedPeak.sub_peaks && selectedPeak.sub_peaks.length > 0 && (
               <div className="border-t border-border-warm pt-1.5 mb-1.5">
-                <p className="text-[11px] font-semibold text-[#8B6914] mb-1">
+                <p className="text-[11px] font-semibold text-[#DC2626] mb-1">
                   Nærliggende topper ({selectedPeak.sub_peaks.length})
                 </p>
                 <div className="flex flex-col gap-0.5">

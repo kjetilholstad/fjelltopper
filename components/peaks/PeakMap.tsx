@@ -1,10 +1,10 @@
 'use client'
 
-import { useMemo, useState, useEffect, useRef } from 'react'
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
+import { useState, useEffect, useRef } from 'react'
+import { MapContainer, TileLayer, Marker, Polyline, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import { Layers } from 'lucide-react'
-import type { EnrichedPeak, SubPeak } from '@/types'
+import type { EnrichedPeak } from '@/types'
 import 'leaflet/dist/leaflet.css'
 
 const LAYERS = [
@@ -42,16 +42,23 @@ function makeIcon(size: number, bg: string): L.DivIcon {
   })
 }
 
-const ICON_REGULAR    = makeIcon(10, '#2D5016')
-const ICON_PARENT     = makeIcon(12, '#2D5016')
-const ICON_SUB        = makeIcon(8,  '#5A8A30')
-const ICON_SELECTED   = makeIcon(14, '#1A3A0A')
-const ICON_ACTIVE_SUB = makeIcon(10, '#E8671A')
+const ICON_SELECTED = makeIcon(18, '#1A3A0A')
+const ICON_HIGHER   = makeIcon(13, '#D4A017')
+const ICON_NEAREST  = makeIcon(13, '#E8671A')
+const ICON_NEARBY   = makeIcon(11, '#DC2626')
+const ICON_REGULAR  = makeIcon(9,  '#2D5016')
 
-function peakIcon(peak: EnrichedPeak, selectedPeakId: string | null): L.DivIcon {
+function getPeakIcon(
+  peak: EnrichedPeak,
+  selectedPeakId: string | null,
+  higherPeakId: string | null,
+  nearest2000Id: string | null,
+  nearbyIds: Set<string>,
+): L.DivIcon {
   if (peak.id === selectedPeakId) return ICON_SELECTED
-  if (peak.nearest_higher_peak) return ICON_SUB
-  if (peak.sub_peaks && peak.sub_peaks.length > 0) return ICON_PARENT
+  if (peak.id === higherPeakId)   return ICON_HIGHER
+  if (peak.id === nearest2000Id)  return ICON_NEAREST
+  if (nearbyIds.has(peak.id))     return ICON_NEARBY
   return ICON_REGULAR
 }
 
@@ -60,25 +67,38 @@ function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
   return null
 }
 
+type LineType = 'higher' | 'nearest2000' | 'nearby'
+
 interface PeakMapProps {
   peaks: EnrichedPeak[]
   selectedPeakId: string | null
   onSelectPeak: (peak: EnrichedPeak | null) => void
+  activeLines: Set<LineType>
+  lineData: {
+    toHigher: [number, number][][] | null
+    toNearest2000: [number, number][][] | null
+    toNearby: [number, number][][] | null
+  } | null
+  higherPeakId: string | null
+  nearest2000Id: string | null
+  nearbyIds: Set<string>
 }
 
-export function PeakMap({ peaks, selectedPeakId, onSelectPeak }: PeakMapProps) {
+export function PeakMap({
+  peaks,
+  selectedPeakId,
+  onSelectPeak,
+  activeLines,
+  lineData,
+  higherPeakId,
+  nearest2000Id,
+  nearbyIds,
+}: PeakMapProps) {
   const [activeLayerId, setActiveLayerId] = useState('topo')
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const selectorRef = useRef<HTMLDivElement>(null)
 
   const activeLayer = LAYERS.find(l => l.id === activeLayerId) ?? LAYERS[0]
-
-  const activeSubs = useMemo<SubPeak[]>(() => {
-    if (!selectedPeakId) return []
-    const sel = peaks.find(p => p.id === selectedPeakId)
-    if (!sel?.sub_peaks) return []
-    return sel.sub_peaks.filter(sp => sp.lat != null && sp.lng != null)
-  }, [peaks, selectedPeakId])
 
   useEffect(() => {
     if (!dropdownOpen) return
@@ -111,17 +131,27 @@ export function PeakMap({ peaks, selectedPeakId, onSelectPeak }: PeakMapProps) {
           <Marker
             key={peak.id}
             position={[peak.lat!, peak.lng!]}
-            icon={peakIcon(peak, selectedPeakId)}
+            icon={getPeakIcon(peak, selectedPeakId, higherPeakId, nearest2000Id, nearbyIds)}
             eventHandlers={{ click: () => onSelectPeak(peak) }}
           />
         ))}
 
-        {activeSubs.map(sp => (
-          <Marker
-            key={`sub-${sp.id}`}
-            position={[sp.lat!, sp.lng!]}
-            icon={ICON_ACTIVE_SUB}
-          />
+        {/* Nærmeste høyere fjell — gull stiplet */}
+        {activeLines.has('higher') && lineData?.toHigher?.map((pos, i) => (
+          <Polyline key={`higher-${i}`} positions={pos}
+            pathOptions={{ color: '#D4A017', weight: 2, dashArray: '6 4', opacity: 0.85 }} />
+        ))}
+
+        {/* Nærmeste over 2000 m — oransje stiplet */}
+        {activeLines.has('nearest2000') && lineData?.toNearest2000?.map((pos, i) => (
+          <Polyline key={`n2000-${i}`} positions={pos}
+            pathOptions={{ color: '#E8671A', weight: 2, dashArray: '6 4', opacity: 0.85 }} />
+        ))}
+
+        {/* Nærliggende topper — rød heltrukket */}
+        {activeLines.has('nearby') && lineData?.toNearby?.map((pos, i) => (
+          <Polyline key={`nearby-${i}`} positions={pos}
+            pathOptions={{ color: '#DC2626', weight: 2, opacity: 0.8 }} />
         ))}
       </MapContainer>
 
