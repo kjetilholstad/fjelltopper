@@ -3,10 +3,10 @@
 import { useState, useMemo } from 'react'
 import { Search, ChevronDown } from 'lucide-react'
 import { PeakCard } from './PeakCard'
-import type { Peak } from '@/types'
+import type { EnrichedPeak } from '@/types'
 
 interface PeakListProps {
-  peaks: Peak[]
+  peaks: EnrichedPeak[]
 }
 
 const HEIGHT_OPTIONS = [
@@ -205,6 +205,7 @@ export function PeakList({ peaks }: PeakListProps) {
               key={peak.id}
               peak={peak}
               rank={rankMap.get(peak.id)}
+              allPeaks={peaks}
             />
           ))}
         </div>

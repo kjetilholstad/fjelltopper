@@ -2,7 +2,10 @@ import Link from 'next/link'
 import { MapPin, Mountain } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { HomePeakCard } from '@/components/HomePeakCard'
+import { nearestPeak } from '@/lib/nearestPeaks'
 import type { Peak } from '@/types'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: 'Fjelltopper — Norges høyeste topper',
@@ -11,19 +14,27 @@ export const metadata = {
 export default async function Home() {
   const supabase = await createClient()
 
-  const [
-    { count: totalCount },
-    { count: coordCount },
-    { data: featuredData },
-  ] = await Promise.all([
+  const [{ count: totalCount }, { count: coordCount }] = await Promise.all([
     supabase.from('peaks').select('*', { count: 'exact', head: true }),
     supabase.from('peaks').select('*', { count: 'exact', head: true }).not('lat', 'is', null).not('lng', 'is', null),
-    supabase.from('peaks').select('*').eq('name', 'Galdhøpiggen').limit(1),
   ])
 
   const total = totalCount ?? 0
   const withCoords = coordCount ?? 0
+
+  // Tilfeldig topp — rangert etter høyde slik at offset = rangering - 1
+  const randomOffset = total > 0 ? Math.floor(Math.random() * total) : 0
+  const [{ data: featuredData }, { data: allForDistance }] = await Promise.all([
+    supabase.from('peaks').select('*').order('height', { ascending: false }).range(randomOffset, randomOffset),
+    supabase.from('peaks').select('id, name, lat, lng').not('lat', 'is', null).not('lng', 'is', null),
+  ])
+
   const featured = (featuredData?.[0] ?? null) as Peak | null
+  const featuredRank = randomOffset + 1
+
+  const nearest = featured && allForDistance
+    ? nearestPeak(featured as any, allForDistance as any)
+    : null
 
   return (
     <div className="min-h-[calc(100vh-64px)] flex flex-col">
@@ -78,7 +89,7 @@ export default async function Home() {
             {/* Right column — featured peak */}
             <div>
               {featured
-                ? <HomePeakCard peak={featured} />
+                ? <HomePeakCard peak={featured} rank={featuredRank} nearestPeakName={nearest?.peak.name ?? null} />
                 : (
                   <div
                     className="bg-white rounded-xl p-5 text-sm text-[#6B6560]"

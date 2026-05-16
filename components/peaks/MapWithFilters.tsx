@@ -4,7 +4,8 @@ import { useState, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Search, ChevronDown } from 'lucide-react'
-import type { Peak } from '@/types'
+import type { EnrichedPeak } from '@/types'
+import { nearestPeak } from '@/lib/nearestPeaks'
 
 const PeakMap = dynamic(
   () => import('./PeakMap').then((m) => m.PeakMap),
@@ -64,7 +65,7 @@ function Select({
 }
 
 interface MapWithFiltersProps {
-  peaks: Peak[]
+  peaks: EnrichedPeak[]
 }
 
 export function MapWithFilters({ peaks }: MapWithFiltersProps) {
@@ -73,7 +74,7 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
   const [minPF, setMinPF] = useState('0')
   const [county, setCounty] = useState('')
   const [municipality, setMunicipality] = useState('')
-  const [selectedPeak, setSelectedPeak] = useState<Peak | null>(null)
+  const [selectedPeak, setSelectedPeak] = useState<EnrichedPeak | null>(null)
 
   const counties = useMemo(() => {
     const set = new Set<string>()
@@ -117,10 +118,10 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
     })
   }, [peaks, query, minHeight, minPF, county, municipality])
 
-  const parentPeak = useMemo(() => {
-    if (!selectedPeak?.parent_peak) return null
-    return peaks.find(p => p.name === selectedPeak.parent_peak) ?? null
-  }, [peaks, selectedPeak])
+  const nearest = useMemo(() => {
+    if (!selectedPeak) return null
+    return nearestPeak(selectedPeak, peaks)
+  }, [selectedPeak, peaks])
 
   const location = selectedPeak
     ? [
@@ -215,34 +216,39 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
               </button>
             </div>
 
-            {/* Høyde · PF */}
+            {/* Høyde · Primærfaktor */}
             <p className="text-xs text-[#6B6560] mb-1">
               <strong className="text-[#1A1A1A]">{selectedPeak.height.toLocaleString('no')} moh</strong>
               <span className="mx-1.5 text-[#C8BFB5]">·</span>
-              PF <strong className="text-[#1A1A1A]">{selectedPeak.primary_factor.toLocaleString('no')} m</strong>
+              Primærfaktor <strong className="text-[#1A1A1A]">{selectedPeak.primary_factor.toLocaleString('no')} m</strong>
             </p>
+
+            {/* Nærmeste høyere fjell */}
+            {selectedPeak.nearest_higher_peak && selectedPeak.secondary_factor ? (
+              <p className="text-[11px] text-text-warm mb-1">
+                Nærmeste høyere: <span className="font-medium text-[#1A1A1A]">{selectedPeak.nearest_higher_peak} ({selectedPeak.secondary_factor < 1000 ? `${selectedPeak.secondary_factor.toLocaleString('no')} m` : `${Math.round(selectedPeak.secondary_factor / 1000).toLocaleString('no')} km`})</span>
+              </p>
+            ) : null}
+
+            {/* Nærmeste fjell over 2000 m */}
+            {nearest && (
+              <p className="text-[11px] text-text-warm mb-1">
+                Nærmeste over 2000 m: <span className="font-medium text-[#1A1A1A]">
+                  {nearest.peak.name} ({nearest.distanceKm.toFixed(1).replace('.', ',')} km)
+                </span>
+              </p>
+            )}
 
             {/* Sted */}
             {location && (
               <p className="text-[11px] text-text-warm mb-1.5">{location}</p>
             )}
 
-            {/* Modertopp */}
-            {parentPeak && (
-              <div className="border-t border-border-warm pt-1.5 mb-1.5">
-                <p className="text-[11px] font-semibold text-[#8B6914] mb-1">Modertopp</p>
-                <div className="flex justify-between gap-2">
-                  <span className="text-[11px] text-[#1A1A1A] truncate">{parentPeak.name}</span>
-                  <span className="text-[11px] text-text-warm shrink-0">{parentPeak.height.toLocaleString('no')} m</span>
-                </div>
-              </div>
-            )}
-
-            {/* Sub-topper */}
+            {/* Nærliggende topper — fra Peakbagger */}
             {selectedPeak.sub_peaks && selectedPeak.sub_peaks.length > 0 && (
               <div className="border-t border-border-warm pt-1.5 mb-1.5">
                 <p className="text-[11px] font-semibold text-[#8B6914] mb-1">
-                  Sub-topper ({selectedPeak.sub_peaks.length})
+                  Nærliggende topper ({selectedPeak.sub_peaks.length})
                 </p>
                 <div className="flex flex-col gap-0.5">
                   {selectedPeak.sub_peaks.map(sp => (

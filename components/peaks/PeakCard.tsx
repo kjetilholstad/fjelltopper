@@ -1,19 +1,26 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { Mountain, TrendingUp, Navigation, MapPin, CheckCircle2, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react'
-import type { Peak } from '@/types'
+import { Mountain, TrendingUp, Navigation, ArrowUpToLine, MapPin, CheckCircle2, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react'
+import type { EnrichedPeak } from '@/types'
+import { nearestPeak } from '@/lib/nearestPeaks'
 
 interface PeakCardProps {
-  peak: Peak
+  peak: EnrichedPeak
   rank?: number
   isAscended?: boolean
+  allPeaks?: EnrichedPeak[]
 }
 
-export function PeakCard({ peak, rank, isAscended = false }: PeakCardProps) {
+export function PeakCard({ peak, rank, isAscended = false, allPeaks }: PeakCardProps) {
   const subPeaks = peak.sub_peaks ?? []
   const [open, setOpen] = useState(false)
+
+  const nearest = useMemo(() => {
+    if (!allPeaks) return null
+    return nearestPeak(peak, allPeaks)
+  }, [peak, allPeaks])
 
   return (
     <Link href={`/peaks/${peak.id}`} className="group block">
@@ -38,22 +45,40 @@ export function PeakCard({ peak, rank, isAscended = false }: PeakCardProps) {
           <span className="text-xs text-text-warm font-light">moh</span>
         </div>
 
-        {/* PF / SF / parent peak */}
+        {/* Primærfaktor */}
         <div className="flex items-center gap-2 mb-1">
           <Navigation size={13} className="text-[#8B6914] shrink-0" strokeWidth={1.75} />
           <span className="text-xs text-text-warm">
-            PF: <span className="font-medium text-[#1A1A1A]">{peak.primary_factor.toLocaleString('no')} m</span>
-            {peak.secondary_factor != null && (
-              <>
-                <span className="mx-1.5 text-border-warm">·</span>
-                SF: <span className="font-medium text-[#1A1A1A]">{peak.secondary_factor.toLocaleString('no')} m</span>
-              </>
-            )}
-            {peak.parent_peak && (
-              <span className="ml-1.5 text-text-warm">→ {peak.parent_peak}</span>
-            )}
+            Primærfaktor: <span className="font-medium text-[#1A1A1A]">{peak.primary_factor.toLocaleString('no')} m</span>
           </span>
         </div>
+
+        {/* Nærmeste høyere fjell */}
+        {peak.nearest_higher_peak && (
+          <div className="flex items-center gap-2 mb-1">
+            <ArrowUpToLine size={13} className="text-[#8B6914] shrink-0" strokeWidth={1.75} />
+            <span className="text-xs text-text-warm">
+              Nærmeste høyere: <span className="font-medium text-[#1A1A1A]">
+                {peak.nearest_higher_peak}
+                {peak.secondary_factor
+                  ? ` (${peak.secondary_factor < 1000 ? `${peak.secondary_factor.toLocaleString('no')} m` : `${Math.round(peak.secondary_factor / 1000).toLocaleString('no')} km`})`
+                  : ''}
+              </span>
+            </span>
+          </div>
+        )}
+
+        {/* Nærmeste over 2000 m */}
+        {nearest && (
+          <div className="flex items-center gap-2 mb-1">
+            <Navigation size={13} className="text-text-warm shrink-0" strokeWidth={1.75} />
+            <span className="text-xs text-text-warm">
+              Nærmeste over 2000 m: <span className="font-medium text-[#1A1A1A]">
+                {nearest.peak.name} ({nearest.distanceKm.toFixed(1).replace('.', ',')} km)
+              </span>
+            </span>
+          </div>
+        )}
 
         {/* Location */}
         <div className="flex items-center gap-2 mt-2">
@@ -63,7 +88,7 @@ export function PeakCard({ peak, rank, isAscended = false }: PeakCardProps) {
           </span>
         </div>
 
-        {/* Sub-peaks */}
+        {/* Nærliggende topper — fra Peakbagger */}
         {subPeaks.length > 0 && (
           <div className="mt-3">
             <button
@@ -72,7 +97,7 @@ export function PeakCard({ peak, rank, isAscended = false }: PeakCardProps) {
               style={{ color: '#8B6914', background: '#FDF8EE', border: '1px solid #E8D5A3' }}
             >
               {open ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
-              {subPeaks.length} sub-topper
+              {subPeaks.length} nærliggende topper
             </button>
             {open && (
               <div className="mt-1.5 rounded-lg bg-[#F7F4EF] px-2.5 py-2 flex flex-col gap-1">
@@ -81,7 +106,7 @@ export function PeakCard({ peak, rank, isAscended = false }: PeakCardProps) {
                     <span className="text-[11px] text-[#1A1A1A] truncate">{sp.name}</span>
                     <span className="text-[11px] text-text-warm shrink-0">
                       {sp.height.toLocaleString('no')} moh
-                      <span className="text-[#8B6914] ml-1.5">PF {sp.pf.toLocaleString('no')} m</span>
+                      <span className="text-[#8B6914] ml-1.5">Primærfaktor {sp.pf.toLocaleString('no')} m</span>
                     </span>
                   </div>
                 ))}

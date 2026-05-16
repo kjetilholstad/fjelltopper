@@ -4,7 +4,7 @@ import { useMemo, useState, useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import { Layers } from 'lucide-react'
-import type { Peak, SubPeak } from '@/types'
+import type { EnrichedPeak, SubPeak } from '@/types'
 import 'leaflet/dist/leaflet.css'
 
 const LAYERS = [
@@ -48,9 +48,9 @@ const ICON_SUB        = makeIcon(8,  '#5A8A30')
 const ICON_SELECTED   = makeIcon(14, '#1A3A0A')
 const ICON_ACTIVE_SUB = makeIcon(10, '#E8671A')
 
-function peakIcon(peak: Peak, selectedPeakId: string | null): L.DivIcon {
+function peakIcon(peak: EnrichedPeak, selectedPeakId: string | null): L.DivIcon {
   if (peak.id === selectedPeakId) return ICON_SELECTED
-  if (peak.parent_peak) return ICON_SUB
+  if (peak.nearest_higher_peak) return ICON_SUB
   if (peak.sub_peaks && peak.sub_peaks.length > 0) return ICON_PARENT
   return ICON_REGULAR
 }
@@ -61,9 +61,9 @@ function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
 }
 
 interface PeakMapProps {
-  peaks: Peak[]
+  peaks: EnrichedPeak[]
   selectedPeakId: string | null
-  onSelectPeak: (peak: Peak | null) => void
+  onSelectPeak: (peak: EnrichedPeak | null) => void
 }
 
 export function PeakMap({ peaks, selectedPeakId, onSelectPeak }: PeakMapProps) {

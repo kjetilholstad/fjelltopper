@@ -13,17 +13,21 @@ export interface Peak {
   height: number
   primary_factor: number
   secondary_factor: number | null
-  parent_peak: string | null
+  nearest_higher_peak: string | null
   county: string | null
   municipality: string | null
   lat: number | null
   lng: number | null
   peakbagger_id: number | null
-  sub_peaks: SubPeak[] | null
+  sub_peaks: string[] | null
   topo_map: string | null
   description: string | null
   image_url: string | null
   created_at: string
+}
+
+export interface EnrichedPeak extends Omit<Peak, 'sub_peaks'> {
+  sub_peaks: SubPeak[] | null
 }
 
 export interface Ascent {

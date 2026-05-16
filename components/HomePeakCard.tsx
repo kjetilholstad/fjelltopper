@@ -4,14 +4,26 @@ import type { Peak } from '@/types'
 
 interface HomePeakCardProps {
   peak: Peak
+  rank: number
+  nearestPeakName?: string | null
 }
 
-export function HomePeakCard({ peak }: HomePeakCardProps) {
+export function HomePeakCard({ peak, rank, nearestPeakName }: HomePeakCardProps) {
   const peakbaggerId = peak.peakbagger_id ?? 8916
 
   const stats = [
     { label: 'Primærfaktor', value: peak.primary_factor != null ? `${peak.primary_factor.toLocaleString('no')} m` : '—' },
-    { label: 'Sekundærfaktor', value: peak.secondary_factor != null ? `${peak.secondary_factor.toLocaleString('no')} m` : '—' },
+    {
+      label: 'Nærmeste høyere fjell',
+      value: peak.secondary_factor
+        ? (() => {
+            const dist = peak.secondary_factor < 1000
+              ? `${peak.secondary_factor.toLocaleString('no')} m`
+              : `${Math.round(peak.secondary_factor / 1000).toLocaleString('no')} km`
+            return peak.nearest_higher_peak ? `${peak.nearest_higher_peak} (${dist})` : dist
+          })()
+        : '—',
+    },
     { label: 'Kommune', value: peak.municipality && peak.municipality !== 'Ukjent' ? peak.municipality : '—' },
     { label: 'Fylke', value: peak.county ?? '—' },
   ]
@@ -23,7 +35,7 @@ export function HomePeakCard({ peak }: HomePeakCardProps) {
         className="inline-flex items-center text-xs font-semibold text-white px-2.5 py-0.5 rounded-full mb-4"
         style={{ background: '#8B6914' }}
       >
-        #1 høyeste topp
+        #{rank} høyeste topp
       </div>
 
       {/* Name */}
@@ -43,6 +55,12 @@ export function HomePeakCard({ peak }: HomePeakCardProps) {
             <p className="text-sm font-semibold text-[#1A1A1A] truncate">{value}</p>
           </div>
         ))}
+        {nearestPeakName && (
+          <div className="col-span-2 rounded-lg px-3 py-2.5" style={{ background: '#F7F4EF' }}>
+            <p className="text-[10px] font-medium text-[#6B6560] uppercase tracking-wide mb-0.5">Nærmeste over 2000 m</p>
+            <p className="text-sm font-semibold text-[#1A1A1A] truncate">{nearestPeakName}</p>
+          </div>
+        )}
       </div>
 
       {/* Peakbagger link */}
