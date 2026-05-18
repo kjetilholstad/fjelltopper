@@ -6,6 +6,7 @@ import { Mountain, TrendingUp, Navigation, ArrowUpToLine, MapPin, CheckCircle2, 
 import type { EnrichedPeak } from '@/types'
 import { nearestPeak } from '@/lib/nearestPeaks'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 
 interface PeakCardProps {
   peak: EnrichedPeak
@@ -20,6 +21,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
   const subPeaks = peak.sub_peaks ?? []
   const [open, setOpen] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
 
   const nearest = useMemo(() => {
@@ -52,20 +54,10 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
           </div>
 
           {userId !== null && isAscended && ascentDate ? (
-            <form
-              onSubmit={e => {
-                e.preventDefault()
-                e.stopPropagation()
-                const fd = new FormData(e.currentTarget)
-                startTransition(async () => { await deleteAscent(fd) })
-              }}
-              onClick={e => e.stopPropagation()}
-            >
-              <input type="hidden" name="peak_id" value={peak.id} />
+            <>
               <button
-                type="submit"
                 disabled={isPending}
-                onClick={e => e.stopPropagation()}
+                onClick={e => { e.preventDefault(); e.stopPropagation(); setConfirmOpen(true) }}
                 title="Fjern bestigning"
                 className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-forest-50 text-forest border border-forest/20 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors disabled:opacity-50"
               >
@@ -74,7 +66,18 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
                   day: 'numeric', month: 'short', year: 'numeric',
                 })}
               </button>
-            </form>
+              <ConfirmDialog
+                open={confirmOpen}
+                onConfirm={() => {
+                  const fd = new FormData()
+                  fd.append('peak_id', peak.id)
+                  startTransition(async () => { await deleteAscent(fd) })
+                  setConfirmOpen(false)
+                }}
+                onCancel={() => setConfirmOpen(false)}
+                message={`Fjerne bestigning av ${peak.name}?`}
+              />
+            </>
           ) : userId !== null && !isAscended ? (
             <button
               onClick={e => { e.preventDefault(); e.stopPropagation(); setShowForm(v => !v) }}

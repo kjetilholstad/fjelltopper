@@ -1,12 +1,15 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useTransition } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Search, ChevronDown, CheckCircle2 } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
 import { nearestPeak } from '@/lib/nearestPeaks'
 import { usePeakFilters } from '@/lib/hooks/usePeakFilters'
+import { logAscent, deleteAscent } from '@/app/ascents/actions'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 
 const PeakMap = dynamic(
   () => import('./PeakMap').then((m) => m.PeakMap),
@@ -77,12 +80,17 @@ function Select({
 
 interface MapWithFiltersProps {
   peaks: EnrichedPeak[]
-  ascendedIds?: string[]
+  ascendedMap?: Record<string, string>
   isLoggedIn?: boolean
+  userId?: string | null
 }
 
-export function MapWithFilters({ peaks, ascendedIds = [], isLoggedIn = false }: MapWithFiltersProps) {
-  const ascendedSet = useMemo(() => new Set(ascendedIds), [ascendedIds])
+export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, userId = null }: MapWithFiltersProps) {
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
+
+  const ascendedSet = useMemo(() => new Set(Object.keys(ascendedMap)), [ascendedMap])
+
   const {
     query, setQuery,
     minHeight, setMinHeight,
@@ -98,6 +106,13 @@ export function MapWithFilters({ peaks, ascendedIds = [], isLoggedIn = false }: 
   const [selectedPeak, setSelectedPeak] = useState<EnrichedPeak | null>(null)
   const [activeLines, setActiveLines] = useState<Set<LineType>>(new Set())
   const [showOnlyAscended, setShowOnlyAscended] = useState(false)
+  const [ascentDate, setAscentDate] = useState(new Date().toISOString().split('T')[0])
+  const [confirmOpen, setConfirmOpen] = useState(false)
+
+  useEffect(() => {
+    setAscentDate(new Date().toISOString().split('T')[0])
+    setConfirmOpen(false)
+  }, [selectedPeak?.id])
 
   function toggleLine(type: LineType) {
     setActiveLines(prev => {
@@ -111,15 +126,15 @@ export function MapWithFilters({ peaks, ascendedIds = [], isLoggedIn = false }: 
     setActiveLines(new Set())
   }, [selectedPeak?.id])
 
-  const filteredWithAscended = useMemo(
-    () => showOnlyAscended ? filtered.filter(p => ascendedSet.has(p.id)) : filtered,
-    [filtered, showOnlyAscended, ascendedSet]
-  )
-
   const nearest = useMemo(() => {
     if (!selectedPeak) return null
     return nearestPeak(selectedPeak, peaks)
   }, [selectedPeak, peaks])
+
+  const filteredWithAscended = useMemo(
+    () => showOnlyAscended ? filtered.filter(p => ascendedSet.has(p.id)) : filtered,
+    [filtered, showOnlyAscended, ascendedSet]
+  )
 
   const higherPeakId = useMemo(() => {
     if (!selectedPeak?.nearest_higher_peak) return null
@@ -169,6 +184,28 @@ export function MapWithFilters({ peaks, ascendedIds = [], isLoggedIn = false }: 
         selectedPeak.county,
       ].filter(Boolean).join(', ')
     : ''
+
+  function handleLogAscent() {
+    if (!selectedPeak) return
+    const fd = new FormData()
+    fd.append('peak_id', selectedPeak.id)
+    fd.append('date', ascentDate)
+    startTransition(async () => {
+      await logAscent(fd)
+      router.refresh()
+    })
+  }
+
+  function handleDeleteAscent() {
+    if (!selectedPeak) return
+    const fd = new FormData()
+    fd.append('peak_id', selectedPeak.id)
+    startTransition(async () => {
+      await deleteAscent(fd)
+      router.refresh()
+    })
+    setConfirmOpen(false)
+  }
 
   return (
     <div style={{ height: 'calc(100vh - 64px)', position: 'relative' }}>
@@ -364,6 +401,48 @@ export function MapWithFilters({ peaks, ascendedIds = [], isLoggedIn = false }: 
               <p className="text-[11px] text-text-warm mb-1.5">{location}</p>
             )}
 
+            {/* Bestigning */}
+            {isLoggedIn && (
+              <div className="border-t border-border-warm mt-2 pt-2 mb-1.5">
+                {ascendedSet.has(selectedPeak.id) ? (
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-forest-50 text-forest border border-forest/20">
+                      <CheckCircle2 size={11} strokeWidth={2} />
+                      {new Date((ascendedMap[selectedPeak.id] ?? '') + 'T12:00:00').toLocaleDateString('no-NO', {
+                        day: 'numeric', month: 'short', year: 'numeric',
+                      })}
+                    </span>
+                    <button
+                      onClick={() => setConfirmOpen(true)}
+                      disabled={isPending}
+                      className="text-xs text-red-400 hover:text-red-600 transition-colors disabled:opacity-50"
+                    >
+                      Fjern
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2 items-end">
+                    <div className="flex-1">
+                      <label className="block text-[10px] font-medium text-[#1A1A1A] mb-1">Dato</label>
+                      <input
+                        type="date"
+                        value={ascentDate}
+                        onChange={e => setAscentDate(e.target.value)}
+                        className="w-full bg-parchment border border-border-warm rounded-md px-2 py-1 text-xs text-[#1A1A1A] focus:outline-none focus:border-forest transition-colors"
+                      />
+                    </div>
+                    <button
+                      onClick={handleLogAscent}
+                      disabled={isPending}
+                      className="bg-forest text-white text-xs font-medium px-3 py-1 rounded-md hover:opacity-90 transition-opacity shrink-0 disabled:opacity-50"
+                    >
+                      {isPending ? '…' : '+ Bestigning'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Nærliggende topper — fra Peakbagger */}
             {selectedPeak.sub_peaks && selectedPeak.sub_peaks.length > 0 && (
               <div className="border-t border-border-warm pt-1.5 mb-1.5">
@@ -391,6 +470,13 @@ export function MapWithFilters({ peaks, ascendedIds = [], isLoggedIn = false }: 
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        onConfirm={handleDeleteAscent}
+        onCancel={() => setConfirmOpen(false)}
+        message={selectedPeak ? `Fjerne bestigning av ${selectedPeak.name}?` : 'Er du sikker?'}
+      />
     </div>
   )
 }

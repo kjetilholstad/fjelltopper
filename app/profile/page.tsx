@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { Mountain } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { deleteAscent } from '@/app/ascents/actions'
+import { DeleteAscentButton } from '@/components/profile/DeleteAscentButton'
 
 export const metadata = { title: 'Min profil — Fjelltopper' }
 
@@ -169,15 +169,9 @@ export default async function ProfilePage() {
                       )}
                     </div>
 
-                    <form action={deleteAscent} className="shrink-0">
-                      <input type="hidden" name="peak_id" value={ascent.peak_id} />
-                      <button
-                        type="submit"
-                        className="text-xs text-red-400 hover:text-red-600 transition-colors"
-                      >
-                        Fjern
-                      </button>
-                    </form>
+                    <div className="shrink-0">
+                      <DeleteAscentButton peakId={ascent.peak_id} peakName={ascent.peak.name} />
+                    </div>
                   </div>
                 ))}
               </div>
