@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { Mountain } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { DeleteAscentButton } from '@/components/profile/DeleteAscentButton'
+import { GpxUploader } from '@/components/peaks/GpxUploader'
 
 export const metadata = { title: 'Min profil — Fjelltopper' }
 
@@ -118,6 +119,9 @@ export default async function ProfilePage() {
           ))}
         </div>
       </div>
+
+      {/* GPX uploader */}
+      <GpxUploader ascendedIds={ascents.map(a => a.peak_id)} />
 
       {/* Ascent list */}
       {ascents.length === 0 ? (
