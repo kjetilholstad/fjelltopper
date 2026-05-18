@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useTransition } from 'react'
 import Link from 'next/link'
 import { Mountain, TrendingUp, Navigation, ArrowUpToLine, MapPin, CheckCircle2, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
@@ -20,6 +20,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
   const subPeaks = peak.sub_peaks ?? []
   const [open, setOpen] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
   const nearest = useMemo(() => {
     if (!allPeaks) return null
@@ -51,12 +52,22 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
           </div>
 
           {userId !== null && isAscended && ascentDate ? (
-            <form action={deleteAscent} onClick={e => e.stopPropagation()}>
+            <form
+              onSubmit={e => {
+                e.preventDefault()
+                e.stopPropagation()
+                const fd = new FormData(e.currentTarget)
+                startTransition(async () => { await deleteAscent(fd) })
+              }}
+              onClick={e => e.stopPropagation()}
+            >
               <input type="hidden" name="peak_id" value={peak.id} />
               <button
                 type="submit"
+                disabled={isPending}
+                onClick={e => e.stopPropagation()}
                 title="Klikk for å fjerne bestigning"
-                className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-forest-50 text-forest border border-forest/20 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors"
+                className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-forest-50 text-forest border border-forest/20 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors disabled:opacity-50"
               >
                 <CheckCircle2 size={11} strokeWidth={2} />
                 {new Date(ascentDate + 'T12:00:00').toLocaleDateString('no-NO', {
@@ -78,9 +89,14 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
         {/* Inline ascent form */}
         {showForm && (
           <form
-            action={logAscent}
+            onSubmit={e => {
+              e.preventDefault()
+              e.stopPropagation()
+              const fd = new FormData(e.currentTarget)
+              startTransition(async () => { await logAscent(fd) })
+              setShowForm(false)
+            }}
             onClick={e => e.stopPropagation()}
-            onSubmit={() => setShowForm(false)}
             className="mt-2 p-2.5 rounded-lg bg-parchment border border-border-warm flex flex-col gap-2"
           >
             <input type="hidden" name="peak_id" value={peak.id} />
@@ -97,9 +113,11 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
               </div>
               <button
                 type="submit"
-                className="bg-forest text-white text-xs font-medium px-3 py-1 rounded-md hover:opacity-90 transition-opacity shrink-0"
+                disabled={isPending}
+                onClick={e => e.stopPropagation()}
+                className="bg-forest text-white text-xs font-medium px-3 py-1 rounded-md hover:opacity-90 transition-opacity shrink-0 disabled:opacity-50"
               >
-                Lagre
+                {isPending ? '…' : 'Lagre'}
               </button>
             </div>
           </form>
