@@ -11,13 +11,15 @@ interface PeakCardProps {
   peak: EnrichedPeak
   rank?: number
   isAscended?: boolean
+  ascentDate?: string | null
   userId?: string | null
   allPeaks?: EnrichedPeak[]
 }
 
-export function PeakCard({ peak, rank, isAscended = false, userId = null, allPeaks }: PeakCardProps) {
+export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, userId = null, allPeaks }: PeakCardProps) {
   const subPeaks = peak.sub_peaks ?? []
   const [open, setOpen] = useState(false)
+  const [showForm, setShowForm] = useState(false)
 
   const nearest = useMemo(() => {
     if (!allPeaks) return null
@@ -40,12 +42,68 @@ export function PeakCard({ peak, rank, isAscended = false, userId = null, allPea
           <span className="font-bold text-[#1A1A1A] text-sm leading-tight">{peak.name}</span>
         </div>
 
-        {/* Height */}
-        <div className="flex items-center gap-2 mb-1.5">
-          <TrendingUp size={14} className="text-forest shrink-0" strokeWidth={1.75} />
-          <span className="text-lg font-bold text-[#1A1A1A]">{peak.height.toLocaleString('no')}</span>
-          <span className="text-xs text-text-warm font-light">moh</span>
+        {/* Height + ascent badge */}
+        <div className="flex items-center justify-between gap-2 mb-1.5">
+          <div className="flex items-center gap-2">
+            <TrendingUp size={14} className="text-forest shrink-0" strokeWidth={1.75} />
+            <span className="text-lg font-bold text-[#1A1A1A]">{peak.height.toLocaleString('no')}</span>
+            <span className="text-xs text-text-warm font-light">moh</span>
+          </div>
+
+          {userId !== null && isAscended && ascentDate ? (
+            <form action={deleteAscent} onClick={e => e.stopPropagation()}>
+              <input type="hidden" name="peak_id" value={peak.id} />
+              <button
+                type="submit"
+                title="Klikk for å fjerne bestigning"
+                className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-forest-50 text-forest border border-forest/20 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors"
+              >
+                <CheckCircle2 size={11} strokeWidth={2} />
+                {new Date(ascentDate + 'T12:00:00').toLocaleDateString('no-NO', {
+                  day: 'numeric', month: 'short', year: 'numeric',
+                })}
+              </button>
+            </form>
+          ) : userId !== null && !isAscended ? (
+            <button
+              onClick={e => { e.preventDefault(); e.stopPropagation(); setShowForm(v => !v) }}
+              className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-parchment text-text-warm border border-border-warm hover:bg-forest-50 hover:text-forest hover:border-forest/20 transition-colors"
+            >
+              <CheckCircle2 size={11} strokeWidth={1.5} />
+              Registrer
+            </button>
+          ) : null}
         </div>
+
+        {/* Inline ascent form */}
+        {showForm && (
+          <form
+            action={logAscent}
+            onClick={e => e.stopPropagation()}
+            onSubmit={() => setShowForm(false)}
+            className="mt-2 p-2.5 rounded-lg bg-parchment border border-border-warm flex flex-col gap-2"
+          >
+            <input type="hidden" name="peak_id" value={peak.id} />
+            <div className="flex gap-2 items-end">
+              <div className="flex-1">
+                <label className="block text-[10px] font-medium text-[#1A1A1A] mb-1">Dato</label>
+                <input
+                  type="date"
+                  name="date"
+                  defaultValue={new Date().toISOString().split('T')[0]}
+                  onClick={e => e.stopPropagation()}
+                  className="w-full bg-white border border-border-warm rounded-md px-2 py-1 text-xs text-[#1A1A1A] focus:outline-none focus:border-forest transition-colors"
+                />
+              </div>
+              <button
+                type="submit"
+                className="bg-forest text-white text-xs font-medium px-3 py-1 rounded-md hover:opacity-90 transition-opacity shrink-0"
+              >
+                Lagre
+              </button>
+            </div>
+          </form>
+        )}
 
         {/* Primærfaktor */}
         <div className="flex items-center gap-2 mb-1">
@@ -62,8 +120,10 @@ export function PeakCard({ peak, rank, isAscended = false, userId = null, allPea
             <span className="text-xs text-text-warm">
               Nærmeste høyere: <span className="font-medium text-[#1A1A1A]">
                 {peak.nearest_higher_peak}
-                {peak.secondary_factor
-                  ? ` (${peak.secondary_factor < 1000 ? `${peak.secondary_factor.toLocaleString('no')} m` : `${Math.round(peak.secondary_factor / 1000).toLocaleString('no')} km`})`
+                {peak.secondary_factor != null
+                  ? ` (${peak.secondary_factor < 2000
+                      ? `${peak.secondary_factor.toLocaleString('no')} m`
+                      : `${(peak.secondary_factor / 1000).toFixed(1).replace('.', ',')} km`})`
                   : ''}
               </span>
             </span>
@@ -76,7 +136,9 @@ export function PeakCard({ peak, rank, isAscended = false, userId = null, allPea
             <Navigation size={13} className="text-text-warm shrink-0" strokeWidth={1.75} />
             <span className="text-xs text-text-warm">
               Nærmeste over 2000 m: <span className="font-medium text-[#1A1A1A]">
-                {nearest.peak.name} ({nearest.distanceKm.toFixed(1).replace('.', ',')} km)
+                {nearest.peak.name} ({nearest.distanceKm < 2
+                  ? `${Math.round(nearest.distanceKm * 1000).toLocaleString('no')} m`
+                  : `${nearest.distanceKm.toFixed(1).replace('.', ',')} km`})
               </span>
             </span>
           </div>
@@ -118,33 +180,7 @@ export function PeakCard({ peak, rank, isAscended = false, userId = null, allPea
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-border-warm">
-          {userId === null ? (
-            <CheckCircle2 size={16} strokeWidth={1.5} className="text-border-warm" />
-          ) : isAscended ? (
-            <form action={deleteAscent} onClick={e => e.stopPropagation()}>
-              <input type="hidden" name="peak_id" value={peak.id} />
-              <button
-                type="submit"
-                title="Fjern bestigning"
-                className="text-forest hover:text-red-400 transition-colors cursor-pointer"
-              >
-                <CheckCircle2 size={16} strokeWidth={1.5} fill="currentColor" />
-              </button>
-            </form>
-          ) : (
-            <form action={logAscent} onClick={e => e.stopPropagation()}>
-              <input type="hidden" name="peak_id" value={peak.id} />
-              <input type="hidden" name="date" value={new Date().toISOString().split('T')[0]} />
-              <button
-                type="submit"
-                title="Registrer bestigning"
-                className="text-border-warm hover:text-forest transition-colors cursor-pointer"
-              >
-                <CheckCircle2 size={16} strokeWidth={1.5} />
-              </button>
-            </form>
-          )}
+        <div className="flex items-center justify-end mt-3 pt-3 border-t border-border-warm">
           <ChevronRight size={15} className="text-border-warm group-hover:text-forest transition-colors" strokeWidth={1.75} />
         </div>
       </div>

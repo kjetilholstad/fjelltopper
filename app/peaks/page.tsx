@@ -15,13 +15,16 @@ export default async function PeaksPage() {
   const [{ data }, { data: ascentsData }] = await Promise.all([
     supabase.from('peaks').select('*').order('height', { ascending: false }),
     user
-      ? supabase.from('ascents').select('peak_id').eq('user_id', user.id)
-      : Promise.resolve({ data: [] as { peak_id: string }[] }),
+      ? supabase.from('ascents').select('peak_id, date').eq('user_id', user.id)
+      : Promise.resolve({ data: [] as { peak_id: string; date: string }[] }),
   ])
 
   const peaks = (data ?? []) as Peak[]
   const enriched = enrichPeaks(peaks)
-  const ascendedIds = (ascentsData ?? []).map(a => (a as { peak_id: string }).peak_id)
+  const ascendedMap: Record<string, string> = {}
+  for (const a of (ascentsData ?? []) as { peak_id: string; date: string }[]) {
+    ascendedMap[a.peak_id] = a.date
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -29,7 +32,7 @@ export default async function PeaksPage() {
         <h1 className="text-3xl font-bold text-[#1A1A1A]">Norske fjelltopper</h1>
         <p className="text-text-warm mt-1 font-light">Søk, filtrer og sorter blant alle registrerte topper</p>
       </div>
-      <PeakList peaks={enriched} ascendedIds={ascendedIds} userId={user?.id ?? null} />
+      <PeakList peaks={enriched} ascendedMap={ascendedMap} userId={user?.id ?? null} />
     </div>
   )
 }

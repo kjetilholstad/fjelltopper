@@ -8,7 +8,7 @@ import { usePeakFilters } from '@/lib/hooks/usePeakFilters'
 
 interface PeakListProps {
   peaks: EnrichedPeak[]
-  ascendedIds?: string[]
+  ascendedMap?: Record<string, string>
   userId?: string | null
 }
 
@@ -66,8 +66,7 @@ function Select({
   )
 }
 
-export function PeakList({ peaks, ascendedIds = [], userId = null }: PeakListProps) {
-  const ascendedSet = useMemo(() => new Set(ascendedIds), [ascendedIds])
+export function PeakList({ peaks, ascendedMap = {}, userId = null }: PeakListProps) {
 
   const {
     query, setQuery,
@@ -172,7 +171,8 @@ export function PeakList({ peaks, ascendedIds = [], userId = null }: PeakListPro
               peak={peak}
               rank={rankMap.get(peak.id)}
               allPeaks={peaks}
-              isAscended={ascendedSet.has(peak.id)}
+              isAscended={peak.id in ascendedMap}
+              ascentDate={ascendedMap[peak.id] ?? null}
               userId={userId}
             />
           ))}
