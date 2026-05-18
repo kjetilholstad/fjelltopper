@@ -14,13 +14,17 @@ export const metadata = {
 export default async function Home() {
   const supabase = await createClient()
 
-  const [{ count: totalCount }, { count: coordCount }] = await Promise.all([
+  const [{ count: totalCount }, { count: pf10Count }, { count: pf30Count }, { count: pf50Count }] = await Promise.all([
     supabase.from('peaks').select('*', { count: 'exact', head: true }),
-    supabase.from('peaks').select('*', { count: 'exact', head: true }).not('lat', 'is', null).not('lng', 'is', null),
+    supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 10),
+    supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 30),
+    supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 50),
   ])
 
   const total = totalCount ?? 0
-  const withCoords = coordCount ?? 0
+  const pf10 = pf10Count ?? 0
+  const pf30 = pf30Count ?? 0
+  const pf50 = pf50Count ?? 0
 
   // Tilfeldig topp — rangert etter høyde slik at offset = rangering - 1
   const randomOffset = total > 0 ? Math.floor(Math.random() * total) : 0
@@ -62,7 +66,7 @@ export default async function Home() {
               </h1>
 
               <p className="leading-relaxed mb-8 max-w-md" style={{ color: '#6B6560' }}>
-                Søk, filtrer og utforsk alle 197 topper over 2000 moh. Kart med koordinater,
+                Søk, filtrer og utforsk alle {total} topper over 2000 moh. Kart med koordinater,
                 primærfaktor og mer.
               </p>
 
@@ -138,11 +142,12 @@ export default async function Home() {
       {/* ── Stats-bar ───────────────────────────────────────────── */}
       <section className="bg-white" style={{ borderTop: '1px solid #E8E2D9' }}>
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-3" style={{ borderColor: '#E8E2D9' }}>
+          <div className="grid grid-cols-4" style={{ borderColor: '#E8E2D9' }}>
             {[
-              { value: total > 0 ? total.toLocaleString('no') : '197', label: 'Topper registrert' },
-              { value: (2469).toLocaleString('no'), label: 'Høyeste punkt (moh)' },
-              { value: withCoords > 0 ? withCoords.toLocaleString('no') : '190', label: 'Med koordinater' },
+              { value: total.toLocaleString('no'), label: 'Topper registrert' },
+              { value: pf10.toLocaleString('no'),  label: 'PF over 10 m' },
+              { value: pf30.toLocaleString('no'),  label: 'PF over 30 m' },
+              { value: pf50.toLocaleString('no'),  label: 'PF over 50 m' },
             ].map(({ value, label }, i) => (
               <div
                 key={label}
