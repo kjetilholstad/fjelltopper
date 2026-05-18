@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
-import type { Peak, SubPeak, EnrichedPeak } from '@/types'
+import { enrichPeaks } from '@/lib/enrichPeaks'
+import type { Peak } from '@/types'
 import { MapWithFilters } from '@/components/peaks/MapWithFilters'
 
 export const dynamic = 'force-dynamic'
@@ -16,25 +17,7 @@ export default async function MapPage() {
     .not('lat', 'is', null)
     .not('lng', 'is', null)
   const peaks = (data ?? []) as Peak[]
-
-  const peakMap = new Map(peaks.map(p => [p.id, p]))
-  const enriched: EnrichedPeak[] = peaks.map(p => ({
-    ...p,
-    sub_peaks: (p.sub_peaks as string[] | null)
-      ?.map(id => {
-        const sp = peakMap.get(id)
-        if (!sp) return null
-        return {
-          id: sp.id,
-          name: sp.name,
-          height: sp.height,
-          pf: sp.primary_factor ?? 0,
-          lat: sp.lat ?? undefined,
-          lng: sp.lng ?? undefined,
-        } as SubPeak
-      })
-      .filter((x): x is SubPeak => x !== null) ?? null,
-  }))
+  const enriched = enrichPeaks(peaks)
 
   return <MapWithFilters peaks={enriched} />
 }

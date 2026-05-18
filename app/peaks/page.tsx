@@ -1,6 +1,7 @@
 import { PeakList } from '@/components/peaks/PeakList'
 import { createClient } from '@/lib/supabase/server'
-import type { Peak, SubPeak, EnrichedPeak } from '@/types'
+import { enrichPeaks } from '@/lib/enrichPeaks'
+import type { Peak } from '@/types'
 
 export const metadata = {
   title: 'Topper — Fjelltopper',
@@ -14,25 +15,7 @@ export default async function PeaksPage() {
     .select('*')
     .order('height', { ascending: false })
   const peaks = (data ?? []) as Peak[]
-
-  const peakMap = new Map(peaks.map(p => [p.id, p]))
-  const enriched: EnrichedPeak[] = peaks.map(p => ({
-    ...p,
-    sub_peaks: (p.sub_peaks as string[] | null)
-      ?.map(id => {
-        const sp = peakMap.get(id)
-        if (!sp) return null
-        return {
-          id: sp.id,
-          name: sp.name,
-          height: sp.height,
-          pf: sp.primary_factor ?? 0,
-          lat: sp.lat ?? undefined,
-          lng: sp.lng ?? undefined,
-        } as SubPeak
-      })
-      .filter((x): x is SubPeak => x !== null) ?? null,
-  }))
+  const enriched = enrichPeaks(peaks)
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
