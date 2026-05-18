@@ -73,8 +73,7 @@ create table public.ascents (
   date date not null,
   notes text,
   weather text,
-  created_at timestamptz default now() not null,
-  unique(user_id, peak_id)
+  created_at timestamptz default now() not null
 );
 
 alter table public.ascents enable row level security;
@@ -97,3 +96,4 @@ create index peaks_height_idx on public.peaks (height desc);
 -- Index for user ascents
 create index ascents_user_id_idx on public.ascents (user_id);
 create index ascents_peak_id_idx on public.ascents (peak_id);
+create index ascents_user_peak_idx on public.ascents (user_id, peak_id);

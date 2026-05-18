@@ -6,7 +6,7 @@ import type { EnrichedPeak } from '@/types'
 export function usePeakFilters(peaks: EnrichedPeak[]) {
   const [query, setQuery] = useState('')
   const [minHeight, setMinHeight] = useState('0')
-  const [minPF, setMinPF] = useState('0')
+  const [minPF, setMinPF] = useState('30')
   const [county, setCounty] = useState('')
   const [municipality, setMunicipality] = useState('')
 

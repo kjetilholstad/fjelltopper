@@ -25,6 +25,7 @@ const HEIGHT_OPTIONS = [
 const PF_OPTIONS = [
   { label: 'Alle primærfaktorer', value: 0 },
   { label: 'PF over 10 m', value: 10 },
+  { label: 'PF over 30 m', value: 30 },
   { label: 'PF over 50 m', value: 50 },
   { label: 'PF over 100 m', value: 100 },
   { label: 'PF over 500 m', value: 500 },
