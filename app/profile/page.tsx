@@ -19,6 +19,7 @@ interface AscentRow {
     height: number
     county: string | null
     municipality: string
+    primary_factor: number | null
   }
 }
 
@@ -27,19 +28,29 @@ export default async function ProfilePage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
-  const [{ data }, { count }] = await Promise.all([
+  const [{ data }, pf0, pf50, pf30, pf10] = await Promise.all([
     supabase
       .from('ascents')
-      .select('*, peak:peaks(id, name, height, county, municipality)')
+      .select('*, peak:peaks(id, name, height, county, municipality, primary_factor)')
       .eq('user_id', user.id)
       .order('date', { ascending: false }),
     supabase.from('peaks').select('*', { count: 'exact', head: true }),
+    supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 50),
+    supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 30),
+    supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 10),
   ])
 
   const ascents = (data ?? []) as AscentRow[]
-  const totalPeaks = count ?? 0
+  const totalPeaks = pf0.count  ?? 0
+  const totalPf50  = pf50.count ?? 0
+  const totalPf30  = pf30.count ?? 0
+  const totalPf10  = pf10.count ?? 0
 
-  const totalCount = ascents.length
+  const totalCount  = ascents.length
+  const ascentPf50  = ascents.filter(a => (a.peak.primary_factor ?? 0) >= 50).length
+  const ascentPf30  = ascents.filter(a => (a.peak.primary_factor ?? 0) >= 30).length
+  const ascentPf10  = ascents.filter(a => (a.peak.primary_factor ?? 0) >= 10).length
+
   const pct = totalPeaks > 0 ? (totalCount / totalPeaks) * 100 : 0
   const maxHeight = Math.max(...ascents.map(a => a.peak.height), 0)
   const minHeight = ascents.length > 0 ? Math.min(...ascents.map(a => a.peak.height)) : 0
@@ -66,20 +77,33 @@ export default async function ProfilePage() {
         <p className="text-sm text-text-warm mt-1">{user.email}</p>
       </div>
 
-      {/* Progress bar */}
-      <div className="bg-white rounded-xl border border-border-warm shadow-sm p-5 mb-4">
-        <div className="flex items-baseline justify-between mb-2">
-          <span className="text-sm font-semibold text-[#1A1A1A]">Fremgang</span>
-          <span className="text-sm font-bold text-forest">
-            {totalCount} av {totalPeaks} topper ({pct.toFixed(1).replace('.', ',')} %)
-          </span>
-        </div>
-        <div className="h-2.5 bg-parchment rounded-full border border-border-warm overflow-hidden">
-          <div
-            className="h-full bg-forest rounded-full transition-all"
-            style={{ width: `${Math.min(pct, 100)}%` }}
-          />
-        </div>
+      {/* Progress bars */}
+      <div className="bg-white rounded-xl border border-border-warm shadow-sm p-5 mb-4 flex flex-col gap-3">
+        <span className="text-sm font-semibold text-[#1A1A1A]">Fremgang</span>
+        {[
+          { label: 'Alle topper',  ascended: totalCount, total: totalPeaks },
+          { label: 'PF ≥ 50 m',   ascended: ascentPf50, total: totalPf50  },
+          { label: 'PF ≥ 30 m',   ascended: ascentPf30, total: totalPf30  },
+          { label: 'PF ≥ 10 m',   ascended: ascentPf10, total: totalPf10  },
+        ].map(({ label, ascended, total }) => {
+          const p = total > 0 ? (ascended / total) * 100 : 0
+          return (
+            <div key={label}>
+              <div className="flex items-baseline justify-between mb-1">
+                <span className="text-xs text-text-warm">{label}</span>
+                <span className="text-xs font-semibold text-forest">
+                  {ascended} / {total} ({p.toFixed(1).replace('.', ',')} %)
+                </span>
+              </div>
+              <div className="h-2 bg-parchment rounded-full border border-border-warm overflow-hidden">
+                <div
+                  className="h-full bg-forest rounded-full transition-all"
+                  style={{ width: `${Math.min(p, 100)}%` }}
+                />
+              </div>
+            </div>
+          )
+        })}
       </div>
 
       {/* Stats grid */}
