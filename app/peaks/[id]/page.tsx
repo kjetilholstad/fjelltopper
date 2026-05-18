@@ -60,7 +60,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
         </div>
         <div className="bg-white rounded-lg border p-4">
           <p className="text-stone-500 mb-1">Primærfaktor</p>
-          <p className="font-semibold text-stone-800">{enrichedPeak.primary_factor.toLocaleString('no')} m</p>
+          <p className="font-semibold text-stone-800">{(enrichedPeak.primary_factor ?? 0).toLocaleString('no')} m</p>
         </div>
         {enrichedPeak.nearest_higher_peak && (
           <div className="bg-white rounded-lg border p-4">

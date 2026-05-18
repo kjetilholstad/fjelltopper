@@ -49,7 +49,7 @@ export function PeakCard({ peak, rank, isAscended = false, allPeaks }: PeakCardP
         <div className="flex items-center gap-2 mb-1">
           <Navigation size={13} className="text-[#8B6914] shrink-0" strokeWidth={1.75} />
           <span className="text-xs text-text-warm">
-            Primærfaktor: <span className="font-medium text-[#1A1A1A]">{peak.primary_factor.toLocaleString('no')} m</span>
+            Primærfaktor: <span className="font-medium text-[#1A1A1A]">{(peak.primary_factor ?? 0).toLocaleString('no')} m</span>
           </span>
         </div>
 

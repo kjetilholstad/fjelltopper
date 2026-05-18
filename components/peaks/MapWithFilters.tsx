@@ -298,7 +298,7 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
             <p className="text-xs text-[#6B6560] mb-1">
               <strong className="text-[#1A1A1A]">{selectedPeak.height.toLocaleString('no')} moh</strong>
               <span className="mx-1.5 text-[#C8BFB5]">·</span>
-              Primærfaktor <strong className="text-[#1A1A1A]">{selectedPeak.primary_factor.toLocaleString('no')} m</strong>
+              Primærfaktor <strong className="text-[#1A1A1A]">{(selectedPeak.primary_factor ?? 0).toLocaleString('no')} m</strong>
             </p>
 
             {/* Nærmeste høyere fjell */}
