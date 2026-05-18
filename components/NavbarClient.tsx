@@ -3,21 +3,25 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Mountain, List, Map, Menu, X, LogIn, LogOut } from 'lucide-react'
+import { Mountain, List, Map, User, Menu, X, LogIn, LogOut } from 'lucide-react'
 import { logout } from '@/app/auth/actions'
 
-const LINKS = [
-  { href: '/peaks', label: 'Topper', icon: List },
-  { href: '/map', label: 'Kart', icon: Map },
+const ALL_LINKS = [
+  { href: '/peaks',   label: 'Topper', icon: List,     requiresAuth: false },
+  { href: '/map',     label: 'Kart',   icon: Map,      requiresAuth: false },
+  { href: '/profile', label: 'Profil', icon: User,     requiresAuth: true  },
 ]
 
 interface NavbarClientProps {
   userEmail: string | null
+  isLoggedIn: boolean
 }
 
-export function NavbarClient({ userEmail }: NavbarClientProps) {
+export function NavbarClient({ userEmail, isLoggedIn }: NavbarClientProps) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+
+  const links = ALL_LINKS.filter(l => !l.requiresAuth || isLoggedIn)
 
   const linkClass = (href: string) =>
     `flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -45,7 +49,7 @@ export function NavbarClient({ userEmail }: NavbarClientProps) {
 
         {/* Desktop nav */}
         <div className="hidden sm:flex items-center gap-1">
-          {LINKS.map(({ href, label, icon: Icon }) => (
+          {links.map(({ href, label, icon: Icon }) => (
             <Link key={href} href={href} className={linkClass(href)}>
               <Icon size={16} strokeWidth={1.75} />
               {label}
@@ -90,7 +94,7 @@ export function NavbarClient({ userEmail }: NavbarClientProps) {
       {/* Mobile menu */}
       {open && (
         <div className="sm:hidden border-t border-border-warm bg-white px-4 py-3 flex flex-col gap-1">
-          {LINKS.map(({ href, label, icon: Icon }) => (
+          {links.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
               href={href}

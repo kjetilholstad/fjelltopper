@@ -4,5 +4,5 @@ import { NavbarClient } from './NavbarClient'
 export async function Navbar() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  return <NavbarClient userEmail={user?.email ?? null} />
+  return <NavbarClient userEmail={user?.email ?? null} isLoggedIn={!!user} />
 }

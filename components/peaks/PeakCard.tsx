@@ -5,15 +5,17 @@ import Link from 'next/link'
 import { Mountain, TrendingUp, Navigation, ArrowUpToLine, MapPin, CheckCircle2, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
 import { nearestPeak } from '@/lib/nearestPeaks'
+import { logAscent, deleteAscent } from '@/app/ascents/actions'
 
 interface PeakCardProps {
   peak: EnrichedPeak
   rank?: number
   isAscended?: boolean
+  userId?: string | null
   allPeaks?: EnrichedPeak[]
 }
 
-export function PeakCard({ peak, rank, isAscended = false, allPeaks }: PeakCardProps) {
+export function PeakCard({ peak, rank, isAscended = false, userId = null, allPeaks }: PeakCardProps) {
   const subPeaks = peak.sub_peaks ?? []
   const [open, setOpen] = useState(false)
 
@@ -117,11 +119,32 @@ export function PeakCard({ peak, rank, isAscended = false, allPeaks }: PeakCardP
 
         {/* Footer */}
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-border-warm">
-          <CheckCircle2
-            size={16}
-            strokeWidth={1.5}
-            className={isAscended ? 'text-forest' : 'text-border-warm'}
-          />
+          {userId === null ? (
+            <CheckCircle2 size={16} strokeWidth={1.5} className="text-border-warm" />
+          ) : isAscended ? (
+            <form action={deleteAscent} onClick={e => e.stopPropagation()}>
+              <input type="hidden" name="peak_id" value={peak.id} />
+              <button
+                type="submit"
+                title="Fjern bestigning"
+                className="text-forest hover:text-red-400 transition-colors cursor-pointer"
+              >
+                <CheckCircle2 size={16} strokeWidth={1.5} fill="currentColor" />
+              </button>
+            </form>
+          ) : (
+            <form action={logAscent} onClick={e => e.stopPropagation()}>
+              <input type="hidden" name="peak_id" value={peak.id} />
+              <input type="hidden" name="date" value={new Date().toISOString().split('T')[0]} />
+              <button
+                type="submit"
+                title="Registrer bestigning"
+                className="text-border-warm hover:text-forest transition-colors cursor-pointer"
+              >
+                <CheckCircle2 size={16} strokeWidth={1.5} />
+              </button>
+            </form>
+          )}
           <ChevronRight size={15} className="text-border-warm group-hover:text-forest transition-colors" strokeWidth={1.75} />
         </div>
       </div>

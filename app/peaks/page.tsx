@@ -29,7 +29,7 @@ export default async function PeaksPage() {
         <h1 className="text-3xl font-bold text-[#1A1A1A]">Norske fjelltopper</h1>
         <p className="text-text-warm mt-1 font-light">Søk, filtrer og sorter blant alle registrerte topper</p>
       </div>
-      <PeakList peaks={enriched} ascendedIds={ascendedIds} />
+      <PeakList peaks={enriched} ascendedIds={ascendedIds} userId={user?.id ?? null} />
     </div>
   )
 }
