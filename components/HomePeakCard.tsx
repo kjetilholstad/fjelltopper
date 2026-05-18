@@ -3,31 +3,37 @@ import { ExternalLink } from 'lucide-react'
 import type { Peak } from '@/types'
 import { distanceToNearestHigher } from '@/lib/nearestPeaks'
 
+function formatDist(m: number): string {
+  return m < 1000
+    ? Math.round(m).toLocaleString('no') + ' m'
+    : (m / 1000).toFixed(1).replace('.', ',') + ' km'
+}
+
 interface HomePeakCardProps {
   peak: Peak
   rank: number
-  nearestPeakName?: string | null
+  nearest?: { peak: Peak; distanceKm: number } | null
   allPeaks?: Peak[]
 }
 
-export function HomePeakCard({ peak, rank, nearestPeakName, allPeaks }: HomePeakCardProps) {
+export function HomePeakCard({ peak, rank, nearest, allPeaks }: HomePeakCardProps) {
   const peakbaggerId = peak.peakbagger_id ?? 8916
 
   const distKm = distanceToNearestHigher(peak, allPeaks ?? [])
-  const distFormatted = distKm != null
-    ? (distKm < 1
-        ? `${Math.round(distKm * 1000).toLocaleString('no')} m`
-        : `${Math.round(distKm).toLocaleString('no')} km`)
+  const nearestHigherPeak = peak.nearest_higher_peak
+    ? (allPeaks ?? []).find(p => p.name === peak.nearest_higher_peak) ?? null
+    : null
+  const nearestHigherValue = nearestHigherPeak && distKm != null
+    ? `${nearestHigherPeak.name} (${nearestHigherPeak.height.toLocaleString('no')} moh – ${formatDist(distKm * 1000)})`
+    : '—'
+
+  const nearestOver2000Value = nearest
+    ? `${nearest.peak.name} (${nearest.peak.height.toLocaleString('no')} moh – ${formatDist(nearest.distanceKm * 1000)})`
     : null
 
   const stats = [
     { label: 'Primærfaktor', value: peak.primary_factor != null ? `${peak.primary_factor.toLocaleString('no')} m` : '—' },
-    {
-      label: 'Nærmeste høyere fjell',
-      value: distFormatted
-        ? (peak.nearest_higher_peak ? `${peak.nearest_higher_peak} (${distFormatted})` : distFormatted)
-        : '—',
-    },
+    { label: 'Nærmeste høyere fjell', value: nearestHigherValue },
     { label: 'Kommune', value: peak.municipality && peak.municipality !== 'Ukjent' ? peak.municipality : '—' },
     { label: 'Fylke', value: peak.county ?? '—' },
   ]
@@ -59,10 +65,10 @@ export function HomePeakCard({ peak, rank, nearestPeakName, allPeaks }: HomePeak
             <p className="text-sm font-semibold text-[#1A1A1A] truncate">{value}</p>
           </div>
         ))}
-        {nearestPeakName && (
+        {nearestOver2000Value && (
           <div className="col-span-2 rounded-lg px-3 py-2.5" style={{ background: '#F7F4EF' }}>
             <p className="text-[10px] font-medium text-[#6B6560] uppercase tracking-wide mb-0.5">Nærmeste over 2000 m</p>
-            <p className="text-sm font-semibold text-[#1A1A1A] truncate">{nearestPeakName}</p>
+            <p className="text-sm font-semibold text-[#1A1A1A] truncate">{nearestOver2000Value}</p>
           </div>
         )}
       </div>

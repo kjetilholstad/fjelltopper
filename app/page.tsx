@@ -92,7 +92,7 @@ export default async function Home() {
             {/* Right column — featured peak */}
             <div>
               {featured
-                ? <HomePeakCard peak={featured} rank={featuredRank} nearestPeakName={nearest?.peak.name ?? null} allPeaks={allPeaks} />
+                ? <HomePeakCard peak={featured} rank={featuredRank} nearest={nearest ?? null} allPeaks={allPeaks} />
                 : (
                   <div
                     className="bg-white rounded-xl p-5 text-sm text-[#6B6560]"
