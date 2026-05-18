@@ -216,7 +216,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
                   type="submit"
                   className="bg-forest text-white rounded-lg px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity self-start"
                 >
-                  Registrer bestigning
+                  Logg bestigning
                 </button>
               </form>
             </div>

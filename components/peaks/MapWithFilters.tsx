@@ -46,7 +46,7 @@ const LEGEND_ITEMS: {
   { color: '#D4A017', size: 13, label: 'Nærmeste høyere fjell',  lineType: 'higher',      dash: true  },
   { color: '#E8671A', size: 13, label: 'Nærmeste over 2000 m',   lineType: 'nearest2000', dash: true  },
   { color: '#DC2626', size: 11, label: 'Nærliggende topper',     lineType: 'nearby',      dash: false },
-  { color: '#ffffff', size: 11, label: 'Besteget topp',          lineType: null,          dash: false, ascended: true },
+  { color: '#ffffff', size: 11, label: 'Bestigning registrert',  lineType: null,          dash: false, ascended: true },
   { color: '#2D5016', size: 9,  label: 'Topp',                   lineType: null,          dash: false },
 ]
 
@@ -234,8 +234,8 @@ export function MapWithFilters({ peaks, ascendedIds = [], isLoggedIn = false }: 
                 className={showOnlyAscended ? 'text-forest' : 'text-text-warm'}
               />
               {showOnlyAscended
-                ? `Viser ${ascendedSet.size} bestegte topper`
-                : `Vis kun bestegte (${ascendedSet.size})`}
+                ? `Viser ${ascendedSet.size} bestigninger`
+                : `Kun mine bestigninger (${ascendedSet.size})`}
             </button>
           )}
 

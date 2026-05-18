@@ -66,7 +66,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
                 type="submit"
                 disabled={isPending}
                 onClick={e => e.stopPropagation()}
-                title="Klikk for å fjerne bestigning"
+                title="Fjern bestigning"
                 className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-forest-50 text-forest border border-forest/20 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors disabled:opacity-50"
               >
                 <CheckCircle2 size={11} strokeWidth={2} />
@@ -81,7 +81,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
               className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-parchment text-text-warm border border-border-warm hover:bg-forest-50 hover:text-forest hover:border-forest/20 transition-colors"
             >
               <CheckCircle2 size={11} strokeWidth={1.5} />
-              Registrer
+              + Bestigning
             </button>
           ) : null}
         </div>
