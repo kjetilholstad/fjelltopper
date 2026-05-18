@@ -10,6 +10,7 @@ import { nearestPeak } from '@/lib/nearestPeaks'
 import { usePeakFilters } from '@/lib/hooks/usePeakFilters'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { getNearbyPeaks } from '@/lib/nearbyPeaks'
+import { haversineKm } from '@/lib/nearestPeaks'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 
 const PeakMap = dynamic(
@@ -168,11 +169,22 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
       ? [[from, [nearestResult.peak.lat, nearestResult.peak.lng]]] as [number, number][][]
       : null
 
-    const toNearby = nearbyPeaks
-      .filter(p => p.lat && p.lng)
+    const nearbyWithCoords = nearbyPeaks.filter(p => p.lat != null && p.lng != null)
+
+    const toNearby = nearbyWithCoords
       .map(p => [from, [p.lat!, p.lng!]] as [number, number][])
 
-    return { toHigher, toNearest2000, toNearby }
+    const nearbyLabels = nearbyWithCoords.map(p => {
+      const midLat = (selectedPeak.lat! + p.lat!) / 2
+      const midLng = (selectedPeak.lng! + p.lng!) / 2
+      const distM = haversineKm(selectedPeak.lat!, selectedPeak.lng!, p.lat!, p.lng!) * 1000
+      const text = distM < 1000
+        ? `${Math.round(distM / 10) * 10} m`
+        : `${(distM / 1000).toFixed(1).replace('.', ',')} km`
+      return { pos: [midLat, midLng] as [number, number], text }
+    })
+
+    return { toHigher, toNearest2000, toNearby, nearbyLabels }
   }, [selectedPeak, peaks, nearbyPeaks])
 
   function lineAvailable(lineType: LineType): boolean {

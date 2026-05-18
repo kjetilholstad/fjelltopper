@@ -81,6 +81,7 @@ interface PeakMapProps {
     toHigher: [number, number][][] | null
     toNearest2000: [number, number][][] | null
     toNearby: [number, number][][] | null
+    nearbyLabels: { pos: [number, number]; text: string }[]
   } | null
   higherPeakId: string | null
   nearest2000Id: string | null
@@ -153,10 +154,23 @@ export function PeakMap({
             pathOptions={{ color: '#E8671A', weight: 2, dashArray: '6 4', opacity: 0.85 }} />
         ))}
 
-        {/* Nærliggende topper — rød heltrukket */}
+        {/* Nærliggende topper — rød heltrukket + avstandslabel */}
         {activeLines.has('nearby') && lineData?.toNearby?.map((pos, i) => (
           <Polyline key={`nearby-${i}`} positions={pos}
             pathOptions={{ color: '#DC2626', weight: 2, opacity: 0.8 }} />
+        ))}
+        {activeLines.has('nearby') && lineData?.nearbyLabels?.map(({ pos, text }, i) => (
+          <Marker
+            key={`nearby-label-${i}`}
+            position={pos}
+            interactive={false}
+            icon={L.divIcon({
+              html: `<span style="background:rgba(255,255,255,0.85);color:#DC2626;font-size:11px;font-weight:600;padding:1px 4px;border-radius:3px;display:inline-block;transform:translate(-50%,-50%);pointer-events:none">${text}</span>`,
+              className: '',
+              iconSize: [1, 1],
+              iconAnchor: [0, 0],
+            })}
+          />
         ))}
       </MapContainer>
 
