@@ -24,6 +24,12 @@ function formatDate(dateStr: string): string {
   })
 }
 
+function formatDist(m: number): string {
+  return m < 1000
+    ? Math.round(m).toLocaleString('no') + ' m'
+    : (m / 1000).toFixed(1).replace('.', ',') + ' km'
+}
+
 export default async function PeakPage({ params }: PeakPageProps) {
   const { id } = await params
   const supabase = await createClient()
@@ -74,31 +80,31 @@ export default async function PeakPage({ params }: PeakPageProps) {
       )}
 
       {/* Stats */}
-      <div className="flex flex-wrap gap-8 mt-6">
-        <div>
-          <p className="text-xs text-stone-400 uppercase tracking-wide mb-1">Høyde</p>
-          <p className="font-semibold text-stone-900">{peak.height.toLocaleString('no')} moh</p>
-        </div>
-        <div>
-          <p className="text-xs text-stone-400 uppercase tracking-wide mb-1">Primærfaktor</p>
-          <p className="font-semibold text-stone-900">{(peak.primary_factor ?? 0).toLocaleString('no')} m</p>
-        </div>
-        {peak.nearest_higher_peak && (
-          <div>
-            <p className="text-xs text-stone-400 uppercase tracking-wide mb-1">Nærmeste høyere fjell</p>
-            <p className="font-semibold text-stone-900">
-              {peak.nearest_higher_peak}
-              {distanceToHigher != null && (
-                <span className="font-normal text-stone-500 ml-1">
-                  ({distanceToHigher < 1
-                    ? `${Math.round(distanceToHigher * 1000).toLocaleString('no')} m`
-                    : `${Math.round(distanceToHigher).toLocaleString('no')} km`})
-                </span>
-              )}
-            </p>
+      {(() => {
+        const nearestHigherPeak = peak.nearest_higher_peak
+          ? allPeaks.find(p => p.name === peak.nearest_higher_peak) ?? null
+          : null
+        return (
+          <div className="grid grid-cols-3 gap-6 mt-6 px-6 divide-x divide-stone-100">
+            <div>
+              <p className="text-[10px] font-semibold tracking-widest uppercase text-stone-400 mb-1">Høyde</p>
+              <p className="font-semibold text-stone-900 text-sm">{peak.height.toLocaleString('no')} moh</p>
+            </div>
+            <div className="pl-6">
+              <p className="text-[10px] font-semibold tracking-widest uppercase text-stone-400 mb-1">Primærfaktor</p>
+              <p className="font-semibold text-stone-900 text-sm">{(peak.primary_factor ?? 0).toLocaleString('no')} m</p>
+            </div>
+            <div className="pl-6">
+              <p className="text-[10px] font-semibold tracking-widest uppercase text-stone-400 mb-1">Nærmeste høyere fjell</p>
+              <p className="font-semibold text-stone-900 text-sm">
+                {nearestHigherPeak && distanceToHigher != null
+                  ? `${nearestHigherPeak.name} (${nearestHigherPeak.height.toLocaleString('no')} moh – ${formatDist(distanceToHigher * 1000)})`
+                  : '—'}
+              </p>
+            </div>
           </div>
-        )}
-      </div>
+        )
+      })()}
 
       {/* Eksterne lenker */}
       {(peak.peakbagger_id != null || peak.peakbook_id != null) && (
@@ -160,7 +166,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
                 {nearest.peak.name}
               </Link>
               <span className="text-stone-500 font-normal ml-1">
-                ({nearest.distanceKm.toFixed(1).replace('.', ',')} km)
+                ({nearest.peak.height.toLocaleString('no')} moh – {formatDist(nearest.distanceKm * 1000)})
               </span>
             </p>
           </div>
