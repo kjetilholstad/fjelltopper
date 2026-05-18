@@ -60,6 +60,9 @@ export function GpxUploader({ ascendedIds }: GpxUploaderProps) {
       }))
       .filter(p => p.lat !== 0 || p.lon !== 0)
 
+    const firstTimeText = trkpts.find(pt => pt.querySelector('time'))?.querySelector('time')?.textContent
+    const gpxDate = firstTimeText ? firstTimeText.slice(0, 10) : today
+
     setStatus('loading')
 
     try {
@@ -73,7 +76,7 @@ export function GpxUploader({ ascendedIds }: GpxUploaderProps) {
       const found: SuggestedPeak[] = json.suggestions ?? []
       setSuggestions(found)
       const initialDates: Record<string, string> = {}
-      for (const s of found) initialDates[s.id] = today
+      for (const s of found) initialDates[s.id] = gpxDate
       setDates(initialDates)
       setStatus('done')
     } catch {
