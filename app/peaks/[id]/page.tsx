@@ -123,7 +123,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
           )}
           {peak.peakbook_id != null && (
             <a
-              href={`https://peakbook.org/index.php?module=index.enterTour&id=${peak.peakbook_id}`}
+              href={`https://peakbook.org/peakbook-element/${peak.peakbook_id}/${encodeURIComponent(peak.name).replace(/%20/g, '+')}.html`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 bg-white rounded-lg border border-border-warm px-4 py-2.5 text-sm font-medium text-[#1A1A1A] hover:border-forest hover:text-forest transition-colors"

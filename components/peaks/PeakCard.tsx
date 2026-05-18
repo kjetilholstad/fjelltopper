@@ -245,7 +245,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
                 onClick={e => {
                   e.preventDefault()
                   e.stopPropagation()
-                  window.open(`https://peakbook.org/index.php?module=index.enterTour&id=${peak.peakbook_id}`, '_blank', 'noopener,noreferrer')
+                  window.open(`https://peakbook.org/peakbook-element/${peak.peakbook_id}/${encodeURIComponent(peak.name).replace(/%20/g, '+')}.html`, '_blank', 'noopener,noreferrer')
                 }}
                 className="flex items-center gap-1 text-[11px] text-text-warm hover:text-forest transition-colors"
               >
