@@ -1,12 +1,3 @@
-export interface SubPeak {
-  id: string
-  name: string
-  height: number
-  pf: number
-  lat?: number
-  lng?: number
-}
-
 export interface Peak {
   id: string
   name: string
@@ -19,16 +10,13 @@ export interface Peak {
   lat: number | null
   lng: number | null
   peakbagger_id: number | null
-  sub_peaks: string[] | null
   topo_map: string | null
   description: string | null
   image_url: string | null
   created_at: string
 }
 
-export interface EnrichedPeak extends Omit<Peak, 'sub_peaks'> {
-  sub_peaks: SubPeak[] | null
-}
+export type EnrichedPeak = Peak
 
 export interface Ascent {
   id: string

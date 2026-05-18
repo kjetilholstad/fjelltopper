@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Mountain, TrendingUp, Navigation, ArrowUpToLine, MapPin, CheckCircle2, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
 import { nearestPeak } from '@/lib/nearestPeaks'
+import { getNearbyPeaks } from '@/lib/nearbyPeaks'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 
@@ -18,11 +19,12 @@ interface PeakCardProps {
 }
 
 export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, userId = null, allPeaks }: PeakCardProps) {
-  const subPeaks = peak.sub_peaks ?? []
   const [open, setOpen] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
+
+  const nearbyPeaks = useMemo(() => getNearbyPeaks(peak, allPeaks ?? []), [peak, allPeaks])
 
   const nearest = useMemo(() => {
     if (!allPeaks) return null
@@ -173,8 +175,8 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
           </span>
         </div>
 
-        {/* Nærliggende topper — fra Peakbagger */}
-        {subPeaks.length > 0 && (
+        {/* Nærliggende topper */}
+        {nearbyPeaks.length > 0 && (
           <div className="mt-3">
             <button
               onClick={e => { e.preventDefault(); e.stopPropagation(); setOpen(o => !o) }}
@@ -182,16 +184,16 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
               style={{ color: '#8B6914', background: '#FDF8EE', border: '1px solid #E8D5A3' }}
             >
               {open ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
-              {subPeaks.length} nærliggende topper
+              {nearbyPeaks.length} nærliggende topper
             </button>
             {open && (
               <div className="mt-1.5 rounded-lg bg-[#F7F4EF] px-2.5 py-2 flex flex-col gap-1">
-                {subPeaks.map(sp => (
-                  <div key={sp.id} className="flex items-baseline justify-between gap-2">
-                    <span className="text-[11px] text-[#1A1A1A] truncate">{sp.name}</span>
+                {nearbyPeaks.map(p => (
+                  <div key={p.id} className="flex items-baseline justify-between gap-2">
+                    <span className="text-[11px] text-[#1A1A1A] truncate">{p.name}</span>
                     <span className="text-[11px] text-text-warm shrink-0">
-                      {sp.height.toLocaleString('no')} moh
-                      <span className="text-[#8B6914] ml-1.5">Primærfaktor {sp.pf.toLocaleString('no')} m</span>
+                      {p.height.toLocaleString('no')} moh
+                      <span className="text-[#8B6914] ml-1.5">Primærfaktor {(p.primary_factor ?? 0).toLocaleString('no')} m</span>
                     </span>
                   </div>
                 ))}

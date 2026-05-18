@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { CheckCircle2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { nearestPeak } from '@/lib/nearestPeaks'
-import { enrichPeaks } from '@/lib/enrichPeaks'
+import { getNearbyPeaks } from '@/lib/nearbyPeaks'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import type { Peak, Ascent } from '@/types'
 
@@ -32,12 +32,12 @@ export default async function PeakPage({ params }: PeakPageProps) {
 
   if (!peakData) notFound()
 
-  const allEnriched = enrichPeaks((allData ?? []) as Peak[])
-  const enrichedPeak = allEnriched.find(p => p.id === id)
-  if (!enrichedPeak) notFound()
+  const allPeaks = (allData ?? []) as Peak[]
+  const peak = allPeaks.find(p => p.id === id)
+  if (!peak) notFound()
 
-  const hasSubPeaks = enrichedPeak.sub_peaks && enrichedPeak.sub_peaks.length > 0
-  const nearest = hasSubPeaks ? null : nearestPeak(enrichedPeak, allEnriched)
+  const nearbyPeaks = getNearbyPeaks(peak, allPeaks)
+  const nearest = nearbyPeaks.length > 0 ? null : nearestPeak(peak, allPeaks)
   const ascent = ascentData as Ascent | null
   const today = new Date().toISOString().split('T')[0]
 
@@ -45,47 +45,47 @@ export default async function PeakPage({ params }: PeakPageProps) {
     <div className="max-w-3xl mx-auto px-4 py-10">
       <div className="mb-6">
         <div className="flex items-start gap-3 flex-wrap">
-          <h1 className="text-4xl font-bold text-stone-900">{enrichedPeak.name}</h1>
+          <h1 className="text-4xl font-bold text-stone-900">{peak.name}</h1>
           <span className="text-base px-3 py-1 mt-1 bg-stone-100 rounded-full font-medium text-stone-700">
-            {enrichedPeak.height} moh
+            {peak.height} moh
           </span>
         </div>
         <p className="text-stone-500 mt-2">
-          {enrichedPeak.municipality}, {enrichedPeak.county}
+          {peak.municipality}, {peak.county}
         </p>
       </div>
 
-      {enrichedPeak.description && (
-        <p className="text-stone-700 text-lg mb-8">{enrichedPeak.description}</p>
+      {peak.description && (
+        <p className="text-stone-700 text-lg mb-8">{peak.description}</p>
       )}
 
       <div className="grid grid-cols-2 gap-4 text-sm">
-        {enrichedPeak.lat != null && enrichedPeak.lng != null && (
+        {peak.lat != null && peak.lng != null && (
           <div className="bg-white rounded-lg border p-4">
             <p className="text-stone-500 mb-1">Koordinater</p>
             <p className="font-mono text-stone-800">
-              {enrichedPeak.lat.toFixed(4)}° N, {enrichedPeak.lng.toFixed(4)}° Ø
+              {peak.lat.toFixed(4)}° N, {peak.lng.toFixed(4)}° Ø
             </p>
           </div>
         )}
         <div className="bg-white rounded-lg border p-4">
           <p className="text-stone-500 mb-1">Høyde</p>
-          <p className="font-semibold text-stone-800">{enrichedPeak.height} meter over havet</p>
+          <p className="font-semibold text-stone-800">{peak.height} meter over havet</p>
         </div>
         <div className="bg-white rounded-lg border p-4">
           <p className="text-stone-500 mb-1">Primærfaktor</p>
-          <p className="font-semibold text-stone-800">{(enrichedPeak.primary_factor ?? 0).toLocaleString('no')} m</p>
+          <p className="font-semibold text-stone-800">{(peak.primary_factor ?? 0).toLocaleString('no')} m</p>
         </div>
-        {enrichedPeak.nearest_higher_peak && (
+        {peak.nearest_higher_peak && (
           <div className="bg-white rounded-lg border p-4">
             <p className="text-stone-500 mb-1">Nærmeste høyere fjell</p>
             <p className="font-semibold text-stone-800">
-              {enrichedPeak.nearest_higher_peak}
-              {enrichedPeak.secondary_factor != null && (
+              {peak.nearest_higher_peak}
+              {peak.secondary_factor != null && (
                 <span className="text-stone-500 font-normal ml-1">
-                  ({enrichedPeak.secondary_factor < 1000
-                    ? `${enrichedPeak.secondary_factor.toLocaleString('no')} m`
-                    : `${Math.round(enrichedPeak.secondary_factor / 1000).toLocaleString('no')} km`})
+                  ({peak.secondary_factor < 1000
+                    ? `${peak.secondary_factor.toLocaleString('no')} m`
+                    : `${Math.round(peak.secondary_factor / 1000).toLocaleString('no')} km`})
                 </span>
               )}
             </p>
@@ -93,21 +93,21 @@ export default async function PeakPage({ params }: PeakPageProps) {
         )}
       </div>
 
-      {/* Nærliggende topper — fra Peakbagger */}
-      {hasSubPeaks && (
+      {/* Nærliggende topper */}
+      {nearbyPeaks.length > 0 && (
         <div className="mt-8">
           <h2 className="text-xl font-bold text-stone-900 mb-3">
-            Nærliggende topper ({enrichedPeak.sub_peaks!.length})
+            Nærliggende topper ({nearbyPeaks.length})
           </h2>
           <div className="flex flex-col gap-2">
-            {enrichedPeak.sub_peaks!.map(sp => (
-              <div key={sp.id} className="bg-white rounded-lg border border-[#E8E2D9] p-3 flex justify-between items-baseline">
-                <Link href={`/peaks/${sp.id}`} className="font-medium text-stone-800 hover:underline">
-                  {sp.name}
+            {nearbyPeaks.map(p => (
+              <div key={p.id} className="bg-white rounded-lg border border-[#E8E2D9] p-3 flex justify-between items-baseline">
+                <Link href={`/peaks/${p.id}`} className="font-medium text-stone-800 hover:underline">
+                  {p.name}
                 </Link>
                 <span className="text-sm text-stone-500">
-                  {sp.height.toLocaleString('no')} moh
-                  <span className="ml-2 text-stone-400">Primærfaktor {sp.pf.toLocaleString('no')} m</span>
+                  {p.height.toLocaleString('no')} moh
+                  <span className="ml-2 text-stone-400">Primærfaktor {(p.primary_factor ?? 0).toLocaleString('no')} m</span>
                 </span>
               </div>
             ))}
@@ -115,7 +115,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
         </div>
       )}
 
-      {/* Nærmeste fjell over 2000 m — fallback når ingen sub_peaks */}
+      {/* Nærmeste fjell over 2000 m — fallback når ingen nærliggende */}
       {nearest && (
         <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
           <div className="bg-white rounded-lg border p-4">
@@ -161,7 +161,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
                 )}
               </div>
               <form action={deleteAscent}>
-                <input type="hidden" name="peak_id" value={enrichedPeak.id} />
+                <input type="hidden" name="peak_id" value={peak.id} />
                 <button
                   type="submit"
                   className="text-sm text-text-warm border border-border-warm rounded-lg px-4 py-2 hover:border-red-300 hover:text-red-600 transition-colors"
@@ -175,7 +175,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
             <div className="bg-white rounded-xl border border-border-warm p-5">
               <h2 className="text-base font-semibold text-[#1A1A1A] mb-4">Logg bestigning</h2>
               <form action={logAscent} className="flex flex-col gap-3">
-                <input type="hidden" name="peak_id" value={enrichedPeak.id} />
+                <input type="hidden" name="peak_id" value={peak.id} />
                 <div>
                   <label htmlFor="ascent-date" className="block text-xs font-medium text-[#1A1A1A] mb-1.5">
                     Dato

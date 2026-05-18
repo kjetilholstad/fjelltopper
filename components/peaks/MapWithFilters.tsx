@@ -9,6 +9,7 @@ import type { EnrichedPeak } from '@/types'
 import { nearestPeak } from '@/lib/nearestPeaks'
 import { usePeakFilters } from '@/lib/hooks/usePeakFilters'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
+import { getNearbyPeaks } from '@/lib/nearbyPeaks'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 
 const PeakMap = dynamic(
@@ -143,10 +144,15 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
 
   const nearest2000Id = useMemo(() => nearest?.peak.id ?? null, [nearest])
 
-  const nearbyIds = useMemo<Set<string>>(() => {
-    if (!selectedPeak?.sub_peaks) return new Set()
-    return new Set(selectedPeak.sub_peaks.map(sp => sp.id))
-  }, [selectedPeak])
+  const nearbyPeaks = useMemo(
+    () => selectedPeak ? getNearbyPeaks(selectedPeak, peaks) : [],
+    [selectedPeak, peaks]
+  )
+
+  const nearbyIds = useMemo<Set<string>>(
+    () => new Set(nearbyPeaks.map(p => p.id)),
+    [nearbyPeaks]
+  )
 
   const lineData = useMemo(() => {
     if (!selectedPeak?.lat || !selectedPeak?.lng) return null
@@ -162,12 +168,12 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
       ? [[from, [nearestResult.peak.lat, nearestResult.peak.lng]]] as [number, number][][]
       : null
 
-    const toNearby = selectedPeak.sub_peaks
-      ?.filter(sp => sp.lat && sp.lng)
-      .map(sp => [from, [sp.lat!, sp.lng!]] as [number, number][]) ?? null
+    const toNearby = nearbyPeaks
+      .filter(p => p.lat && p.lng)
+      .map(p => [from, [p.lat!, p.lng!]] as [number, number][])
 
     return { toHigher, toNearest2000, toNearby }
-  }, [selectedPeak, peaks])
+  }, [selectedPeak, peaks, nearbyPeaks])
 
   function lineAvailable(lineType: LineType): boolean {
     if (lineType === 'higher')      return !!lineData?.toHigher
@@ -443,17 +449,17 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
               </div>
             )}
 
-            {/* Nærliggende topper — fra Peakbagger */}
-            {selectedPeak.sub_peaks && selectedPeak.sub_peaks.length > 0 && (
+            {/* Nærliggende topper */}
+            {nearbyPeaks.length > 0 && (
               <div className="border-t border-border-warm pt-1.5 mb-1.5">
                 <p className="text-[11px] font-semibold text-[#DC2626] mb-1">
-                  Nærliggende topper ({selectedPeak.sub_peaks.length})
+                  Nærliggende topper ({nearbyPeaks.length})
                 </p>
                 <div className="flex flex-col gap-0.5">
-                  {selectedPeak.sub_peaks.map(sp => (
-                    <div key={sp.id} className="flex justify-between gap-2">
-                      <span className="text-[11px] text-[#1A1A1A] truncate">{sp.name}</span>
-                      <span className="text-[11px] text-text-warm shrink-0">{sp.height.toLocaleString('no')} m</span>
+                  {nearbyPeaks.map(p => (
+                    <div key={p.id} className="flex justify-between gap-2">
+                      <span className="text-[11px] text-[#1A1A1A] truncate">{p.name}</span>
+                      <span className="text-[11px] text-text-warm shrink-0">{p.height.toLocaleString('no')} m</span>
                     </div>
                   ))}
                 </div>
