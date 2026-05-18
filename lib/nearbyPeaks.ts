@@ -8,7 +8,7 @@ export function getNearbyPeaks(peak: Peak, allPeaks: Peak[]): Peak[] {
     const dist = haversineKm(peak.lat!, peak.lng!, p.lat!, p.lng!)
     const heightDiff = Math.abs(p.height - peak.height) / peak.height
     return (
-      dist < 1.0 &&
+      dist < 1.5 &&
       (p.primary_factor ?? 999) < 100 &&
       heightDiff < 0.10
     )
