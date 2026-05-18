@@ -11,13 +11,18 @@ export const metadata = {
 
 export default async function MapPage() {
   const supabase = await createClient()
-  const { data } = await supabase
-    .from('peaks')
-    .select('*')
-    .not('lat', 'is', null)
-    .not('lng', 'is', null)
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const [{ data }, { data: ascentsData }] = await Promise.all([
+    supabase.from('peaks').select('*').not('lat', 'is', null).not('lng', 'is', null),
+    user
+      ? supabase.from('ascents').select('peak_id').eq('user_id', user.id)
+      : Promise.resolve({ data: [] as { peak_id: string }[] }),
+  ])
+
   const peaks = (data ?? []) as Peak[]
   const enriched = enrichPeaks(peaks)
+  const ascendedIds = (ascentsData ?? []).map(a => (a as { peak_id: string }).peak_id)
 
-  return <MapWithFilters peaks={enriched} />
+  return <MapWithFilters peaks={enriched} ascendedIds={ascendedIds} isLoggedIn={!!user} />
 }

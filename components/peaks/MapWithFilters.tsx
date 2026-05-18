@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { Search, ChevronDown } from 'lucide-react'
+import { Search, ChevronDown, CheckCircle2 } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
 import { nearestPeak } from '@/lib/nearestPeaks'
 import { usePeakFilters } from '@/lib/hooks/usePeakFilters'
@@ -40,11 +40,13 @@ const LEGEND_ITEMS: {
   label: string
   lineType: LineType | null
   dash: boolean
+  ascended?: boolean
 }[] = [
   { color: '#1A3A0A', size: 18, label: 'Valgt topp',             lineType: null,          dash: false },
   { color: '#D4A017', size: 13, label: 'Nærmeste høyere fjell',  lineType: 'higher',      dash: true  },
   { color: '#E8671A', size: 13, label: 'Nærmeste over 2000 m',   lineType: 'nearest2000', dash: true  },
   { color: '#DC2626', size: 11, label: 'Nærliggende topper',     lineType: 'nearby',      dash: false },
+  { color: '#ffffff', size: 11, label: 'Bestegt topp',           lineType: null,          dash: false, ascended: true },
   { color: '#2D5016', size: 9,  label: 'Topp',                   lineType: null,          dash: false },
 ]
 
@@ -75,9 +77,12 @@ function Select({
 
 interface MapWithFiltersProps {
   peaks: EnrichedPeak[]
+  ascendedIds?: string[]
+  isLoggedIn?: boolean
 }
 
-export function MapWithFilters({ peaks }: MapWithFiltersProps) {
+export function MapWithFilters({ peaks, ascendedIds = [], isLoggedIn = false }: MapWithFiltersProps) {
+  const ascendedSet = useMemo(() => new Set(ascendedIds), [ascendedIds])
   const {
     query, setQuery,
     minHeight, setMinHeight,
@@ -92,6 +97,7 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
 
   const [selectedPeak, setSelectedPeak] = useState<EnrichedPeak | null>(null)
   const [activeLines, setActiveLines] = useState<Set<LineType>>(new Set())
+  const [showOnlyAscended, setShowOnlyAscended] = useState(false)
 
   function toggleLine(type: LineType) {
     setActiveLines(prev => {
@@ -104,6 +110,11 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
   useEffect(() => {
     setActiveLines(new Set())
   }, [selectedPeak?.id])
+
+  const filteredWithAscended = useMemo(
+    () => showOnlyAscended ? filtered.filter(p => ascendedSet.has(p.id)) : filtered,
+    [filtered, showOnlyAscended, ascendedSet]
+  )
 
   const nearest = useMemo(() => {
     if (!selectedPeak) return null
@@ -162,7 +173,7 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
   return (
     <div style={{ height: 'calc(100vh - 64px)', position: 'relative' }}>
       <PeakMap
-        peaks={filtered}
+        peaks={filteredWithAscended}
         selectedPeakId={selectedPeak?.id ?? null}
         onSelectPeak={setSelectedPeak}
         activeLines={activeLines}
@@ -170,6 +181,7 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
         higherPeakId={higherPeakId}
         nearest2000Id={nearest2000Id}
         nearbyIds={nearbyIds}
+        ascendedIds={ascendedSet}
       />
 
       {/* Venstre kolonne: filter + tegnforklaring + detaljpanel */}
@@ -205,8 +217,30 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
             />
           </div>
 
+          {isLoggedIn && ascendedSet.size > 0 && (
+            <button
+              onClick={() => setShowOnlyAscended(v => !v)}
+              className={[
+                'flex items-center gap-2 w-full rounded-lg px-3 py-1.5 text-xs font-medium',
+                'border transition-colors text-left',
+                showOnlyAscended
+                  ? 'bg-forest-50 text-forest border-forest/30'
+                  : 'bg-white text-text-warm border-border-warm hover:border-forest/30 hover:text-forest',
+              ].join(' ')}
+            >
+              <CheckCircle2
+                size={13}
+                strokeWidth={showOnlyAscended ? 2 : 1.5}
+                className={showOnlyAscended ? 'text-forest' : 'text-text-warm'}
+              />
+              {showOnlyAscended
+                ? `Viser ${ascendedSet.size} bestegte topper`
+                : `Vis kun bestegte (${ascendedSet.size})`}
+            </button>
+          )}
+
           <p className="text-[11px] text-text-warm leading-none">
-            <span className="font-semibold text-[#1A1A1A]">{filtered.length}</span>
+            <span className="font-semibold text-[#1A1A1A]">{filteredWithAscended.length}</span>
             {' '}av{' '}
             <span className="font-semibold text-[#1A1A1A]">{peaks.length}</span>
             {' '}topper vises
@@ -219,7 +253,7 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
             Tegnforklaring
           </p>
 
-          {LEGEND_ITEMS.map(({ color, size, label, lineType, dash }) => {
+          {LEGEND_ITEMS.map(({ color, size, label, lineType, dash, ascended }) => {
             const isToggleable = lineType !== null
             const available = isToggleable ? lineAvailable(lineType) : true
             const isActive = isToggleable && activeLines.has(lineType)
@@ -259,11 +293,19 @@ export function MapWithFilters({ peaks }: MapWithFiltersProps) {
 
             return (
               <div key={label} className="flex items-center gap-2 px-1.5 py-1">
-                <div style={{
-                  width: size, height: size, borderRadius: '50%', flexShrink: 0,
-                  background: color, border: '1.5px solid white',
-                  boxShadow: '0 1px 3px rgba(0,0,0,.25)',
-                }} />
+                {ascended ? (
+                  <div style={{
+                    width: size, height: size, borderRadius: '50%', flexShrink: 0,
+                    background: 'white', border: '2px solid #2D5016',
+                    boxShadow: '0 1px 3px rgba(0,0,0,.25)',
+                  }} />
+                ) : (
+                  <div style={{
+                    width: size, height: size, borderRadius: '50%', flexShrink: 0,
+                    background: color, border: '1.5px solid white',
+                    boxShadow: '0 1px 3px rgba(0,0,0,.25)',
+                  }} />
+                )}
                 <span className="text-xs text-[#1A1A1A]">{label}</span>
               </div>
             )

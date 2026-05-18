@@ -31,10 +31,10 @@ const LAYERS = [
   },
 ]
 
-function makeIcon(size: number, bg: string): L.DivIcon {
+function makeIcon(size: number, bg: string, borderColor = 'white'): L.DivIcon {
   const half = size / 2
   return L.divIcon({
-    html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${bg};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.35)"></div>`,
+    html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${bg};border:2px solid ${borderColor};box-shadow:0 1px 4px rgba(0,0,0,.35)"></div>`,
     className: '',
     iconSize: [size, size],
     iconAnchor: [half, half],
@@ -42,11 +42,12 @@ function makeIcon(size: number, bg: string): L.DivIcon {
   })
 }
 
-const ICON_SELECTED = makeIcon(18, '#1A3A0A')
-const ICON_HIGHER   = makeIcon(13, '#D4A017')
-const ICON_NEAREST  = makeIcon(13, '#E8671A')
-const ICON_NEARBY   = makeIcon(11, '#DC2626')
-const ICON_REGULAR  = makeIcon(9,  '#2D5016')
+const ICON_SELECTED = makeIcon(18, '#1A3A0A', 'white')
+const ICON_HIGHER   = makeIcon(13, '#D4A017', 'white')
+const ICON_NEAREST  = makeIcon(13, '#E8671A', 'white')
+const ICON_NEARBY   = makeIcon(11, '#DC2626', 'white')
+const ICON_ASCENDED = makeIcon(11, 'white',   '#2D5016')
+const ICON_REGULAR  = makeIcon(9,  '#2D5016', 'white')
 
 function getPeakIcon(
   peak: EnrichedPeak,
@@ -54,11 +55,13 @@ function getPeakIcon(
   higherPeakId: string | null,
   nearest2000Id: string | null,
   nearbyIds: Set<string>,
+  ascendedIds: Set<string>,
 ): L.DivIcon {
   if (peak.id === selectedPeakId) return ICON_SELECTED
   if (peak.id === higherPeakId)   return ICON_HIGHER
   if (peak.id === nearest2000Id)  return ICON_NEAREST
   if (nearbyIds.has(peak.id))     return ICON_NEARBY
+  if (ascendedIds.has(peak.id))   return ICON_ASCENDED
   return ICON_REGULAR
 }
 
@@ -82,6 +85,7 @@ interface PeakMapProps {
   higherPeakId: string | null
   nearest2000Id: string | null
   nearbyIds: Set<string>
+  ascendedIds: Set<string>
 }
 
 export function PeakMap({
@@ -93,6 +97,7 @@ export function PeakMap({
   higherPeakId,
   nearest2000Id,
   nearbyIds,
+  ascendedIds,
 }: PeakMapProps) {
   const [activeLayerId, setActiveLayerId] = useState('topo')
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -131,7 +136,7 @@ export function PeakMap({
           <Marker
             key={peak.id}
             position={[peak.lat!, peak.lng!]}
-            icon={getPeakIcon(peak, selectedPeakId, higherPeakId, nearest2000Id, nearbyIds)}
+            icon={getPeakIcon(peak, selectedPeakId, higherPeakId, nearest2000Id, nearbyIds, ascendedIds)}
             eventHandlers={{ click: () => onSelectPeak(peak) }}
           />
         ))}
