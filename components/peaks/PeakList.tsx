@@ -8,6 +8,7 @@ import { usePeakFilters } from '@/lib/hooks/usePeakFilters'
 
 interface PeakListProps {
   peaks: EnrichedPeak[]
+  ascendedIds?: string[]
 }
 
 const HEIGHT_OPTIONS = [
@@ -64,7 +65,9 @@ function Select({
   )
 }
 
-export function PeakList({ peaks }: PeakListProps) {
+export function PeakList({ peaks, ascendedIds = [] }: PeakListProps) {
+  const ascendedSet = useMemo(() => new Set(ascendedIds), [ascendedIds])
+
   const {
     query, setQuery,
     minHeight, setMinHeight,
@@ -168,6 +171,7 @@ export function PeakList({ peaks }: PeakListProps) {
               peak={peak}
               rank={rankMap.get(peak.id)}
               allPeaks={peaks}
+              isAscended={ascendedSet.has(peak.id)}
             />
           ))}
         </div>

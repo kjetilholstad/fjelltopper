@@ -1,21 +1,33 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { CheckCircle2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { nearestPeak } from '@/lib/nearestPeaks'
 import { enrichPeaks } from '@/lib/enrichPeaks'
-import type { Peak } from '@/types'
+import { logAscent, deleteAscent } from '@/app/ascents/actions'
+import type { Peak, Ascent } from '@/types'
 
 interface PeakPageProps {
   params: Promise<{ id: string }>
 }
 
+function formatDate(dateStr: string): string {
+  return new Date(dateStr + 'T12:00:00').toLocaleDateString('no', {
+    day: 'numeric', month: 'long', year: 'numeric',
+  })
+}
+
 export default async function PeakPage({ params }: PeakPageProps) {
   const { id } = await params
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
-  const [{ data: peakData }, { data: allData }] = await Promise.all([
+  const [{ data: peakData }, { data: allData }, { data: ascentData }] = await Promise.all([
     supabase.from('peaks').select('*').eq('id', id).single(),
     supabase.from('peaks').select('*'),
+    user
+      ? supabase.from('ascents').select('*').eq('peak_id', id).eq('user_id', user.id).maybeSingle()
+      : Promise.resolve({ data: null as Ascent | null }),
   ])
 
   if (!peakData) notFound()
@@ -26,6 +38,8 @@ export default async function PeakPage({ params }: PeakPageProps) {
 
   const hasSubPeaks = enrichedPeak.sub_peaks && enrichedPeak.sub_peaks.length > 0
   const nearest = hasSubPeaks ? null : nearestPeak(enrichedPeak, allEnriched)
+  const ascent = ascentData as Ascent | null
+  const today = new Date().toISOString().split('T')[0]
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
@@ -115,6 +129,98 @@ export default async function PeakPage({ params }: PeakPageProps) {
               </span>
             </p>
           </div>
+        </div>
+      )}
+
+      {/* Bestigningsseksjon */}
+      {user && (
+        <div className="mt-8">
+          {ascent ? (
+            /* Allerede bestegt */
+            <div className="bg-white rounded-xl border border-border-warm p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <CheckCircle2 size={18} className="text-forest" strokeWidth={1.75} />
+                <h2 className="text-base font-semibold text-[#1A1A1A]">Bestigning registrert</h2>
+              </div>
+              <div className="text-sm text-text-warm flex flex-col gap-1 mb-4">
+                <p>
+                  <span className="font-medium text-[#1A1A1A]">Dato:</span>{' '}
+                  {formatDate(ascent.date)}
+                </p>
+                {ascent.notes && (
+                  <p>
+                    <span className="font-medium text-[#1A1A1A]">Notater:</span>{' '}
+                    {ascent.notes}
+                  </p>
+                )}
+                {ascent.weather && (
+                  <p>
+                    <span className="font-medium text-[#1A1A1A]">Vær:</span>{' '}
+                    {ascent.weather}
+                  </p>
+                )}
+              </div>
+              <form action={deleteAscent}>
+                <input type="hidden" name="peak_id" value={enrichedPeak.id} />
+                <button
+                  type="submit"
+                  className="text-sm text-text-warm border border-border-warm rounded-lg px-4 py-2 hover:border-red-300 hover:text-red-600 transition-colors"
+                >
+                  Fjern bestigning
+                </button>
+              </form>
+            </div>
+          ) : (
+            /* Logg ny bestigning */
+            <div className="bg-white rounded-xl border border-border-warm p-5">
+              <h2 className="text-base font-semibold text-[#1A1A1A] mb-4">Logg bestigning</h2>
+              <form action={logAscent} className="flex flex-col gap-3">
+                <input type="hidden" name="peak_id" value={enrichedPeak.id} />
+                <div>
+                  <label htmlFor="ascent-date" className="block text-xs font-medium text-[#1A1A1A] mb-1.5">
+                    Dato
+                  </label>
+                  <input
+                    id="ascent-date"
+                    name="date"
+                    type="date"
+                    required
+                    defaultValue={today}
+                    className="w-full bg-parchment border border-border-warm rounded-lg px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest transition-colors"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="ascent-notes" className="block text-xs font-medium text-[#1A1A1A] mb-1.5">
+                    Notater <span className="text-text-warm font-normal">(valgfritt)</span>
+                  </label>
+                  <textarea
+                    id="ascent-notes"
+                    name="notes"
+                    rows={3}
+                    className="w-full bg-parchment border border-border-warm rounded-lg px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest transition-colors resize-none"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="ascent-weather" className="block text-xs font-medium text-[#1A1A1A] mb-1.5">
+                    Vær <span className="text-text-warm font-normal">(valgfritt)</span>
+                  </label>
+                  <input
+                    id="ascent-weather"
+                    name="weather"
+                    type="text"
+                    placeholder="F.eks. Klarvær, vindstille"
+                    className="w-full bg-parchment border border-border-warm rounded-lg px-3 py-2 text-sm text-[#1A1A1A] placeholder:text-text-warm focus:outline-none focus:border-forest transition-colors"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="bg-forest text-white rounded-lg px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity self-start"
+                >
+                  Registrer bestigning
+                </button>
+              </form>
+            </div>
+          )}
         </div>
       )}
     </div>
