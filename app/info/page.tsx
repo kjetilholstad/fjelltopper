@@ -265,7 +265,7 @@ export default function InfoPage() {
         </section>
 
         {/* ── 4. Registrere Bestigning ── */}
-        <section className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6">
+        <section className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
           <h2 className="text-base font-semibold text-[#1A1A1A] mb-4 flex items-center gap-2">
             <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">4</span>
             Registrere Bestigning
