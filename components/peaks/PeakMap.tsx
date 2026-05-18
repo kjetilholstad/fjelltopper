@@ -79,7 +79,9 @@ interface PeakMapProps {
   activeLines: Set<LineType>
   lineData: {
     toHigher: [number, number][][] | null
+    higherLabel: { pos: [number, number]; text: string } | null
     toNearest2000: [number, number][][] | null
+    nearest2000Label: { pos: [number, number]; text: string } | null
     toNearby: [number, number][][] | null
     nearbyLabels: { pos: [number, number]; text: string }[]
   } | null
@@ -147,12 +149,36 @@ export function PeakMap({
           <Polyline key={`higher-${i}`} positions={pos}
             pathOptions={{ color: '#D4A017', weight: 2, dashArray: '6 4', opacity: 0.85 }} />
         ))}
+        {activeLines.has('higher') && lineData?.higherLabel && (
+          <Marker
+            position={lineData.higherLabel.pos}
+            interactive={false}
+            icon={L.divIcon({
+              html: `<span style="background:rgba(255,255,255,0.85);color:#D4A017;font-size:11px;font-weight:600;padding:1px 4px;border-radius:3px;display:inline-block;transform:translate(-50%,-50%);pointer-events:none">${lineData.higherLabel.text}</span>`,
+              className: '',
+              iconSize: [1, 1],
+              iconAnchor: [0, 0],
+            })}
+          />
+        )}
 
         {/* Nærmeste over 2000 m — oransje stiplet */}
         {activeLines.has('nearest2000') && lineData?.toNearest2000?.map((pos, i) => (
           <Polyline key={`n2000-${i}`} positions={pos}
             pathOptions={{ color: '#E8671A', weight: 2, dashArray: '6 4', opacity: 0.85 }} />
         ))}
+        {activeLines.has('nearest2000') && lineData?.nearest2000Label && (
+          <Marker
+            position={lineData.nearest2000Label.pos}
+            interactive={false}
+            icon={L.divIcon({
+              html: `<span style="background:rgba(255,255,255,0.85);color:#E8671A;font-size:11px;font-weight:600;padding:1px 4px;border-radius:3px;display:inline-block;transform:translate(-50%,-50%);pointer-events:none">${lineData.nearest2000Label.text}</span>`,
+              className: '',
+              iconSize: [1, 1],
+              iconAnchor: [0, 0],
+            })}
+          />
+        )}
 
         {/* Nærliggende topper — rød heltrukket + avstandslabel */}
         {activeLines.has('nearby') && lineData?.toNearby?.map((pos, i) => (

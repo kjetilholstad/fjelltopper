@@ -160,13 +160,30 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
     const from: [number, number] = [selectedPeak.lat, selectedPeak.lng]
 
     const higherPeakEntry = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
-    const toHigher = higherPeakEntry?.lat && higherPeakEntry?.lng
+    const toHigher = higherPeakEntry?.lat != null && higherPeakEntry?.lng != null
       ? [[from, [higherPeakEntry.lat, higherPeakEntry.lng]]] as [number, number][][]
       : null
 
+    const sf = selectedPeak.secondary_factor
+    const higherLabel = higherPeakEntry?.lat != null && higherPeakEntry?.lng != null && sf != null
+      ? {
+          pos: [(selectedPeak.lat! + higherPeakEntry.lat) / 2, (selectedPeak.lng! + higherPeakEntry.lng) / 2] as [number, number],
+          text: sf < 1000 ? `${sf} m` : `${(sf / 1000).toFixed(1).replace('.', ',')} km`,
+        }
+      : null
+
     const nearestResult = nearestPeak(selectedPeak, peaks)
-    const toNearest2000 = nearestResult?.peak.lat && nearestResult?.peak.lng
+    const toNearest2000 = nearestResult?.peak.lat != null && nearestResult?.peak.lng != null
       ? [[from, [nearestResult.peak.lat, nearestResult.peak.lng]]] as [number, number][][]
+      : null
+
+    const nearest2000Label = nearestResult?.peak.lat != null && nearestResult?.peak.lng != null
+      ? {
+          pos: [(selectedPeak.lat! + nearestResult.peak.lat) / 2, (selectedPeak.lng! + nearestResult.peak.lng) / 2] as [number, number],
+          text: nearestResult.distanceKm < 1
+            ? `${Math.round(nearestResult.distanceKm * 1000 / 10) * 10} m`
+            : `${nearestResult.distanceKm.toFixed(1).replace('.', ',')} km`,
+        }
       : null
 
     const nearbyWithCoords = nearbyPeaks.filter(p => p.lat != null && p.lng != null)
@@ -184,7 +201,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
       return { pos: [midLat, midLng] as [number, number], text }
     })
 
-    return { toHigher, toNearest2000, toNearby, nearbyLabels }
+    return { toHigher, higherLabel, toNearest2000, nearest2000Label, toNearby, nearbyLabels }
   }, [selectedPeak, peaks, nearbyPeaks])
 
   function lineAvailable(lineType: LineType): boolean {
