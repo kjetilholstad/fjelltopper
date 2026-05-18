@@ -52,7 +52,6 @@ create table public.peaks (
   lat double precision,
   lng double precision,
   peakbagger_id integer,
-  sub_peaks jsonb default '[]'::jsonb,
   topo_map text,
   description text,
   image_url text,

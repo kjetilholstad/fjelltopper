@@ -19,7 +19,11 @@
       "Bash(curl -s -o /dev/null -w '%{http_code}' https://cache.kartverket.no/v1/wmts/1.0.0/__TRACKED_VAR__/default/webmercator/10/288/535.png)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/10/288/535\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://a.tile.opentopomap.org/10/535/288.png\")",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\kjho\\\\fjelltopper\\\\components\\\\profile\")",
+      "Bash(Out-Null)"
     ]
   }
 }
