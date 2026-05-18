@@ -13,16 +13,26 @@ export default async function MapPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const [{ data }, { data: ascentsData }] = await Promise.all([
-    supabase.from('peaks').select('*').not('lat', 'is', null).not('lng', 'is', null),
+  const [{ data: peaksData }, { data: ascentsData }] = await Promise.all([
+    supabase
+      .from('peaks')
+      .select('*')
+      .not('lat', 'is', null)
+      .not('lng', 'is', null),
     user
       ? supabase.from('ascents').select('peak_id').eq('user_id', user.id)
       : Promise.resolve({ data: [] as { peak_id: string }[] }),
   ])
 
-  const peaks = (data ?? []) as Peak[]
+  const peaks = (peaksData ?? []) as Peak[]
   const enriched = enrichPeaks(peaks)
-  const ascendedIds = (ascentsData ?? []).map(a => (a as { peak_id: string }).peak_id)
+  const ascendedIds = (ascentsData ?? []).map(a => a.peak_id as string)
 
-  return <MapWithFilters peaks={enriched} ascendedIds={ascendedIds} isLoggedIn={!!user} />
+  return (
+    <MapWithFilters
+      peaks={enriched}
+      ascendedIds={ascendedIds}
+      isLoggedIn={!!user}
+    />
+  )
 }
