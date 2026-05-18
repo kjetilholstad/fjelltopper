@@ -79,32 +79,37 @@ export default async function ProfilePage() {
       </div>
 
       {/* Progress bars */}
-      <div className="bg-white rounded-xl border border-border-warm shadow-sm p-5 mb-4 flex flex-col gap-3">
+      <div className="bg-white rounded-xl border border-border-warm shadow-sm p-5 mb-4">
         <span className="text-sm font-semibold text-[#1A1A1A]">Fremgang</span>
-        {[
-          { label: 'Alle topper',  ascended: totalCount, total: totalPeaks },
-          { label: 'PF ≥ 50 m',   ascended: ascentPf50, total: totalPf50  },
-          { label: 'PF ≥ 30 m',   ascended: ascentPf30, total: totalPf30  },
-          { label: 'PF ≥ 10 m',   ascended: ascentPf10, total: totalPf10  },
-        ].map(({ label, ascended, total }) => {
-          const p = total > 0 ? (ascended / total) * 100 : 0
-          return (
-            <div key={label}>
-              <div className="flex items-baseline justify-between mb-1">
-                <span className="text-xs text-text-warm">{label}</span>
-                <span className="text-xs font-semibold text-forest">
-                  {ascended} / {total} ({p.toFixed(1).replace('.', ',')} %)
-                </span>
+        <div className="flex flex-col gap-4 mt-3">
+          {[
+            { label: 'Alle topper', ascended: totalCount, total: totalPeaks, color: '#2D5016', track: '#EAF3DE' },
+            { label: 'PF ≥ 50 m',  ascended: ascentPf50, total: totalPf50,  color: '#D4A017', track: '#FEF3C7' },
+            { label: 'PF ≥ 30 m',  ascended: ascentPf30, total: totalPf30,  color: '#E8671A', track: '#FFEDD5' },
+            { label: 'PF ≥ 10 m',  ascended: ascentPf10, total: totalPf10,  color: '#0284C7', track: '#E0F2FE' },
+          ].map(({ label, ascended, total, color, track }) => {
+            const p = total > 0 ? (ascended / total) * 100 : 0
+            return (
+              <div key={label}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full shrink-0" style={{ background: color }} />
+                    <span className="text-xs font-medium text-[#1A1A1A]">{label}</span>
+                  </div>
+                  <span className="text-xs font-semibold tabular-nums" style={{ color }}>
+                    {ascended} / {total} · {p.toFixed(1).replace('.', ',')} %
+                  </span>
+                </div>
+                <div className="h-2.5 rounded-full overflow-hidden" style={{ background: track }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min(p, 100)}%`, background: color }}
+                  />
+                </div>
               </div>
-              <div className="h-2 bg-parchment rounded-full border border-border-warm overflow-hidden">
-                <div
-                  className="h-full bg-forest rounded-full transition-all"
-                  style={{ width: `${Math.min(p, 100)}%` }}
-                />
-              </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
 
       {/* Stats grid */}
