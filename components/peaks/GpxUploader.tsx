@@ -2,7 +2,7 @@
 
 import { useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { Upload, CheckCircle2, Mountain } from 'lucide-react'
+import { Upload, CheckCircle2, Mountain, Lock } from 'lucide-react'
 import { logAscent } from '@/app/ascents/actions'
 
 interface SuggestedPeak {
@@ -124,6 +124,11 @@ export function GpxUploader({ ascendedIds }: GpxUploaderProps) {
           }}
         />
       </div>
+
+      <p className="flex items-center gap-1.5 text-xs text-text-warm mt-3">
+        <Lock size={11} className="shrink-0" strokeWidth={1.75} />
+        GPX-filen lagres ikke. Sporet analyseres kun i nettleseren din og kastes umiddelbart etter at forslagene er generert.
+      </p>
 
       {status === 'error' && errorMsg && (
         <p className="text-xs text-red-500 mt-3">{errorMsg}</p>
