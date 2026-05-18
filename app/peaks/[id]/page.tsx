@@ -64,9 +64,15 @@ export default async function PeakPage({ params }: PeakPageProps) {
           <div className="h-72 sm:h-96 rounded-xl overflow-hidden border border-border-warm mt-6">
             <PeakDetailMap peak={peak} nearbyPeaks={nearbyPeaks} />
           </div>
-          <p className="font-mono text-xs text-stone-400 mt-2">
-            {peak.lat.toFixed(4)}° N, {peak.lng.toFixed(4)}° Ø
-          </p>
+          <a
+            href={`https://geohack.toolforge.org/geohack.php?language=no&pagename=${encodeURIComponent(peak.name)}&params=${peak.lat}_N_${peak.lng}_E_`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono text-xs text-stone-400 hover:text-stone-600 transition-colors mt-2 inline-flex items-center gap-1"
+          >
+            {peak.lat.toFixed(6)}° N, {peak.lng.toFixed(6)}° Ø
+            <ExternalLink size={10} />
+          </a>
         </>
       )}
 
