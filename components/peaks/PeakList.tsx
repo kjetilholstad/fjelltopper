@@ -6,9 +6,11 @@ import { PeakCard } from './PeakCard'
 import type { EnrichedPeak } from '@/types'
 import { usePeakFilters } from '@/lib/hooks/usePeakFilters'
 
+type AscentMapEntry = { id: string; date: string; notes: string | null; weather: string | null }
+
 interface PeakListProps {
   peaks: EnrichedPeak[]
-  ascendedMap?: Record<string, string>
+  ascendedMap?: Record<string, AscentMapEntry>
   userId?: string | null
 }
 
@@ -165,17 +167,23 @@ export function PeakList({ peaks, ascendedMap = {}, userId = null }: PeakListPro
         <p className="text-center text-text-warm py-16">Ingen topper matcher søket ditt.</p>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {sorted.map(peak => (
-            <PeakCard
-              key={peak.id}
-              peak={peak}
-              rank={rankMap.get(peak.id)}
-              allPeaks={peaks}
-              isAscended={peak.id in ascendedMap}
-              ascentDate={ascendedMap[peak.id] ?? null}
-              userId={userId}
-            />
-          ))}
+          {sorted.map(peak => {
+            const entry = ascendedMap[peak.id]
+            return (
+              <PeakCard
+                key={peak.id}
+                peak={peak}
+                rank={rankMap.get(peak.id)}
+                allPeaks={peaks}
+                isAscended={!!entry}
+                ascentId={entry?.id ?? null}
+                ascentDate={entry?.date ?? null}
+                ascentNotes={entry?.notes ?? null}
+                ascentWeather={entry?.weather ?? null}
+                userId={userId}
+              />
+            )
+          })}
         </div>
       )}
     </div>

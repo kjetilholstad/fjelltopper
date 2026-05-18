@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { Mountain } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { DeleteAscentButton } from '@/components/profile/DeleteAscentButton'
+import { EditAscentButton } from '@/components/profile/EditAscentButton'
 import { GpxUploader } from '@/components/peaks/GpxUploader'
 
 export const metadata = { title: 'Min profil — Fjelltopper' }
@@ -197,7 +198,15 @@ export default async function ProfilePage() {
                       )}
                     </div>
 
-                    <div className="shrink-0">
+                    <div className="shrink-0 flex items-center gap-2">
+                      <EditAscentButton
+                        ascentId={ascent.id}
+                        peakId={ascent.peak_id}
+                        peakName={ascent.peak.name}
+                        currentDate={ascent.date}
+                        currentNotes={ascent.notes}
+                        currentWeather={ascent.weather}
+                      />
                       <DeleteAscentButton peakId={ascent.peak_id} peakName={ascent.peak.name} />
                     </div>
                   </div>

@@ -10,6 +10,7 @@ export interface Peak {
   lat: number | null
   lng: number | null
   peakbagger_id: number | null
+  peakbook_id?: number | null
   topo_map: string | null
   description: string | null
   image_url: string | null

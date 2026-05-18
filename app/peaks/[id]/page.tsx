@@ -1,11 +1,18 @@
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
-import { CheckCircle2 } from 'lucide-react'
+import { CheckCircle2, ExternalLink } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { nearestPeak } from '@/lib/nearestPeaks'
 import { getNearbyPeaks } from '@/lib/nearbyPeaks'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
+import { EditAscentButton } from '@/components/profile/EditAscentButton'
 import type { Peak, Ascent } from '@/types'
+
+const PeakDetailMap = dynamic(
+  () => import('@/components/peaks/PeakDetailMap'),
+  { ssr: false }
+)
 
 interface PeakPageProps {
   params: Promise<{ id: string }>
@@ -55,11 +62,17 @@ export default async function PeakPage({ params }: PeakPageProps) {
         </p>
       </div>
 
-      {peak.description && (
-        <p className="text-stone-700 text-lg mb-8">{peak.description}</p>
+      {peak.lat != null && peak.lng != null && (
+        <div className="h-72 sm:h-96 rounded-xl overflow-hidden border border-border-warm mt-6">
+          <PeakDetailMap peak={peak} nearbyPeaks={nearbyPeaks} />
+        </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4 text-sm">
+      {peak.description && (
+        <p className="text-stone-700 text-lg mb-8 mt-6">{peak.description}</p>
+      )}
+
+      <div className="grid grid-cols-2 gap-4 text-sm mt-6">
         {peak.lat != null && peak.lng != null && (
           <div className="bg-white rounded-lg border p-4">
             <p className="text-stone-500 mb-1">Koordinater</p>
@@ -92,6 +105,34 @@ export default async function PeakPage({ params }: PeakPageProps) {
           </div>
         )}
       </div>
+
+      {/* Eksterne lenker */}
+      {(peak.peakbagger_id != null || peak.peakbook_id != null) && (
+        <div className="mt-6 flex flex-wrap gap-3">
+          {peak.peakbagger_id != null && (
+            <a
+              href={`https://www.peakbagger.com/peak.aspx?pid=${peak.peakbagger_id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-white rounded-lg border border-border-warm px-4 py-2.5 text-sm font-medium text-[#1A1A1A] hover:border-forest hover:text-forest transition-colors"
+            >
+              <ExternalLink size={14} strokeWidth={1.75} />
+              Peakbagger
+            </a>
+          )}
+          {peak.peakbook_id != null && (
+            <a
+              href={`https://peakbook.org/index.php?module=index.enterTour&id=${peak.peakbook_id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-white rounded-lg border border-border-warm px-4 py-2.5 text-sm font-medium text-[#1A1A1A] hover:border-forest hover:text-forest transition-colors"
+            >
+              <ExternalLink size={14} strokeWidth={1.75} />
+              Peakbook
+            </a>
+          )}
+        </div>
+      )}
 
       {/* Nærliggende topper */}
       {nearbyPeaks.length > 0 && (
@@ -160,15 +201,25 @@ export default async function PeakPage({ params }: PeakPageProps) {
                   </p>
                 )}
               </div>
-              <form action={deleteAscent}>
-                <input type="hidden" name="peak_id" value={peak.id} />
-                <button
-                  type="submit"
-                  className="text-sm text-text-warm border border-border-warm rounded-lg px-4 py-2 hover:border-red-300 hover:text-red-600 transition-colors"
-                >
-                  Fjern bestigning
-                </button>
-              </form>
+              <div className="flex items-center gap-3 flex-wrap">
+                <form action={deleteAscent}>
+                  <input type="hidden" name="peak_id" value={peak.id} />
+                  <button
+                    type="submit"
+                    className="text-sm text-text-warm border border-border-warm rounded-lg px-4 py-2 hover:border-red-300 hover:text-red-600 transition-colors"
+                  >
+                    Fjern bestigning
+                  </button>
+                </form>
+                <EditAscentButton
+                  ascentId={ascent.id}
+                  peakId={peak.id}
+                  peakName={peak.name}
+                  currentDate={ascent.date}
+                  currentNotes={ascent.notes}
+                  currentWeather={ascent.weather}
+                />
+              </div>
             </div>
           ) : (
             /* Logg ny bestigning */

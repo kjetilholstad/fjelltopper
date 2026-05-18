@@ -80,9 +80,11 @@ function Select({
   )
 }
 
+type AscentMapEntry = { id: string; date: string; notes: string | null; weather: string | null }
+
 interface MapWithFiltersProps {
   peaks: EnrichedPeak[]
-  ascendedMap?: Record<string, string>
+  ascendedMap?: Record<string, AscentMapEntry>
   isLoggedIn?: boolean
   userId?: string | null
 }
@@ -443,7 +445,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                   <div className="flex items-center justify-between gap-2">
                     <span className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-forest-50 text-forest border border-forest/20">
                       <CheckCircle2 size={11} strokeWidth={2} />
-                      {new Date((ascendedMap[selectedPeak.id] ?? '') + 'T12:00:00').toLocaleDateString('no-NO', {
+                      {new Date((ascendedMap[selectedPeak.id]?.date ?? '') + 'T12:00:00').toLocaleDateString('no-NO', {
                         day: 'numeric', month: 'short', year: 'numeric',
                       })}
                     </span>

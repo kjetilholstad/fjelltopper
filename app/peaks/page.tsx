@@ -12,18 +12,20 @@ export default async function PeaksPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
+  type AscentEntry = { id: string; peak_id: string; date: string; notes: string | null; weather: string | null }
+
   const [{ data }, { data: ascentsData }] = await Promise.all([
     supabase.from('peaks').select('*').order('height', { ascending: false }),
     user
-      ? supabase.from('ascents').select('peak_id, date').eq('user_id', user.id)
-      : Promise.resolve({ data: [] as { peak_id: string; date: string }[] }),
+      ? supabase.from('ascents').select('id, peak_id, date, notes, weather').eq('user_id', user.id)
+      : Promise.resolve({ data: [] as AscentEntry[] }),
   ])
 
   const peaks = (data ?? []) as Peak[]
   const enriched = enrichPeaks(peaks)
-  const ascendedMap: Record<string, string> = {}
-  for (const a of (ascentsData ?? []) as { peak_id: string; date: string }[]) {
-    ascendedMap[a.peak_id] = a.date
+  const ascendedMap: Record<string, { id: string; date: string; notes: string | null; weather: string | null }> = {}
+  for (const a of (ascentsData ?? []) as AscentEntry[]) {
+    ascendedMap[a.peak_id] = { id: a.id, date: a.date, notes: a.notes, weather: a.weather }
   }
 
   return (

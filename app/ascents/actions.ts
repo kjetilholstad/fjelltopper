@@ -23,6 +23,28 @@ export async function logAscent(formData: FormData) {
   revalidatePath(`/peaks/${peak_id}`)
 }
 
+export async function updateAscent(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/auth/login')
+
+  const ascent_id = formData.get('ascent_id') as string
+  const peak_id = formData.get('peak_id') as string
+  const date = formData.get('date') as string
+  const notes = (formData.get('notes') as string | null)?.trim() || null
+  const weather = (formData.get('weather') as string | null)?.trim() || null
+
+  await supabase
+    .from('ascents')
+    .update({ date, notes, weather })
+    .eq('id', ascent_id)
+    .eq('user_id', user.id)
+
+  revalidatePath('/peaks')
+  revalidatePath(`/peaks/${peak_id}`)
+  revalidatePath('/profile')
+}
+
 export async function deleteAscent(formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

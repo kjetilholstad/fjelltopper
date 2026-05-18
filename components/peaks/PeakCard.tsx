@@ -2,23 +2,27 @@
 
 import { useState, useMemo, useTransition } from 'react'
 import Link from 'next/link'
-import { Mountain, TrendingUp, Navigation, ArrowUpToLine, MapPin, CheckCircle2, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react'
+import { Mountain, TrendingUp, Navigation, ArrowUpToLine, MapPin, CheckCircle2, ChevronRight, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
 import { nearestPeak } from '@/lib/nearestPeaks'
 import { getNearbyPeaks } from '@/lib/nearbyPeaks'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { EditAscentButton } from '@/components/profile/EditAscentButton'
 
 interface PeakCardProps {
   peak: EnrichedPeak
   rank?: number
   isAscended?: boolean
+  ascentId?: string | null
   ascentDate?: string | null
+  ascentNotes?: string | null
+  ascentWeather?: string | null
   userId?: string | null
   allPeaks?: EnrichedPeak[]
 }
 
-export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, userId = null, allPeaks }: PeakCardProps) {
+export function PeakCard({ peak, rank, isAscended = false, ascentId = null, ascentDate = null, ascentNotes = null, ascentWeather = null, userId = null, allPeaks }: PeakCardProps) {
   const [open, setOpen] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -56,7 +60,17 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
           </div>
 
           {userId !== null && isAscended && ascentDate ? (
-            <>
+            <div className="flex items-center gap-1">
+              {ascentId && (
+                <EditAscentButton
+                  ascentId={ascentId}
+                  peakId={peak.id}
+                  peakName={peak.name}
+                  currentDate={ascentDate}
+                  currentNotes={ascentNotes}
+                  currentWeather={ascentWeather}
+                />
+              )}
               <button
                 disabled={isPending}
                 onClick={e => { e.preventDefault(); e.stopPropagation(); setConfirmOpen(true) }}
@@ -79,7 +93,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
                 onCancel={() => setConfirmOpen(false)}
                 message={`Fjerne bestigning av ${peak.name}?`}
               />
-            </>
+            </div>
           ) : userId !== null && !isAscended ? (
             <button
               onClick={e => { e.preventDefault(); e.stopPropagation(); setShowForm(v => !v) }}
@@ -198,6 +212,43 @@ export function PeakCard({ peak, rank, isAscended = false, ascentDate = null, us
                   </div>
                 ))}
               </div>
+            )}
+          </div>
+        )}
+
+        {/* Eksterne lenker */}
+        {(peak.peakbagger_id != null || peak.peakbook_id != null) && (
+          <div
+            className="flex items-center gap-3 mt-2"
+            onClick={e => e.stopPropagation()}
+          >
+            {peak.peakbagger_id != null && (
+              <button
+                type="button"
+                onClick={e => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  window.open(`https://www.peakbagger.com/peak.aspx?pid=${peak.peakbagger_id}`, '_blank', 'noopener,noreferrer')
+                }}
+                className="flex items-center gap-1 text-[11px] text-text-warm hover:text-forest transition-colors"
+              >
+                <ExternalLink size={11} strokeWidth={1.75} />
+                Peakbagger
+              </button>
+            )}
+            {peak.peakbook_id != null && (
+              <button
+                type="button"
+                onClick={e => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  window.open(`https://peakbook.org/index.php?module=index.enterTour&id=${peak.peakbook_id}`, '_blank', 'noopener,noreferrer')
+                }}
+                className="flex items-center gap-1 text-[11px] text-text-warm hover:text-forest transition-colors"
+              >
+                <ExternalLink size={11} strokeWidth={1.75} />
+                Peakbook
+              </button>
             )}
           </div>
         )}
