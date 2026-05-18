@@ -52,51 +52,44 @@ export default async function PeakPage({ params }: PeakPageProps) {
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
       <div className="mb-6">
-        <div className="flex items-start gap-3 flex-wrap">
-          <h1 className="text-4xl font-bold text-stone-900">{peak.name}</h1>
-          <span className="text-base px-3 py-1 mt-1 bg-stone-100 rounded-full font-medium text-stone-700">
-            {peak.height} moh
-          </span>
-        </div>
-        <p className="text-stone-500 mt-2">
-          {peak.municipality}, {peak.county}
+        <h1 className="text-4xl font-bold text-stone-900">{peak.name}</h1>
+        <p className="text-stone-500 text-sm mt-1">
+          {peak.height.toLocaleString('no')} moh · {peak.municipality}, {peak.county}
         </p>
       </div>
 
       {peak.lat != null && peak.lng != null && (
-        <div className="h-72 sm:h-96 rounded-xl overflow-hidden border border-border-warm mt-6">
-          <PeakDetailMap peak={peak} nearbyPeaks={nearbyPeaks} />
-        </div>
+        <>
+          <div className="h-72 sm:h-96 rounded-xl overflow-hidden border border-border-warm mt-6">
+            <PeakDetailMap peak={peak} nearbyPeaks={nearbyPeaks} />
+          </div>
+          <p className="font-mono text-xs text-stone-400 mt-2">
+            {peak.lat.toFixed(4)}° N, {peak.lng.toFixed(4)}° Ø
+          </p>
+        </>
       )}
 
       {peak.description && (
-        <p className="text-stone-700 text-lg mb-8 mt-6">{peak.description}</p>
+        <p className="text-stone-700 text-lg mt-6">{peak.description}</p>
       )}
 
-      <div className="grid grid-cols-2 gap-4 text-sm mt-6">
-        {peak.lat != null && peak.lng != null && (
-          <div className="bg-white rounded-lg border p-4">
-            <p className="text-stone-500 mb-1">Koordinater</p>
-            <p className="font-mono text-stone-800">
-              {peak.lat.toFixed(4)}° N, {peak.lng.toFixed(4)}° Ø
-            </p>
-          </div>
-        )}
-        <div className="bg-white rounded-lg border p-4">
-          <p className="text-stone-500 mb-1">Høyde</p>
-          <p className="font-semibold text-stone-800">{peak.height} meter over havet</p>
+      {/* Stats */}
+      <div className="flex flex-wrap gap-8 mt-6">
+        <div>
+          <p className="text-xs text-stone-400 uppercase tracking-wide mb-1">Høyde</p>
+          <p className="font-semibold text-stone-900">{peak.height.toLocaleString('no')} moh</p>
         </div>
-        <div className="bg-white rounded-lg border p-4">
-          <p className="text-stone-500 mb-1">Primærfaktor</p>
-          <p className="font-semibold text-stone-800">{(peak.primary_factor ?? 0).toLocaleString('no')} m</p>
+        <div>
+          <p className="text-xs text-stone-400 uppercase tracking-wide mb-1">Primærfaktor</p>
+          <p className="font-semibold text-stone-900">{(peak.primary_factor ?? 0).toLocaleString('no')} m</p>
         </div>
         {peak.nearest_higher_peak && (
-          <div className="bg-white rounded-lg border p-4">
-            <p className="text-stone-500 mb-1">Nærmeste høyere fjell</p>
-            <p className="font-semibold text-stone-800">
+          <div>
+            <p className="text-xs text-stone-400 uppercase tracking-wide mb-1">Nærmeste høyere fjell</p>
+            <p className="font-semibold text-stone-900">
               {peak.nearest_higher_peak}
               {distanceToHigher != null && (
-                <span className="text-stone-500 font-normal ml-1">
+                <span className="font-normal text-stone-500 ml-1">
                   ({distanceToHigher < 1
                     ? `${Math.round(distanceToHigher * 1000).toLocaleString('no')} m`
                     : `${Math.round(distanceToHigher).toLocaleString('no')} km`})
@@ -109,15 +102,15 @@ export default async function PeakPage({ params }: PeakPageProps) {
 
       {/* Eksterne lenker */}
       {(peak.peakbagger_id != null || peak.peakbook_id != null) && (
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div className="flex gap-4 border-t border-stone-100 pt-3 mt-4">
           {peak.peakbagger_id != null && (
             <a
               href={`https://www.peakbagger.com/peak.aspx?pid=${peak.peakbagger_id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-white rounded-lg border border-border-warm px-4 py-2.5 text-sm font-medium text-[#1A1A1A] hover:border-forest hover:text-forest transition-colors"
+              className="flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 transition-colors"
             >
-              <ExternalLink size={14} strokeWidth={1.75} />
+              <ExternalLink size={12} />
               Peakbagger
             </a>
           )}
@@ -126,9 +119,9 @@ export default async function PeakPage({ params }: PeakPageProps) {
               href={`https://peakbook.org/peakbook-element/${peak.peakbook_id}/${encodeURIComponent(peak.name).replace(/%20/g, '+')}.html`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-white rounded-lg border border-border-warm px-4 py-2.5 text-sm font-medium text-[#1A1A1A] hover:border-forest hover:text-forest transition-colors"
+              className="flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 transition-colors"
             >
-              <ExternalLink size={14} strokeWidth={1.75} />
+              <ExternalLink size={12} />
               Peakbook
             </a>
           )}
