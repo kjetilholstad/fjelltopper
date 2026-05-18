@@ -9,7 +9,7 @@ function PrimaerfaktorSVG() {
   const saddelY = 115
   const peakBY = 62
   const peakBX = 348
-  const arrowX = peakBX + 28
+  const arrowX = peakBX - 18
 
   return (
     <svg viewBox="0 0 440 180" xmlns="http://www.w3.org/2000/svg" className="w-full max-w-md mx-auto block" aria-label="Illustrasjon av primærfaktor">
@@ -62,7 +62,7 @@ function ToNaermesteSVG() {
       <circle cx="180" cy="55" r="4" fill="#6B6560" />
 
       {/* Label: "over sadel" */}
-      <text x="110" y="12" fontSize="9" fill="#2D5016" textAnchor="middle" fontFamily="system-ui, sans-serif" fontStyle="italic">via laveste pas</text>
+      <text x="110" y="12" fontSize="9" fill="#2D5016" textAnchor="middle" fontFamily="system-ui, sans-serif" fontStyle="italic">via laveste pass</text>
 
       {/* Tittel venstre */}
       <text x="110" y="150" fontSize="11" fill="#1A1A1A" fontWeight="600" textAnchor="middle" fontFamily="system-ui, sans-serif">Nærmeste Høyere Topp</text>
@@ -106,12 +106,12 @@ function NaerliggendeTopperSVG() {
     { x: 175, y: 82,  pf: 70,  inside: true,  ok: true,  label: 'PF 70 m' },
     { x: 112, y: 152, pf: 30,  inside: true,  ok: true,  label: 'PF 30 m' },
     { x: 185, y: 148, pf: 130, inside: true,  ok: false, label: 'PF 130 m' },
-    { x: 38,  y: 55,  pf: 50,  inside: false, ok: false, label: 'PF 50 m' },
-    { x: 232, y: 165, pf: 60,  inside: false, ok: false, label: 'PF 60 m' },
+    { x: 38,  y: 55,  pf: 50,  inside: false, ok: false, label: 'for langt unna' },
+    { x: 226, y: 158, pf: 60,  inside: false, ok: false, label: 'for langt unna' },
   ]
 
   return (
-    <svg viewBox="0 0 280 230" xmlns="http://www.w3.org/2000/svg" className="w-full max-w-xs mx-auto block" aria-label="Illustrasjon av nærliggende topper">
+    <svg viewBox="0 0 340 235" xmlns="http://www.w3.org/2000/svg" className="w-full max-w-xs mx-auto block" aria-label="Illustrasjon av nærliggende topper">
 
       {/* Radius-sirkel */}
       <circle cx={cx} cy={cy} r={r} fill="none" stroke="#2D5016" strokeWidth="1.2" strokeDasharray="6,4" opacity="0.5" />
@@ -142,11 +142,11 @@ function NaerliggendeTopperSVG() {
       <text x={cx} y={cy + 20} fontSize="10" fill="#2D5016" fontWeight="600" textAnchor="middle" fontFamily="system-ui, sans-serif">Din topp</text>
 
       {/* Forklaring nederst */}
-      <g transform="translate(10, 205)">
+      <g transform="translate(10, 210)">
         <circle cx="6" cy="5" r="4" fill="#2D5016" />
         <text x="14" y="9" fontSize="9" fill="#1A1A1A" fontFamily="system-ui, sans-serif">Regnes som nærliggende</text>
-        <circle cx="116" cy="5" r="4" fill="#C8BFB2" />
-        <text x="124" y="9" fontSize="9" fill="#6B6560" fontFamily="system-ui, sans-serif">Regnes ikke</text>
+        <circle cx="158" cy="5" r="4" fill="#C8BFB2" />
+        <text x="166" y="9" fontSize="9" fill="#6B6560" fontFamily="system-ui, sans-serif">Regnes ikke</text>
       </g>
     </svg>
   )
@@ -227,7 +227,7 @@ export default function InfoPage() {
 
           <ToNaermesteSVG />
           <p className="text-xs text-[#6B6560] text-center mt-3 italic">
-            Venstre: topografisk rute via laveste pas. Høyre: korteste luftlinje til nærmeste 2000-mtopp.
+            Venstre: topografisk rute via laveste pass. Høyre: korteste luftlinje til nærmeste 2000-mtopp.
           </p>
         </section>
 
@@ -318,6 +318,98 @@ export default function InfoPage() {
               </ol>
               <p className="mt-3 text-xs text-[#6B6560] bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9] leading-relaxed">
                 🔒 GPX-filen lagres ikke. Sporet analyseres kun i nettleseren din og kastes umiddelbart etter at forslagene er generert.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── 5. Kartvisning og tegnforklaring ── */}
+        <section className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
+          <h2 className="text-base font-semibold text-[#1A1A1A] mb-3 flex items-center gap-2">
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">5</span>
+            Kartvisning og tegnforklaring
+          </h2>
+          <p className="text-sm text-[#6B6560] leading-relaxed mb-4">
+            I kartvisningen kan du tegne linjer mellom topper for å visualisere topografiske relasjoner.
+            Linjene aktiveres via tegnforklaringen — men først må du <strong className="text-[#1A1A1A] font-medium">velge en topp</strong> ved å klikke på den i kartet.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-5 items-start">
+
+            {/* Mockup av tegnforklaringen */}
+            <div className="bg-white rounded-xl shadow-md border border-[#E8E2D9] px-3 py-2.5 flex flex-col gap-0.5 shrink-0 w-56">
+              <p className="text-[10px] font-semibold text-[#6B6560] uppercase tracking-wide mb-1">Tegnforklaring</p>
+
+              {/* Valgt topp — ikke klikkbar */}
+              <div className="flex items-center gap-2 px-1.5 py-1">
+                <div className="w-[18px] h-[18px] rounded-full bg-[#1A3A0A] border-[1.5px] border-white shadow shrink-0" />
+                <span className="text-xs text-[#1A1A1A]">Valgt topp</span>
+              </div>
+
+              {/* Nærmeste høyere fjell — klikkbar */}
+              <div className="flex items-center gap-2 rounded-lg px-1.5 py-1 -mx-1.5 bg-[#F7F4EF] cursor-pointer">
+                <div className="w-[13px] h-[13px] rounded-full bg-[#D4A017] border-[1.5px] border-white shadow shrink-0" />
+                <svg width="20" height="10" viewBox="0 0 20 10" className="shrink-0">
+                  <line x1="0" y1="5" x2="20" y2="5" stroke="#D4A017" strokeWidth="2" strokeDasharray="4 3" />
+                </svg>
+                <span className="text-xs text-[#1A1A1A]">Nærmeste høyere fjell</span>
+                <span className="ml-auto text-[10px] font-semibold text-[#D4A017]">På</span>
+              </div>
+
+              {/* Nærmeste over 2000 m — klikkbar, inaktiv */}
+              <div className="flex items-center gap-2 rounded-lg px-1.5 py-1 -mx-1.5 hover:bg-[#F7F4EF] cursor-pointer">
+                <div className="w-[13px] h-[13px] rounded-full bg-[#E8671A] border-[1.5px] border-white shadow shrink-0" />
+                <svg width="20" height="10" viewBox="0 0 20 10" className="shrink-0">
+                  <line x1="0" y1="5" x2="20" y2="5" stroke="#E8671A" strokeWidth="2" strokeDasharray="4 3" />
+                </svg>
+                <span className="text-xs text-[#1A1A1A]">Nærmeste over 2000 m</span>
+              </div>
+
+              {/* Nærliggende topper — klikkbar, inaktiv */}
+              <div className="flex items-center gap-2 rounded-lg px-1.5 py-1 -mx-1.5 hover:bg-[#F7F4EF] cursor-pointer">
+                <div className="w-[11px] h-[11px] rounded-full bg-[#DC2626] border-[1.5px] border-white shadow shrink-0" />
+                <svg width="20" height="10" viewBox="0 0 20 10" className="shrink-0">
+                  <line x1="0" y1="5" x2="20" y2="5" stroke="#DC2626" strokeWidth="2" />
+                </svg>
+                <span className="text-xs text-[#1A1A1A]">Nærliggende topper</span>
+              </div>
+
+              {/* Separator */}
+              <div className="border-t border-[#E8E2D9] my-1" />
+
+              {/* Bestigning registrert */}
+              <div className="flex items-center gap-2 px-1.5 py-1">
+                <div className="w-[11px] h-[11px] rounded-full bg-white border-2 border-[#2D5016] shadow shrink-0" />
+                <span className="text-xs text-[#1A1A1A]">Bestigning registrert</span>
+              </div>
+
+              {/* Topp */}
+              <div className="flex items-center gap-2 px-1.5 py-1">
+                <div className="w-[9px] h-[9px] rounded-full bg-[#2D5016] border-[1.5px] border-white shadow shrink-0" />
+                <span className="text-xs text-[#1A1A1A]">Topp</span>
+              </div>
+            </div>
+
+            {/* Forklaring ved siden av */}
+            <div className="flex flex-col gap-3 text-sm text-[#6B6560]">
+              <p className="leading-relaxed">
+                De tre øverste radene med fargede linjer er <strong className="text-[#1A1A1A] font-medium">klikkbare</strong> når du har valgt en topp.
+                Klikk én gang for å tegne linjen, klikk igjen for å skjule den.
+              </p>
+              <div className="flex flex-col gap-2">
+                {[
+                  { color: '#D4A017', label: 'Nærmeste høyere fjell', desc: 'Stiplet gul linje til den topografisk nærmeste høyere toppen.' },
+                  { color: '#E8671A', label: 'Nærmeste over 2000 m',  desc: 'Stiplet oransje linje til den geografisk nærmeste toppen over 2 000 moh.' },
+                  { color: '#DC2626', label: 'Nærliggende topper',    desc: 'Røde linjer til alle topper som oppfyller nærliggende-kriteriene.' },
+                ].map(({ color, label, desc }) => (
+                  <div key={label} className="flex items-start gap-2.5">
+                    <div className="mt-1 w-3 h-3 rounded-full shrink-0" style={{ background: color }} />
+                    <p><span className="font-medium text-[#1A1A1A]">{label}:</span> {desc}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9] leading-relaxed">
+                Radene er grået ut så lenge ingen topp er valgt. Klikk på en toppmarkør i kartet for å aktivere dem.
               </p>
             </div>
           </div>
