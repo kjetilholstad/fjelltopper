@@ -41,10 +41,10 @@ export default async function Home() {
     : null
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex flex-col">
+    <div>
 
       {/* ── Hero ────────────────────────────────────────────────── */}
-      <section className="flex-1 bg-parchment px-4 sm:px-6 lg:px-12 pt-14 pb-0">
+      <section className="bg-parchment px-4 sm:px-6 lg:px-12 pt-14 pb-0">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
