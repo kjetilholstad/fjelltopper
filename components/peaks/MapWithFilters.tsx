@@ -12,6 +12,7 @@ import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { getNearbyPeaks } from '@/lib/nearbyPeaks'
 import { haversineKm } from '@/lib/nearestPeaks'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { formatDist } from '@/lib/utils'
 
 const PeakMap = dynamic(
   () => import('./PeakMap').then((m) => m.PeakMap),
@@ -177,9 +178,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
     const higherLabel = higherPeakEntry?.lat != null && higherPeakEntry?.lng != null && higherDistKm != null
       ? {
           pos: [(selectedPeak.lat! + higherPeakEntry.lat) / 2, (selectedPeak.lng! + higherPeakEntry.lng) / 2] as [number, number],
-          text: higherDistKm < 1
-            ? `${Math.round(higherDistKm * 1000)} m`
-            : `${higherDistKm.toFixed(1).replace('.', ',')} km`,
+          text: formatDist(higherDistKm * 1000),
         }
       : null
 
@@ -191,9 +190,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
     const nearest2000Label = nearestResult?.peak.lat != null && nearestResult?.peak.lng != null
       ? {
           pos: [(selectedPeak.lat! + nearestResult.peak.lat) / 2, (selectedPeak.lng! + nearestResult.peak.lng) / 2] as [number, number],
-          text: nearestResult.distanceKm < 1
-            ? `${Math.round(nearestResult.distanceKm * 1000 / 10) * 10} m`
-            : `${nearestResult.distanceKm.toFixed(1).replace('.', ',')} km`,
+          text: formatDist(nearestResult.distanceKm * 1000),
         }
       : null
 
@@ -206,9 +203,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
       const midLat = (selectedPeak.lat! + p.lat!) / 2
       const midLng = (selectedPeak.lng! + p.lng!) / 2
       const distM = haversineKm(selectedPeak.lat!, selectedPeak.lng!, p.lat!, p.lng!) * 1000
-      const text = distM < 1000
-        ? `${Math.round(distM / 10) * 10} m`
-        : `${(distM / 1000).toFixed(1).replace('.', ',')} km`
+      const text = formatDist(distM)
       return { pos: [midLat, midLng] as [number, number], text }
     })
 
@@ -430,9 +425,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             {selectedPeak.nearest_higher_peak && distToHigher != null ? (
               <p className="text-[11px] text-text-warm mb-1">
                 Nærmeste høyere: <span className="font-medium text-[#1A1A1A]">
-                  {selectedPeak.nearest_higher_peak} ({distToHigher < 1
-                    ? `${Math.round(distToHigher * 1000).toLocaleString('no')} m`
-                    : `${Math.round(distToHigher).toLocaleString('no')} km`})
+                  {selectedPeak.nearest_higher_peak} ({formatDist(distToHigher * 1000)})
                 </span>
               </p>
             ) : null}
@@ -441,7 +434,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             {nearest && (
               <p className="text-[11px] text-text-warm mb-1">
                 Nærmeste over 2000 m: <span className="font-medium text-[#1A1A1A]">
-                  {nearest.peak.name} ({nearest.distanceKm.toFixed(1).replace('.', ',')} km)
+                  {nearest.peak.name} ({formatDist(nearest.distanceKm * 1000)})
                 </span>
               </p>
             )}

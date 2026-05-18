@@ -9,6 +9,7 @@ import { getNearbyPeaks } from '@/lib/nearbyPeaks'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { EditAscentButton } from '@/components/profile/EditAscentButton'
+import { formatDist } from '@/lib/utils'
 
 interface PeakCardProps {
   peak: EnrichedPeak
@@ -159,11 +160,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
                 {peak.nearest_higher_peak}
                 {(() => {
                   const dist = distanceToNearestHigher(peak, allPeaks ?? [])
-                  return dist != null
-                    ? ` (${dist < 2
-                        ? `${Math.round(dist * 1000).toLocaleString('no')} m`
-                        : `${dist.toFixed(1).replace('.', ',')} km`})`
-                    : ''
+                  return dist != null ? ` (${formatDist(dist * 1000)})` : ''
                 })()}
               </span>
             </span>
@@ -176,9 +173,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
             <Navigation size={13} className="text-text-warm shrink-0" strokeWidth={1.75} />
             <span className="text-xs text-text-warm">
               Nærmeste over 2000 m: <span className="font-medium text-[#1A1A1A]">
-                {nearest.peak.name} ({nearest.distanceKm < 2
-                  ? `${Math.round(nearest.distanceKm * 1000).toLocaleString('no')} m`
-                  : `${nearest.distanceKm.toFixed(1).replace('.', ',')} km`})
+                {nearest.peak.name} ({formatDist(nearest.distanceKm * 1000)})
               </span>
             </span>
           </div>

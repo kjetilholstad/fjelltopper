@@ -2,12 +2,7 @@ import Link from 'next/link'
 import { ExternalLink } from 'lucide-react'
 import type { Peak } from '@/types'
 import { distanceToNearestHigher } from '@/lib/nearestPeaks'
-
-function formatDist(m: number): string {
-  return m < 1000
-    ? Math.round(m).toLocaleString('no') + ' m'
-    : (m / 1000).toFixed(1).replace('.', ',') + ' km'
-}
+import { formatDist } from '@/lib/utils'
 
 interface HomePeakCardProps {
   peak: Peak

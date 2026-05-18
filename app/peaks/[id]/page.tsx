@@ -7,6 +7,7 @@ import { nearestPeak, distanceToNearestHigher } from '@/lib/nearestPeaks'
 import { getNearbyPeaks } from '@/lib/nearbyPeaks'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { EditAscentButton } from '@/components/profile/EditAscentButton'
+import { formatDist } from '@/lib/utils'
 import type { Peak, Ascent } from '@/types'
 
 const PeakDetailMap = dynamic(
@@ -22,12 +23,6 @@ function formatDate(dateStr: string): string {
   return new Date(dateStr + 'T12:00:00').toLocaleDateString('no', {
     day: 'numeric', month: 'long', year: 'numeric',
   })
-}
-
-function formatDist(m: number): string {
-  return m < 1000
-    ? Math.round(m).toLocaleString('no') + ' m'
-    : (m / 1000).toFixed(1).replace('.', ',') + ' km'
 }
 
 export default async function PeakPage({ params }: PeakPageProps) {
