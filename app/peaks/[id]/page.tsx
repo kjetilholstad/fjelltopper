@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
 import { CheckCircle2, ExternalLink } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { nearestPeak } from '@/lib/nearestPeaks'
+import { nearestPeak, distanceToNearestHigher } from '@/lib/nearestPeaks'
 import { getNearbyPeaks } from '@/lib/nearbyPeaks'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { EditAscentButton } from '@/components/profile/EditAscentButton'
@@ -45,6 +45,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
 
   const nearbyPeaks = getNearbyPeaks(peak, allPeaks)
   const nearest = nearbyPeaks.length > 0 ? null : nearestPeak(peak, allPeaks)
+  const distanceToHigher = distanceToNearestHigher(peak, allPeaks)
   const ascent = ascentData as Ascent | null
   const today = new Date().toISOString().split('T')[0]
 
@@ -94,11 +95,11 @@ export default async function PeakPage({ params }: PeakPageProps) {
             <p className="text-stone-500 mb-1">Nærmeste høyere fjell</p>
             <p className="font-semibold text-stone-800">
               {peak.nearest_higher_peak}
-              {peak.secondary_factor != null && (
+              {distanceToHigher != null && (
                 <span className="text-stone-500 font-normal ml-1">
-                  ({peak.secondary_factor < 1000
-                    ? `${peak.secondary_factor.toLocaleString('no')} m`
-                    : `${Math.round(peak.secondary_factor / 1000).toLocaleString('no')} km`})
+                  ({distanceToHigher < 1
+                    ? `${Math.round(distanceToHigher * 1000).toLocaleString('no')} m`
+                    : `${Math.round(distanceToHigher).toLocaleString('no')} km`})
                 </span>
               )}
             </p>

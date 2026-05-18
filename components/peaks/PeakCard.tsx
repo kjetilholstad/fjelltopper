@@ -4,7 +4,7 @@ import { useState, useMemo, useTransition } from 'react'
 import Link from 'next/link'
 import { Mountain, TrendingUp, Navigation, ArrowUpToLine, MapPin, CheckCircle2, ChevronRight, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
-import { nearestPeak } from '@/lib/nearestPeaks'
+import { nearestPeak, distanceToNearestHigher } from '@/lib/nearestPeaks'
 import { getNearbyPeaks } from '@/lib/nearbyPeaks'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
@@ -157,11 +157,14 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
             <span className="text-xs text-text-warm">
               Nærmeste høyere: <span className="font-medium text-[#1A1A1A]">
                 {peak.nearest_higher_peak}
-                {peak.secondary_factor != null
-                  ? ` (${peak.secondary_factor < 2000
-                      ? `${peak.secondary_factor.toLocaleString('no')} m`
-                      : `${(peak.secondary_factor / 1000).toFixed(1).replace('.', ',')} km`})`
-                  : ''}
+                {(() => {
+                  const dist = distanceToNearestHigher(peak, allPeaks ?? [])
+                  return dist != null
+                    ? ` (${dist < 2
+                        ? `${Math.round(dist * 1000).toLocaleString('no')} m`
+                        : `${dist.toFixed(1).replace('.', ',')} km`})`
+                    : ''
+                })()}
               </span>
             </span>
           </div>

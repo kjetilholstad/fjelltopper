@@ -28,17 +28,16 @@ export default async function Home() {
 
   // Tilfeldig topp — rangert etter høyde slik at offset = rangering - 1
   const randomOffset = total > 0 ? Math.floor(Math.random() * total) : 0
-  const [{ data: featuredData }, { data: allForDistance }] = await Promise.all([
+  const [{ data: featuredData }, { data: allData }] = await Promise.all([
     supabase.from('peaks').select('*').order('height', { ascending: false }).range(randomOffset, randomOffset),
-    supabase.from('peaks').select('id, name, lat, lng').not('lat', 'is', null).not('lng', 'is', null),
+    supabase.from('peaks').select('*').not('lat', 'is', null).not('lng', 'is', null),
   ])
 
   const featured = (featuredData?.[0] ?? null) as Peak | null
+  const allPeaks = (allData ?? []) as Peak[]
   const featuredRank = randomOffset + 1
 
-  const nearest = featured && allForDistance
-    ? nearestPeak(featured as any, allForDistance as any)
-    : null
+  const nearest = featured ? nearestPeak(featured, allPeaks) : null
 
   return (
     <div>
@@ -93,7 +92,7 @@ export default async function Home() {
             {/* Right column — featured peak */}
             <div>
               {featured
-                ? <HomePeakCard peak={featured} rank={featuredRank} nearestPeakName={nearest?.peak.name ?? null} />
+                ? <HomePeakCard peak={featured} rank={featuredRank} nearestPeakName={nearest?.peak.name ?? null} allPeaks={allPeaks} />
                 : (
                   <div
                     className="bg-white rounded-xl p-5 text-sm text-[#6B6560]"

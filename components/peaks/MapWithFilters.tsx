@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Search, ChevronDown, CheckCircle2 } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
-import { nearestPeak } from '@/lib/nearestPeaks'
+import { nearestPeak, distanceToNearestHigher } from '@/lib/nearestPeaks'
 import { usePeakFilters } from '@/lib/hooks/usePeakFilters'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { getNearbyPeaks } from '@/lib/nearbyPeaks'
@@ -135,6 +135,11 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
     return nearestPeak(selectedPeak, peaks)
   }, [selectedPeak, peaks])
 
+  const distToHigher = useMemo(
+    () => selectedPeak ? distanceToNearestHigher(selectedPeak, peaks) : null,
+    [selectedPeak, peaks]
+  )
+
   const filteredWithAscended = useMemo(
     () => showOnlyAscended ? filtered.filter(p => ascendedSet.has(p.id)) : filtered,
     [filtered, showOnlyAscended, ascendedSet]
@@ -166,11 +171,15 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
       ? [[from, [higherPeakEntry.lat, higherPeakEntry.lng]]] as [number, number][][]
       : null
 
-    const sf = selectedPeak.secondary_factor
-    const higherLabel = higherPeakEntry?.lat != null && higherPeakEntry?.lng != null && sf != null
+    const higherDistKm = higherPeakEntry?.lat != null && higherPeakEntry?.lng != null
+      ? haversineKm(selectedPeak.lat!, selectedPeak.lng!, higherPeakEntry.lat, higherPeakEntry.lng)
+      : null
+    const higherLabel = higherPeakEntry?.lat != null && higherPeakEntry?.lng != null && higherDistKm != null
       ? {
           pos: [(selectedPeak.lat! + higherPeakEntry.lat) / 2, (selectedPeak.lng! + higherPeakEntry.lng) / 2] as [number, number],
-          text: sf < 1000 ? `${sf} m` : `${(sf / 1000).toFixed(1).replace('.', ',')} km`,
+          text: higherDistKm < 1
+            ? `${Math.round(higherDistKm * 1000)} m`
+            : `${higherDistKm.toFixed(1).replace('.', ',')} km`,
         }
       : null
 
@@ -418,9 +427,13 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             </p>
 
             {/* Nærmeste høyere fjell */}
-            {selectedPeak.nearest_higher_peak && selectedPeak.secondary_factor ? (
+            {selectedPeak.nearest_higher_peak && distToHigher != null ? (
               <p className="text-[11px] text-text-warm mb-1">
-                Nærmeste høyere: <span className="font-medium text-[#1A1A1A]">{selectedPeak.nearest_higher_peak} ({selectedPeak.secondary_factor < 1000 ? `${selectedPeak.secondary_factor.toLocaleString('no')} m` : `${Math.round(selectedPeak.secondary_factor / 1000).toLocaleString('no')} km`})</span>
+                Nærmeste høyere: <span className="font-medium text-[#1A1A1A]">
+                  {selectedPeak.nearest_higher_peak} ({distToHigher < 1
+                    ? `${Math.round(distToHigher * 1000).toLocaleString('no')} m`
+                    : `${Math.round(distToHigher).toLocaleString('no')} km`})
+                </span>
               </p>
             ) : null}
 

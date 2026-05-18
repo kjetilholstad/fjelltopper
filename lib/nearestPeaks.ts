@@ -1,4 +1,4 @@
-import type { EnrichedPeak } from '@/types'
+import type { Peak, EnrichedPeak } from '@/types'
 
 export function haversineKm(
   lat1: number, lng1: number,
@@ -13,6 +13,13 @@ export function haversineKm(
     Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
     Math.sin(dLng / 2) ** 2
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
+export function distanceToNearestHigher(peak: Peak, allPeaks: Peak[]): number | null {
+  if (!peak.nearest_higher_peak || peak.lat == null || peak.lng == null) return null
+  const target = allPeaks.find(p => p.name === peak.nearest_higher_peak)
+  if (!target || target.lat == null || target.lng == null) return null
+  return haversineKm(peak.lat, peak.lng, target.lat, target.lng)
 }
 
 export function nearestPeak(

@@ -1,27 +1,31 @@
 import Link from 'next/link'
 import { ExternalLink } from 'lucide-react'
 import type { Peak } from '@/types'
+import { distanceToNearestHigher } from '@/lib/nearestPeaks'
 
 interface HomePeakCardProps {
   peak: Peak
   rank: number
   nearestPeakName?: string | null
+  allPeaks?: Peak[]
 }
 
-export function HomePeakCard({ peak, rank, nearestPeakName }: HomePeakCardProps) {
+export function HomePeakCard({ peak, rank, nearestPeakName, allPeaks }: HomePeakCardProps) {
   const peakbaggerId = peak.peakbagger_id ?? 8916
+
+  const distKm = distanceToNearestHigher(peak, allPeaks ?? [])
+  const distFormatted = distKm != null
+    ? (distKm < 1
+        ? `${Math.round(distKm * 1000).toLocaleString('no')} m`
+        : `${Math.round(distKm).toLocaleString('no')} km`)
+    : null
 
   const stats = [
     { label: 'Primærfaktor', value: peak.primary_factor != null ? `${peak.primary_factor.toLocaleString('no')} m` : '—' },
     {
       label: 'Nærmeste høyere fjell',
-      value: peak.secondary_factor
-        ? (() => {
-            const dist = peak.secondary_factor < 1000
-              ? `${peak.secondary_factor.toLocaleString('no')} m`
-              : `${Math.round(peak.secondary_factor / 1000).toLocaleString('no')} km`
-            return peak.nearest_higher_peak ? `${peak.nearest_higher_peak} (${dist})` : dist
-          })()
+      value: distFormatted
+        ? (peak.nearest_higher_peak ? `${peak.nearest_higher_peak} (${distFormatted})` : distFormatted)
         : '—',
     },
     { label: 'Kommune', value: peak.municipality && peak.municipality !== 'Ukjent' ? peak.municipality : '—' },

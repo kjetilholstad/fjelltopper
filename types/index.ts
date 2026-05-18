@@ -3,7 +3,6 @@ export interface Peak {
   name: string
   height: number
   primary_factor: number | null
-  secondary_factor: number | null
   nearest_higher_peak: string | null
   county: string | null
   municipality: string
