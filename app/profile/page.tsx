@@ -134,7 +134,7 @@ export default async function ProfilePage() {
       ) : (
         <div>
           {years.map(year => (
-            <div key={year}>
+            <div key={year} className="mt-10 first:mt-0">
               <h2 className="text-xs font-semibold text-text-warm uppercase tracking-wide mb-2 mt-6 first:mt-0">
                 {year} · {byYear[year].length} bestigning{byYear[year].length !== 1 ? 'er' : ''}
               </h2>
