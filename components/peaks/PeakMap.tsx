@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { MapContainer, TileLayer, Marker, Polyline, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
-import { Layers } from 'lucide-react'
+import { Layers, Route } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
+import { nearestPeak } from '@/lib/nearestPeaks'
 import 'leaflet/dist/leaflet.css'
 
 const LAYERS = [
@@ -48,6 +49,7 @@ const ICON_NEAREST  = makeIcon(13, '#E8671A', 'white')
 const ICON_NEARBY   = makeIcon(11, '#DC2626', 'white')
 const ICON_ASCENDED = makeIcon(11, 'white',   '#2D5016')
 const ICON_REGULAR  = makeIcon(9,  '#2D5016', 'white')
+const ICON_COMPARE  = makeIcon(16, '#E8671A', '#fff')
 
 function getPeakIcon(
   peak: EnrichedPeak,
@@ -56,8 +58,10 @@ function getPeakIcon(
   nearest2000Id: string | null,
   nearbyIds: Set<string>,
   ascendedIds: Set<string>,
+  compareFromId: string | null,
 ): L.DivIcon {
   if (peak.id === selectedPeakId) return ICON_SELECTED
+  if (peak.id === compareFromId)  return ICON_COMPARE
   if (peak.id === higherPeakId)   return ICON_HIGHER
   if (peak.id === nearest2000Id)  return ICON_NEAREST
   if (nearbyIds.has(peak.id))     return ICON_NEARBY
@@ -89,6 +93,7 @@ interface PeakMapProps {
   nearest2000Id: string | null
   nearbyIds: Set<string>
   ascendedIds: Set<string>
+  onProfileChange: (profile: { from: EnrichedPeak; to: EnrichedPeak } | null) => void
 }
 
 export function PeakMap({
@@ -101,13 +106,23 @@ export function PeakMap({
   nearest2000Id,
   nearbyIds,
   ascendedIds,
+  onProfileChange,
 }: PeakMapProps) {
   const [activeLayerId, setActiveLayerId] = useState('topo')
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const selectorRef = useRef<HTMLDivElement>(null)
 
+  const [compareMode, setCompareMode] = useState(false)
+  const [compareFrom, setCompareFrom] = useState<EnrichedPeak | null>(null)
+
+  const selectedPeak = useMemo(
+    () => peaks.find(p => p.id === selectedPeakId) ?? null,
+    [peaks, selectedPeakId]
+  )
+
   const activeLayer = LAYERS.find(l => l.id === activeLayerId) ?? LAYERS[0]
 
+  // Close layer dropdown on outside click
   useEffect(() => {
     if (!dropdownOpen) return
     function handleClick(e: MouseEvent) {
@@ -118,6 +133,55 @@ export function PeakMap({
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [dropdownOpen])
+
+  // Auto-trigger profile when a line toggle is activated
+  useEffect(() => {
+    if (!selectedPeak?.lat || !selectedPeak?.lng) return
+
+    if (activeLines.has('higher') && selectedPeak.nearest_higher_peak) {
+      const target = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
+      if (target?.lat && target?.lng) {
+        onProfileChange({ from: selectedPeak, to: target })
+        return
+      }
+    }
+    if (activeLines.has('nearest2000')) {
+      const nearest = nearestPeak(selectedPeak, peaks)
+      if (nearest?.peak.lat && nearest?.peak.lng) {
+        onProfileChange({ from: selectedPeak, to: nearest.peak })
+      }
+    }
+  }, [activeLines, selectedPeak, peaks])
+
+  const handleMarkerClick = (peak: EnrichedPeak) => {
+    if (compareMode) {
+      if (!compareFrom) {
+        setCompareFrom(peak)
+      } else if (compareFrom.id === peak.id) {
+        setCompareFrom(null)
+      } else {
+        onProfileChange({ from: compareFrom, to: peak })
+        setCompareFrom(peak) // sliding window
+      }
+    } else {
+      onSelectPeak(peak)
+    }
+  }
+
+  const handleMapClick = () => {
+    if (compareMode) {
+      setCompareFrom(null)
+    } else {
+      onSelectPeak(null)
+    }
+  }
+
+  const toggleCompareMode = () => {
+    setCompareMode(m => {
+      if (m) setCompareFrom(null)
+      return !m
+    })
+  }
 
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative' }}>
@@ -133,14 +197,14 @@ export function PeakMap({
           {...(activeLayer.subdomains ? { subdomains: activeLayer.subdomains } : {})}
         />
 
-        <MapClickHandler onMapClick={() => onSelectPeak(null)} />
+        <MapClickHandler onMapClick={handleMapClick} />
 
         {peaks.map(peak => (
           <Marker
             key={peak.id}
             position={[peak.lat!, peak.lng!]}
-            icon={getPeakIcon(peak, selectedPeakId, higherPeakId, nearest2000Id, nearbyIds, ascendedIds)}
-            eventHandlers={{ click: () => onSelectPeak(peak) }}
+            icon={getPeakIcon(peak, selectedPeakId, higherPeakId, nearest2000Id, nearbyIds, ascendedIds, compareFrom?.id ?? null)}
+            eventHandlers={{ click: () => handleMarkerClick(peak) }}
           />
         ))}
 
@@ -200,35 +264,63 @@ export function PeakMap({
         ))}
       </MapContainer>
 
-      {/* Kartlag-velger — øverst til høyre */}
-      <div ref={selectorRef} style={{ position: 'absolute', top: 12, right: 12, zIndex: 1000 }}>
-        <button
-          onClick={() => setDropdownOpen(o => !o)}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-white shadow-md"
-          style={{ background: '#2D5016' }}
-        >
-          <Layers size={13} />
-          {activeLayer.label}
-        </button>
-
-        {dropdownOpen && (
-          <div className="mt-1 bg-white rounded-xl shadow-md border border-border-warm overflow-hidden min-w-[160px]">
-            {LAYERS.map(layer => (
-              <button
-                key={layer.id}
-                onClick={() => { setActiveLayerId(layer.id); setDropdownOpen(false) }}
-                className="w-full text-left px-3 py-2 text-xs transition-colors hover:bg-parchment"
-                style={{
-                  color: layer.id === activeLayerId ? '#2D5016' : '#1A1A1A',
-                  fontWeight: layer.id === activeLayerId ? 600 : 400,
-                  background: layer.id === activeLayerId ? '#F7F4EF' : undefined,
-                }}
-              >
-                {layer.label}
-              </button>
-            ))}
+      {/* Compare-mode hint — topp-midten */}
+      {compareMode && (
+        <div style={{ position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)', zIndex: 1000 }}>
+          <div className="bg-white rounded-lg shadow-md border border-[#E8E2D9] px-3 py-1.5 text-xs text-[#6B6560] whitespace-nowrap">
+            {compareFrom
+              ? `Fra: ${compareFrom.name} — klikk neste topp`
+              : 'Klikk på første topp'}
           </div>
-        )}
+        </div>
+      )}
+
+      {/* Kartlag-velger + profilknapp — øverst til høyre */}
+      <div ref={selectorRef} style={{ position: 'absolute', top: 12, right: 12, zIndex: 1000 }}>
+        <div className="flex items-start gap-1.5">
+          <button
+            onClick={toggleCompareMode}
+            title={compareMode ? 'Avslutt profilmodus' : 'Høydeprofil mellom to topper'}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium shadow-md transition-colors"
+            style={{
+              background: compareMode ? '#E8671A' : 'white',
+              color: compareMode ? 'white' : '#6B6560',
+              border: '1px solid #E8E2D9',
+            }}
+          >
+            <Route size={13} />
+          </button>
+
+          <div>
+            <button
+              onClick={() => setDropdownOpen(o => !o)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-white shadow-md"
+              style={{ background: '#2D5016' }}
+            >
+              <Layers size={13} />
+              {activeLayer.label}
+            </button>
+
+            {dropdownOpen && (
+              <div className="mt-1 bg-white rounded-xl shadow-md border border-border-warm overflow-hidden min-w-[160px]">
+                {LAYERS.map(layer => (
+                  <button
+                    key={layer.id}
+                    onClick={() => { setActiveLayerId(layer.id); setDropdownOpen(false) }}
+                    className="w-full text-left px-3 py-2 text-xs transition-colors hover:bg-parchment"
+                    style={{
+                      color: layer.id === activeLayerId ? '#2D5016' : '#1A1A1A',
+                      fontWeight: layer.id === activeLayerId ? 600 : 400,
+                      background: layer.id === activeLayerId ? '#F7F4EF' : undefined,
+                    }}
+                  >
+                    {layer.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -120,6 +120,31 @@ function NaermesteOver2000SVG() {
   )
 }
 
+function HoydeprofilSVG() {
+  const sampleDots = [
+    { x: 25,  y: 78  }, { x: 60,  y: 92  }, { x: 95,  y: 106 },
+    { x: 130, y: 104 }, { x: 165, y: 99  }, { x: 200, y: 113 },
+    { x: 235, y: 102 }, { x: 270, y: 86  }, { x: 305, y: 70  },
+    { x: 340, y: 65  }, { x: 375, y: 62  }, { x: 415, y: 58  },
+  ]
+  return (
+    <svg viewBox="0 0 440 145" xmlns="http://www.w3.org/2000/svg" className="w-full max-w-lg mx-auto block" aria-label="Høydeprofil med samplingspunkter mellom to topper">
+      <line x1="0" y1="132" x2="440" y2="132" stroke="#E0D9D0" strokeWidth="0.8"/>
+      <path d="M 25,132 L 25,78 L 110,112 L 155,95 L 205,115 L 310,68 L 415,58 L 415,132 Z"
+            fill="#E8E2D9"/>
+      <path d="M 25,78 L 110,112 L 155,95 L 205,115 L 310,68 L 415,58"
+            fill="none" stroke="#C8BFB2" strokeWidth="1.3"/>
+      {sampleDots.map((d, i) => (
+        <circle key={i} cx={d.x} cy={d.y} r="2.5" fill="#2D5016" opacity="0.65"/>
+      ))}
+      <circle cx="25"  cy="78" r="5" fill="#2D5016" stroke="white" strokeWidth="1.8"/>
+      <text x="25"  y="66" fontSize="9.5" fill="#2D5016" fontWeight="700" textAnchor="middle" fontFamily="system-ui, sans-serif">Topp A</text>
+      <circle cx="415" cy="58" r="5" fill="#2D5016" stroke="white" strokeWidth="1.8"/>
+      <text x="415" y="46" fontSize="9.5" fill="#2D5016" fontWeight="700" textAnchor="middle" fontFamily="system-ui, sans-serif">Topp B</text>
+    </svg>
+  )
+}
+
 function NaerliggendeTopperSVG() {
   // Fugleperspektiv: midtpunkt med 1,5 km-radius sirkel og nabotopper
   const cx = 140
@@ -269,10 +294,41 @@ export default function InfoPage() {
           </div>
         </section>
 
-        {/* ── 3. Nærliggende Topper ── */}
+        {/* ── 3. Høydeprofil og gangtidsestimat ── */}
         <section className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
           <h2 className="text-base font-semibold text-[#1A1A1A] mb-3 flex items-center gap-2">
             <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">3</span>
+            Høydeprofil og gangtidsestimat
+          </h2>
+          <p className="text-sm text-[#6B6560] leading-relaxed mb-3">
+            Luftlinjeavstand forteller ikke hele historien mellom to topper. For et bedre bilde
+            beregnes en høydeprofil ved å sample <strong className="text-[#1A1A1A] font-medium">50 jevnt fordelte punkter</strong> langs
+            luftlinjen og hente høyden i hvert punkt fra Kartverkets høydedataAPI. Dette gir en kurve
+            over terrenget mellom toppene — vist som de grønne punktene under.
+          </p>
+          <p className="text-sm text-[#6B6560] leading-relaxed mb-4">
+            Fra profilen beregnes <strong className="text-[#1A1A1A] font-medium">akkumulert stigning</strong> — summen av
+            alle høydemeter opp langs profilen (nedturer telles ikke med). Deretter brukes
+            Naismiths regel for å estimere gangtiden:
+          </p>
+          <div className="bg-[#f0f5e8] rounded-lg px-4 py-3 border border-[#C8D8A0] mb-5 text-center">
+            <p className="text-sm text-[#2D5016] font-medium">
+              Gangtid ≈ (luftlinjeavstand ÷ 5&nbsp;km/t) + (akkumulert stigning ÷ 600&nbsp;hm/t)
+            </p>
+          </div>
+          <HoydeprofilSVG />
+          <p className="text-xs text-[#6B6560] text-center mt-3 italic">
+            Grønne punkter = 50 samplingspunkter langs luftlinjen. Høyde fra Kartverkets API.
+          </p>
+          <p className="mt-4 text-xs text-[#6B6560] bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9] leading-relaxed">
+            Estimatet forutsetter jevnt terreng og ingen sti — reell gangtid kan variere betydelig avhengig av underlag og rute.
+          </p>
+        </section>
+
+        {/* ── 4. Nærliggende Topper ── */}
+        <section className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
+          <h2 className="text-base font-semibold text-[#1A1A1A] mb-3 flex items-center gap-2">
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">4</span>
             Nærliggende Topper
           </h2>
           <p className="text-sm text-[#6B6560] leading-relaxed mb-4">
@@ -305,7 +361,7 @@ export default function InfoPage() {
         {/* ── 4. Registrere Bestigning ── */}
         <section className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
           <h2 className="text-base font-semibold text-[#1A1A1A] mb-4 flex items-center gap-2">
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">4</span>
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">5</span>
             Registrere Bestigning
           </h2>
 
@@ -364,7 +420,7 @@ export default function InfoPage() {
         {/* ── 5. Kartvisning og tegnforklaring ── */}
         <section className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
           <h2 className="text-base font-semibold text-[#1A1A1A] mb-3 flex items-center gap-2">
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">5</span>
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">6</span>
             Kartvisning og tegnforklaring
           </h2>
           <p className="text-sm text-[#6B6560] leading-relaxed mb-4">

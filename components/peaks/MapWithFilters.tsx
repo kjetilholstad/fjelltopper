@@ -19,6 +19,8 @@ const PeakMap = dynamic(
   { ssr: false, loading: () => <div style={{ height: 'calc(100vh - 64px)' }} className="bg-parchment animate-pulse" /> }
 )
 
+const ElevationProfile = dynamic(() => import('./ElevationProfile'), { ssr: false })
+
 const HEIGHT_OPTIONS = [
   { label: 'Alle høyder', value: '0' },
   { label: 'Over 2000 moh', value: '2000' },
@@ -111,6 +113,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
 
   const [selectedPeak, setSelectedPeak] = useState<EnrichedPeak | null>(null)
   const [activeLines, setActiveLines] = useState<Set<LineType>>(new Set())
+  const [activeProfile, setActiveProfile] = useState<{ from: EnrichedPeak; to: EnrichedPeak } | null>(null)
   const [showOnlyAscended, setShowOnlyAscended] = useState(false)
   const [ascentDate, setAscentDate] = useState(new Date().toISOString().split('T')[0])
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -261,6 +264,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
         nearest2000Id={nearest2000Id}
         nearbyIds={nearbyIds}
         ascendedIds={ascendedSet}
+        onProfileChange={setActiveProfile}
       />
 
       {/* Venstre kolonne: filter + tegnforklaring + detaljpanel */}
@@ -512,6 +516,21 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
               Se detaljer →
             </Link>
           </div>
+        )}
+
+        {/* Høydeprofil */}
+        {activeProfile &&
+          activeProfile.from.lat != null && activeProfile.from.lng != null &&
+          activeProfile.to.lat   != null && activeProfile.to.lng   != null && (
+          <ElevationProfile
+            fromName={activeProfile.from.name}
+            toName={activeProfile.to.name}
+            fromLat={activeProfile.from.lat}
+            fromLng={activeProfile.from.lng}
+            toLat={activeProfile.to.lat}
+            toLng={activeProfile.to.lng}
+            onClose={() => setActiveProfile(null)}
+          />
         )}
       </div>
 
