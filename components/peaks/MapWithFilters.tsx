@@ -22,11 +22,12 @@ const PeakMap = dynamic(
 const ElevationProfile = dynamic(() => import('./ElevationProfile'), { ssr: false })
 
 const HEIGHT_OPTIONS = [
-  { label: 'Alle høyder', value: '0' },
+  { label: 'Alle høyder',    value: '0'    },
   { label: 'Over 2000 moh', value: '2000' },
-  { label: 'Over 1800 moh', value: '1800' },
-  { label: 'Over 1500 moh', value: '1500' },
-  { label: 'Over 1000 moh', value: '1000' },
+  { label: 'Over 2100 moh', value: '2100' },
+  { label: 'Over 2200 moh', value: '2200' },
+  { label: 'Over 2300 moh', value: '2300' },
+  { label: 'Over 2400 moh', value: '2400' },
 ]
 
 const PF_OPTIONS = [
