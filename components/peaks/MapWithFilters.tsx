@@ -262,7 +262,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
       <PeakMap
         peaks={filteredWithAscended}
         selectedPeakId={selectedPeak?.id ?? null}
-        onSelectPeak={setSelectedPeak}
+        onSelectPeak={peak => { setSelectedPeak(peak); if (peak) setPanelOpen(true) }}
         activeLines={activeLines}
         lineData={lineData}
         higherPeakId={higherPeakId}
@@ -417,7 +417,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
         </div>}
 
         {/* Detaljpanel for valgt topp */}
-        {selectedPeak && (
+        {panelOpen && selectedPeak && (
           <div
             className="bg-white rounded-xl shadow-md border border-border-warm"
             style={{ padding: '12px 14px' }}
@@ -534,7 +534,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
         )}
 
         {/* Høydeprofil */}
-        {activeProfile &&
+        {panelOpen && activeProfile &&
           activeProfile.from.lat != null && activeProfile.from.lng != null &&
           activeProfile.to.lat   != null && activeProfile.to.lng   != null && (
           <ElevationProfile
