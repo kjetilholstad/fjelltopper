@@ -47,9 +47,14 @@ export default function LoginPage({ searchParams }: Props) {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-xs font-medium text-[#1A1A1A] mb-1.5">
-              Passord
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label htmlFor="password" className="text-xs font-medium text-[#1A1A1A]">
+                Passord
+              </label>
+              <Link href="/auth/forgot-password" className="text-xs text-text-warm hover:text-forest transition-colors">
+                Glemt passord?
+              </Link>
+            </div>
             <input
               id="password"
               name="password"

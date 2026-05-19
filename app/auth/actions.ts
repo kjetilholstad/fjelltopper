@@ -43,6 +43,20 @@ export async function register(formData: FormData) {
   redirect('/')
 }
 
+export async function forgotPassword(formData: FormData) {
+  const supabase = await createClient()
+  const email = formData.get('email') as string
+  const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL}/auth/reset-password`
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo })
+
+  if (error) {
+    redirect(`/auth/forgot-password?error=${encodeURIComponent(error.message)}`)
+  }
+
+  redirect('/auth/forgot-password?sent=true')
+}
+
 export async function logout() {
   const supabase = await createClient()
   await supabase.auth.signOut()

@@ -1,10 +1,15 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 
+const PROTECTED_PATHS = ['/profile']
+
 export async function middleware(request: NextRequest) {
   const { response, user } = await updateSession(request)
 
-  if (request.nextUrl.pathname.startsWith('/profile') && !user) {
+  const { pathname } = request.nextUrl
+  const isProtected = PROTECTED_PATHS.some(p => pathname.startsWith(p))
+
+  if (isProtected && !user) {
     return NextResponse.redirect(new URL('/auth/login', request.url))
   }
 
