@@ -444,7 +444,8 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             {/* Nærmeste høyere fjell */}
             {selectedPeak.nearest_higher_peak && distToHigher != null ? (
               <p className="text-[11px] text-text-warm mb-1">
-                Nærmeste høyere: <span className="font-medium text-[#1A1A1A]">
+                Nærmeste høyere:<br />
+                <span className="font-medium text-[#1A1A1A]">
                   {selectedPeak.nearest_higher_peak} ({formatDist(distToHigher * 1000)})
                 </span>
               </p>
@@ -453,7 +454,8 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             {/* Nærmeste fjell over 2000 m */}
             {nearest && (
               <p className="text-[11px] text-text-warm mb-1">
-                Nærmeste over 2000 m (PF ≥ 30 m): <span className="font-medium text-[#1A1A1A]">
+                Nærmeste over 2000 m (PF ≥ 30 m):<br />
+                <span className="font-medium text-[#1A1A1A]">
                   {nearest.peak.name} ({formatDist(nearest.distanceKm * 1000)})
                 </span>
               </p>
