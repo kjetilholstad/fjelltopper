@@ -62,7 +62,7 @@ export function HomePeakCard({ peak, rank, nearest, allPeaks }: HomePeakCardProp
         ))}
         {nearestOver2000Value && (
           <div className="col-span-2 rounded-lg px-3 py-2.5" style={{ background: '#F7F4EF' }}>
-            <p className="text-[10px] font-medium text-[#6B6560] uppercase tracking-wide mb-0.5">Nærmeste over 2000 m</p>
+            <p className="text-[10px] font-medium text-[#6B6560] uppercase tracking-wide mb-0.5">Nærmeste over 2000 m (PF ≥ 30 m)</p>
             <p className="text-sm font-semibold text-[#1A1A1A] truncate">{nearestOver2000Value}</p>
           </div>
         )}

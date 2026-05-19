@@ -28,7 +28,7 @@ export function nearestPeak(
 ): { peak: EnrichedPeak; distanceKm: number } | null {
   if (!peak.lat || !peak.lng) return null
   const candidates = allPeaks
-    .filter(p => p.id !== peak.id && p.lat && p.lng)
+    .filter(p => p.id !== peak.id && p.lat && p.lng && (p.primary_factor ?? 0) >= 30)
     .map(p => ({
       peak: p,
       distanceKm: haversineKm(peak.lat!, peak.lng!, p.lat!, p.lng!),

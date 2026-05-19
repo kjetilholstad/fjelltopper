@@ -32,7 +32,7 @@ export default async function PeaksPage() {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-[#1A1A1A]">Norske fjelltopper</h1>
-        <p className="text-text-warm mt-1 font-light">Søk, filtrer og sorter blant alle registrerte topper</p>
+        <p className="text-text-warm mt-1 font-light">Søk, filtrer og sorter blant alle registrerte topper — standard filter: PF ≥ 30 m</p>
       </div>
       <PeakList peaks={enriched} ascendedMap={ascendedMap} userId={user?.id ?? null} />
     </div>

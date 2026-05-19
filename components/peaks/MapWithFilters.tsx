@@ -51,7 +51,7 @@ const LEGEND_ITEMS: {
 }[] = [
   { color: '#1A3A0A', size: 18, label: 'Valgt topp',             lineType: null,          dash: false },
   { color: '#D4A017', size: 13, label: 'Nærmeste høyere fjell',  lineType: 'higher',      dash: true  },
-  { color: '#E8671A', size: 13, label: 'Nærmeste over 2000 m',   lineType: 'nearest2000', dash: true  },
+  { color: '#E8671A', size: 13, label: 'Nærmeste over 2000 m (PF ≥ 30 m)',   lineType: 'nearest2000', dash: true  },
   { color: '#DC2626', size: 11, label: 'Nærliggende topper',     lineType: 'nearby',      dash: false },
   { color: '#ffffff', size: 11, label: 'Bestigning registrert',  lineType: null,          dash: false, ascended: true },
   { color: '#2D5016', size: 9,  label: 'Topp',                   lineType: null,          dash: false },
@@ -107,7 +107,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
     counties,
     municipalities,
     filtered,
-  } = usePeakFilters(peaks)
+  } = usePeakFilters(peaks, '0')
 
   const [selectedPeak, setSelectedPeak] = useState<EnrichedPeak | null>(null)
   const [activeLines, setActiveLines] = useState<Set<LineType>>(new Set())
@@ -434,7 +434,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             {/* Nærmeste fjell over 2000 m */}
             {nearest && (
               <p className="text-[11px] text-text-warm mb-1">
-                Nærmeste over 2000 m: <span className="font-medium text-[#1A1A1A]">
+                Nærmeste over 2000 m (PF ≥ 30 m): <span className="font-medium text-[#1A1A1A]">
                   {nearest.peak.name} ({formatDist(nearest.distanceKm * 1000)})
                 </span>
               </p>

@@ -29,28 +29,28 @@ export default async function ProfilePage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
-  const [{ data }, pf0, pf50, pf30, pf10] = await Promise.all([
+  const [{ data }, pf0, pf30, pf50, pf100] = await Promise.all([
     supabase
       .from('ascents')
       .select('*, peak:peaks(id, name, height, county, municipality, primary_factor)')
       .eq('user_id', user.id)
       .order('date', { ascending: false }),
     supabase.from('peaks').select('*', { count: 'exact', head: true }),
-    supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 50),
     supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 30),
-    supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 10),
+    supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 50),
+    supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 100),
   ])
 
   const ascents = (data ?? []) as AscentRow[]
-  const totalPeaks = pf0.count  ?? 0
-  const totalPf50  = pf50.count ?? 0
-  const totalPf30  = pf30.count ?? 0
-  const totalPf10  = pf10.count ?? 0
+  const totalPeaks  = pf0.count   ?? 0
+  const totalPf30   = pf30.count  ?? 0
+  const totalPf50   = pf50.count  ?? 0
+  const totalPf100  = pf100.count ?? 0
 
-  const totalCount  = ascents.length
-  const ascentPf50  = ascents.filter(a => (a.peak.primary_factor ?? 0) >= 50).length
-  const ascentPf30  = ascents.filter(a => (a.peak.primary_factor ?? 0) >= 30).length
-  const ascentPf10  = ascents.filter(a => (a.peak.primary_factor ?? 0) >= 10).length
+  const totalCount   = ascents.length
+  const ascentPf30   = ascents.filter(a => (a.peak.primary_factor ?? 0) >= 30).length
+  const ascentPf50   = ascents.filter(a => (a.peak.primary_factor ?? 0) >= 50).length
+  const ascentPf100  = ascents.filter(a => (a.peak.primary_factor ?? 0) >= 100).length
 
   const pct = totalPeaks > 0 ? (totalCount / totalPeaks) * 100 : 0
   const maxHeight = Math.max(...ascents.map(a => a.peak.height), 0)
@@ -83,10 +83,10 @@ export default async function ProfilePage() {
         <span className="text-sm font-semibold text-[#1A1A1A]">Fremgang</span>
         <div className="flex flex-col gap-4 mt-3">
           {[
-            { label: 'Alle topper', ascended: totalCount, total: totalPeaks, color: '#2D5016', track: '#EAF3DE' },
-            { label: 'PF ≥ 50 m',  ascended: ascentPf50, total: totalPf50,  color: '#D4A017', track: '#FEF3C7' },
-            { label: 'PF ≥ 30 m',  ascended: ascentPf30, total: totalPf30,  color: '#E8671A', track: '#FFEDD5' },
-            { label: 'PF ≥ 10 m',  ascended: ascentPf10, total: totalPf10,  color: '#0284C7', track: '#E0F2FE' },
+            { label: 'Topper registrert', ascended: totalCount,   total: totalPeaks,  color: '#2D5016', track: '#EAF3DE' },
+            { label: 'PF over 30 m',      ascended: ascentPf30,   total: totalPf30,   color: '#0284C7', track: '#E0F2FE' },
+            { label: 'PF over 50 m',      ascended: ascentPf50,   total: totalPf50,   color: '#E8671A', track: '#FFEDD5' },
+            { label: 'PF over 100 m',     ascended: ascentPf100,  total: totalPf100,  color: '#D4A017', track: '#FEF3C7' },
           ].map(({ label, ascended, total, color, track }) => {
             const p = total > 0 ? (ascended / total) * 100 : 0
             return (

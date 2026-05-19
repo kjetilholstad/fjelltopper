@@ -42,55 +42,80 @@ function PrimaerfaktorSVG() {
   )
 }
 
-function ToNaermesteSVG() {
-  // To paneler side om side: topografisk rute vs. luftlinje
+function NaermesteHoyereToppSVG() {
   return (
-    <svg viewBox="0 0 440 170" xmlns="http://www.w3.org/2000/svg" className="w-full max-w-lg mx-auto block" aria-label="Forskjell på nærmeste høyere topp og nærmeste topp over 2000m">
+    <svg viewBox="0 0 440 178" xmlns="http://www.w3.org/2000/svg" className="w-full" aria-label="Luftlinje til nærmeste høyere topp">
+      {/* Fjellprofil — sammenhengende polygon */}
+      {/* Fjell A (70,18) | Sadel A↔Ditt (175,116) | Ditt fjell (248,80) | Sadel Ditt↔B (325,100) | Fjell B (400,74) */}
+      <path d="M 4,145 L 70,18 L 175,116 L 248,80 L 325,100 L 400,74 L 436,145 Z"
+            fill="#E8E2D9" stroke="#C8BFB2" strokeWidth="1.3" strokeLinejoin="round"/>
 
-      {/* ── Venstre panel: Nærmeste Høyere Topp ── */}
-      {/* Fjell 1 (nåværende) */}
-      <path d="M 0,130 L 60,50 L 120,130 Z" fill="#E8E2D9" stroke="#C8BFB2" strokeWidth="1.2" />
-      {/* Sadel og fjell 2 */}
-      <path d="M 100,130 L 140,100 L 180,55 L 220,130 Z" fill="#D6CFC4" stroke="#C8BFB2" strokeWidth="1.2" />
-
-      {/* Buet pil over sadelen (topografisk rute) */}
-      <path d="M 60,46 Q 140,10 180,51" fill="none" stroke="#2D5016" strokeWidth="2" strokeDasharray="5,3" />
-      <polygon points="180,51 168,48 172,60" fill="#2D5016" />
-
-      {/* Toppmarkører */}
-      <circle cx="60" cy="50" r="4" fill="#2D5016" />
-      <circle cx="180" cy="55" r="4" fill="#6B6560" />
-
-      {/* Label: "over sadel" */}
-      <text x="110" y="12" fontSize="9" fill="#2D5016" textAnchor="middle" fontFamily="system-ui, sans-serif" fontStyle="italic">via laveste pass</text>
-
-      {/* Tittel venstre */}
-      <text x="110" y="150" fontSize="11" fill="#1A1A1A" fontWeight="600" textAnchor="middle" fontFamily="system-ui, sans-serif">Nærmeste Høyere Topp</text>
-      <text x="110" y="164" fontSize="9.5" fill="#6B6560" textAnchor="middle" fontFamily="system-ui, sans-serif">topografisk / terrengstyrt</text>
-
-      {/* ── Skillelinje ── */}
-      <line x1="220" y1="10" x2="220" y2="135" stroke="#E8E2D9" strokeWidth="1.5" />
-
-      {/* ── Høyre panel: Nærmeste Topp Over 2000 m ── */}
-      {/* Referansefjell */}
-      <path d="M 225,130 L 280,45 L 335,130 Z" fill="#E8E2D9" stroke="#C8BFB2" strokeWidth="1.2" />
-      {/* Nærmeste over 2000 m (kortere avstand) */}
-      <path d="M 355,130 L 390,70 L 440,130 Z" fill="#D6CFC4" stroke="#C8BFB2" strokeWidth="1.2" />
-
-      {/* Rett stiplet linje mellom toppene */}
-      <line x1="280" y1="45" x2="390" y2="70" stroke="#8B6914" strokeWidth="2" strokeDasharray="6,3" />
-      <polygon points="390,70 379,60 383,73" fill="#8B6914" />
+      {/* PF-markering: horisontal referanselinje ved sadelhøyde + vertikal dobbelpil */}
+      <line x1="325" y1="100" x2="264" y2="100" stroke="#8B6914" strokeWidth="1" strokeDasharray="3,2"/>
+      <line x1="264" y1="87"  x2="264" y2="93"  stroke="#8B6914" strokeWidth="1.5"/>
+      <polygon points="264,80 259,89 269,89"   fill="#8B6914"/>
+      <polygon points="264,100 259,91 269,91"  fill="#8B6914"/>
+      <rect x="269" y="85" width="20" height="12" rx="2" fill="rgba(255,255,255,0.88)"/>
+      <text x="270" y="95" fontSize="9" fill="#8B6914" fontWeight="700" fontFamily="system-ui, sans-serif">PF</text>
 
       {/* Toppmarkører */}
-      <circle cx="280" cy="45" r="4" fill="#2D5016" />
-      <circle cx="390" cy="70" r="4" fill="#8B6914" />
+      <circle cx="248" cy="80" r="5"   fill="#2D5016" stroke="white" strokeWidth="2"/>
+      <circle cx="400" cy="74" r="4.5" fill="#6B6560"  stroke="white" strokeWidth="1.8"/>
 
-      {/* Label: "luftlinje" */}
-      <text x="335" y="43" fontSize="9" fill="#8B6914" textAnchor="middle" fontFamily="system-ui, sans-serif" fontStyle="italic">luftlinje</text>
+      {/* Etiketter sentrert over toppene */}
+      <text x="70"  y="7"  fontSize="10" fill="#6B6560" fontWeight="600" textAnchor="middle" fontFamily="system-ui, sans-serif">Fjell A</text>
+      <text x="248" y="67" fontSize="10" fill="#2D5016" fontWeight="700" textAnchor="middle" fontFamily="system-ui, sans-serif">Ditt fjell</text>
+      <text x="400" y="61" fontSize="10" fill="#1A1A1A" fontWeight="600" textAnchor="middle" fontFamily="system-ui, sans-serif">Fjell B</text>
 
-      {/* Tittel høyre */}
-      <text x="332" y="150" fontSize="11" fill="#1A1A1A" fontWeight="600" textAnchor="middle" fontFamily="system-ui, sans-serif">Nærmeste Over 2000 m</text>
-      <text x="332" y="164" fontSize="9.5" fill="#6B6560" textAnchor="middle" fontFamily="system-ui, sans-serif">geografisk / haversine-avstand</text>
+      {/* Bakkelinje */}
+      <line x1="4" y1="145" x2="436" y2="145" stroke="#E0D9D0" strokeWidth="0.8"/>
+
+      {/* Grå bracket: Fjell A ↔ Ditt fjell */}
+      <line x1="70"  y1="155" x2="248" y2="155" stroke="#C8BFB2" strokeWidth="1.2"/>
+      <line x1="70"  y1="151" x2="70"  y2="159" stroke="#C8BFB2" strokeWidth="1.2"/>
+      <line x1="248" y1="151" x2="248" y2="159" stroke="#C8BFB2" strokeWidth="1.2"/>
+
+      {/* Grønn pilbracket: Ditt fjell → Fjell B */}
+      <line x1="248" y1="155" x2="390" y2="155" stroke="#2D5016" strokeWidth="1.5"/>
+      <line x1="248" y1="151" x2="248" y2="159" stroke="#2D5016" strokeWidth="1.5"/>
+      <polygon points="400,155 388,150 388,160" fill="#2D5016"/>
+    </svg>
+  )
+}
+
+function NaermesteOver2000SVG() {
+  return (
+    <svg viewBox="0 0 440 178" xmlns="http://www.w3.org/2000/svg" className="w-full" aria-label="Luftlinje til nærmeste topp over 2000 moh">
+      {/* Bakkelinje */}
+      <line x1="4" y1="138" x2="436" y2="138" stroke="#E0D9D0" strokeWidth="0.8"/>
+
+      {/* Fjell A — svært høyt, til venstre */}
+      <path d="M 18,138 L 88,14 L 158,138 Z"   fill="#E8E2D9" stroke="#C8BFB2" strokeWidth="1.2" strokeLinejoin="round"/>
+      {/* Ditt fjell — midten */}
+      <path d="M 180,138 L 248,74 L 316,138 Z"  fill="#D6CFC4" stroke="#C8BFB2" strokeWidth="1.2" strokeLinejoin="round"/>
+      {/* Fjell B — lavere enn Ditt fjell, til høyre */}
+      <path d="M 338,138 L 392,106 L 446,138 Z" fill="#E8E2D9" stroke="#C8BFB2" strokeWidth="1.2" strokeLinejoin="round"/>
+
+      {/* Toppmarkører */}
+      <circle cx="248" cy="74"  r="5"   fill="#2D5016" stroke="white" strokeWidth="2"/>
+      <circle cx="392" cy="106" r="4.5" fill="#8B6914"  stroke="white" strokeWidth="1.8"/>
+
+      {/* Etiketter sentrert over toppene */}
+      <text x="88"  y="4"  fontSize="10" fill="#6B6560" fontWeight="600" textAnchor="middle" fontFamily="system-ui, sans-serif">Fjell A</text>
+      <text x="248" y="61" fontSize="10" fill="#2D5016" fontWeight="700" textAnchor="middle" fontFamily="system-ui, sans-serif">Ditt fjell</text>
+      <text x="392" y="93" fontSize="10" fill="#1A1A1A" fontWeight="600" textAnchor="middle" fontFamily="system-ui, sans-serif">Fjell B</text>
+
+      {/* Grå bracket: |——— 4 000 m ———| */}
+      <line x1="88"  y1="150" x2="248" y2="150" stroke="#C8BFB2" strokeWidth="1.2"/>
+      <line x1="88"  y1="146" x2="88"  y2="154" stroke="#C8BFB2" strokeWidth="1.2"/>
+      <line x1="248" y1="146" x2="248" y2="154" stroke="#C8BFB2" strokeWidth="1.2"/>
+      <text x="168" y="163" fontSize="8.5" fill="#A89F96" textAnchor="middle" fontFamily="system-ui, sans-serif">4 000 m</text>
+
+      {/* Gull pilbracket: |——— 2 000 m ———→ */}
+      <line x1="248" y1="150" x2="381" y2="150" stroke="#8B6914" strokeWidth="1.5"/>
+      <line x1="248" y1="146" x2="248" y2="154" stroke="#8B6914" strokeWidth="1.5"/>
+      <polygon points="392,150 380,145 380,155" fill="#8B6914"/>
+      <text x="320" y="163" fontSize="8.5" fill="#8B6914" fontWeight="600" textAnchor="middle" fontFamily="system-ui, sans-serif">2 000 m</text>
     </svg>
   )
 }
@@ -184,9 +209,11 @@ export default function InfoPage() {
             må krysse for å nå et høyere fjell. Jo høyere PF, desto mer markant og selvstendig er fjellet.
           </p>
           <p className="text-sm text-[#6B6560] leading-relaxed mb-5">
-            Galdhøpiggen har PF på 1&nbsp;850&nbsp;m — det finnes ingen høyere topp i Norge, så man
-            må ned til havnivå for å finne et høyere fjell i Europa. Glittertinden har PF på 986&nbsp;m.
-            En nabotopp med PF på 15&nbsp;m er knapt en selvstendig topp — den er mer en forhøyning på en fjellrygg.
+            Galdhøpiggen (2&nbsp;469&nbsp;moh) har PF på 2&nbsp;370&nbsp;m — nærmeste høyere topp
+            er Kriváň i Slovakia (2&nbsp;494&nbsp;moh). Det laveste sadelpunktet mellom dem ligger
+            på ca.&nbsp;98&nbsp;moh i de sentral-europeiske lavlandene — man trenger altså ikke helt
+            ned til havnivå. Glittertinden har PF på 990&nbsp;m. En nabotopp med PF på 15&nbsp;m
+            er knapt en selvstendig topp — den er mer en forhøyning på en fjellrygg.
           </p>
           <PrimaerfaktorSVG />
           <p className="text-xs text-[#6B6560] text-center mt-3 italic">
@@ -208,9 +235,9 @@ export default function InfoPage() {
                 <span className="text-sm font-semibold text-[#1A1A1A]">Nærmeste Høyere Topp</span>
               </div>
               <p className="text-xs text-[#6B6560] leading-relaxed">
-                Et topografisk konsept: den toppen du må krysse det laveste passet for å nå noe høyere.
-                Kan ligge langt unna geografisk — terrenget bestemmer, ikke fuglen.
-                Brukes i beregningen av primærfaktor.
+                Den høyere toppen som er lagret for hvert fjell — hentet fra Peakbagger der tilgjengelig,
+                ellers beregnet som nærmeste geografisk høyere topp.
+                Avstanden som vises er luftlinje (haversine) til den lagrede toppen.
               </p>
             </div>
             <div className="bg-[#F7F4EF] rounded-lg p-4 border border-[#E8E2D9]">
@@ -219,16 +246,27 @@ export default function InfoPage() {
                 <span className="text-sm font-semibold text-[#1A1A1A]">Nærmeste Over 2000 m</span>
               </div>
               <p className="text-xs text-[#6B6560] leading-relaxed">
-                Ren geografisk luftlinjeavstand til den nærmeste toppen i databasen som er registrert
-                over 2&nbsp;000 moh. Beregnes med haversine-formelen fra koordinatene.
+                Geografisk luftlinjeavstand (haversine) til den nærmeste toppen i databasen
+                med primærfaktor ≥ 30&nbsp;m. PF-kravet sikrer at kun selvstendige topper
+                telles — ikke forhøyninger på en fjellrygg.
               </p>
             </div>
           </div>
 
-          <ToNaermesteSVG />
-          <p className="text-xs text-[#6B6560] text-center mt-3 italic">
-            Venstre: topografisk rute via laveste pass. Høyre: korteste luftlinje til nærmeste 2000-mtopp.
-          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-5">
+            <div>
+              <NaermesteHoyereToppSVG />
+              <p className="text-xs text-[#6B6560] text-center mt-2 italic">
+                Luftlinje til nærmeste høyere topp
+              </p>
+            </div>
+            <div>
+              <NaermesteOver2000SVG />
+              <p className="text-xs text-[#6B6560] text-center mt-2 italic">
+                Luftlinje til nærmeste topp over 2&nbsp;000 moh (PF ≥ 30&nbsp;m)
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* ── 3. Nærliggende Topper ── */}
@@ -362,7 +400,7 @@ export default function InfoPage() {
                 <svg width="20" height="10" viewBox="0 0 20 10" className="shrink-0">
                   <line x1="0" y1="5" x2="20" y2="5" stroke="#E8671A" strokeWidth="2" strokeDasharray="4 3" />
                 </svg>
-                <span className="text-xs text-[#1A1A1A]">Nærmeste over 2000 m</span>
+                <span className="text-xs text-[#1A1A1A]">Nærmeste over 2000 m (PF ≥ 30 m)</span>
               </div>
 
               {/* Nærliggende topper — klikkbar, inaktiv */}
@@ -399,7 +437,7 @@ export default function InfoPage() {
               <div className="flex flex-col gap-2">
                 {[
                   { color: '#D4A017', label: 'Nærmeste høyere fjell', desc: 'Stiplet gul linje til den topografisk nærmeste høyere toppen.' },
-                  { color: '#E8671A', label: 'Nærmeste over 2000 m',  desc: 'Stiplet oransje linje til den geografisk nærmeste toppen over 2 000 moh.' },
+                  { color: '#E8671A', label: 'Nærmeste over 2000 m (PF ≥ 30 m)',  desc: 'Stiplet oransje linje til den geografisk nærmeste toppen over 2 000 moh med primærfaktor ≥ 30 m.' },
                   { color: '#DC2626', label: 'Nærliggende topper',    desc: 'Røde linjer til alle topper som oppfyller nærliggende-kriteriene.' },
                 ].map(({ color, label, desc }) => (
                   <div key={label} className="flex items-start gap-2.5">

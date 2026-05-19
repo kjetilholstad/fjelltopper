@@ -3,10 +3,10 @@
 import { useState, useMemo } from 'react'
 import type { EnrichedPeak } from '@/types'
 
-export function usePeakFilters(peaks: EnrichedPeak[]) {
+export function usePeakFilters(peaks: EnrichedPeak[], defaultMinPF = '30') {
   const [query, setQuery] = useState('')
   const [minHeight, setMinHeight] = useState('0')
-  const [minPF, setMinPF] = useState('30')
+  const [minPF, setMinPF] = useState(defaultMinPF)
   const [county, setCounty] = useState('')
   const [municipality, setMunicipality] = useState('')
 
