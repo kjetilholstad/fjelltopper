@@ -153,10 +153,11 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
 
         {/* Nærmeste høyere fjell */}
         {peak.nearest_higher_peak && (
-          <div className="flex items-center gap-2 mb-1">
-            <ArrowUpToLine size={13} className="text-[#8B6914] shrink-0" strokeWidth={1.75} />
+          <div className="flex items-start gap-2 mb-1">
+            <ArrowUpToLine size={13} className="text-[#8B6914] shrink-0 mt-0.5" strokeWidth={1.75} />
             <span className="text-xs text-text-warm">
-              Nærmeste høyere: <span className="font-medium text-[#1A1A1A]">
+              Nærmeste høyere:<br />
+              <span className="font-medium text-[#1A1A1A]">
                 {peak.nearest_higher_peak}
                 {(() => {
                   const dist = distanceToNearestHigher(peak, allPeaks ?? [])
@@ -169,10 +170,11 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
 
         {/* Nærmeste over 2000 m */}
         {nearest && (
-          <div className="flex items-center gap-2 mb-1">
-            <Navigation size={13} className="text-text-warm shrink-0" strokeWidth={1.75} />
+          <div className="flex items-start gap-2 mb-1">
+            <Navigation size={13} className="text-text-warm shrink-0 mt-0.5" strokeWidth={1.75} />
             <span className="text-xs text-text-warm">
-              Nærmeste over 2000 m (PF ≥ 30 m): <span className="font-medium text-[#1A1A1A]">
+              Nærmeste over 2000 m (PF ≥ 30 m):<br />
+              <span className="font-medium text-[#1A1A1A]">
                 {nearest.peak.name} ({formatDist(nearest.distanceKm * 1000)})
               </span>
             </span>
