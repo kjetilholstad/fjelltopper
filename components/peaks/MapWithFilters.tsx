@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect, useTransition } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Search, ChevronDown, CheckCircle2 } from 'lucide-react'
+import { Search, ChevronDown, ChevronUp, CheckCircle2, SlidersHorizontal } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
 import { nearestPeak, distanceToNearestHigher } from '@/lib/nearestPeaks'
 import { usePeakFilters } from '@/lib/hooks/usePeakFilters'
@@ -110,6 +110,11 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
     municipalities,
     filtered,
   } = usePeakFilters(peaks, '0')
+
+  const [panelOpen, setPanelOpen] = useState(true)
+  useEffect(() => {
+    if (window.innerWidth < 640) setPanelOpen(false)
+  }, [])
 
   const [selectedPeak, setSelectedPeak] = useState<EnrichedPeak | null>(null)
   const [activeLines, setActiveLines] = useState<Set<LineType>>(new Set())
@@ -272,8 +277,18 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
         style={{ position: 'absolute', top: 12, left: 12, zIndex: 1000, maxWidth: 400 }}
         className="w-[calc(100%-24px)] sm:w-auto flex flex-col gap-2"
       >
+        {/* Kollaps-knapp */}
+        <button
+          onClick={() => setPanelOpen(o => !o)}
+          className="flex items-center gap-1.5 bg-white rounded-lg shadow-md border border-border-warm px-3 py-1.5 text-xs font-medium text-[#6B6560] hover:text-[#1A1A1A] transition-colors self-start"
+        >
+          <SlidersHorizontal size={12} />
+          {panelOpen ? 'Skjul' : 'Filter'}
+          {panelOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+        </button>
+
         {/* Filter panel */}
-        <div className="bg-white rounded-xl shadow-md border border-border-warm p-3 flex flex-col gap-2">
+        {panelOpen && <div className="bg-white rounded-xl shadow-md border border-border-warm p-3 flex flex-col gap-2">
           <div className="relative">
             <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-warm pointer-events-none" />
             <input
@@ -328,10 +343,10 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             <span className="font-semibold text-[#1A1A1A]">{peaks.length}</span>
             {' '}topper vises
           </p>
-        </div>
+        </div>}
 
         {/* Tegnforklaring */}
-        <div className="bg-white rounded-xl shadow-md border border-border-warm px-3 py-2.5 flex flex-col gap-0.5">
+        {panelOpen && <div className="bg-white rounded-xl shadow-md border border-border-warm px-3 py-2.5 flex flex-col gap-0.5">
           <p className="text-[10px] font-semibold text-text-warm uppercase tracking-wide mb-1">
             Tegnforklaring
           </p>
@@ -399,7 +414,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
               Velg en topp for å aktivere linjer
             </p>
           )}
-        </div>
+        </div>}
 
         {/* Detaljpanel for valgt topp */}
         {selectedPeak && (
