@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { MapContainer, TileLayer, Marker, Polyline, useMapEvents } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Polyline, ZoomControl, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import { Layers, Route } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
@@ -189,7 +189,9 @@ export function PeakMap({
         center={[61.6, 8.3]}
         zoom={8}
         style={{ height: '100%', width: '100%' }}
+        zoomControl={false}
       >
+        <ZoomControl position="bottomleft" />
         <TileLayer
           key={activeLayerId}
           attribution={activeLayer.attribution}
