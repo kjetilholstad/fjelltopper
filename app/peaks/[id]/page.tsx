@@ -80,7 +80,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
       {(countMap[id] ?? 0) > 0 && (
         <p className="flex items-center gap-1.5 text-sm text-text-warm mt-3">
           <Users size={14} strokeWidth={1.75} />
-          {countMap[id].toLocaleString('no')} personer har bestått denne toppen
+          {countMap[id].toLocaleString('no')} {countMap[id] === 1 ? 'person har besteget' : 'personer har besteget'} denne toppen
         </p>
       )}
 
