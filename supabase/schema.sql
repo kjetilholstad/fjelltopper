@@ -45,13 +45,14 @@ create table public.peaks (
   name text not null,
   height integer not null,
   primary_factor integer,
-  secondary_factor integer,
   nearest_higher_peak text,
   county text,
   municipality text not null,
   lat double precision,
   lng double precision,
   peakbagger_id integer,
+  peakbook_id integer,
+  sub_peaks jsonb,
   topo_map text,
   description text,
   image_url text,
@@ -73,7 +74,9 @@ create table public.ascents (
   date date not null,
   notes text,
   weather text,
-  created_at timestamptz default now() not null
+  created_at timestamptz default now() not null,
+  -- UNIQUE beholdt med vilje: logAscent bruker upsert({ onConflict: 'user_id,peak_id' })
+  unique (user_id, peak_id)
 );
 
 alter table public.ascents enable row level security;

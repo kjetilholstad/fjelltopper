@@ -32,7 +32,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
 
   const [{ data: peakData }, { data: allData }, { data: ascentData }] = await Promise.all([
     supabase.from('peaks').select('*').eq('id', id).single(),
-    supabase.from('peaks').select('*'),
+    supabase.from('peaks').select('id, name, height, lat, lng, primary_factor, nearest_higher_peak'),
     user
       ? supabase.from('ascents').select('*').eq('peak_id', id).eq('user_id', user.id).maybeSingle()
       : Promise.resolve({ data: null as Ascent | null }),
@@ -40,9 +40,8 @@ export default async function PeakPage({ params }: PeakPageProps) {
 
   if (!peakData) notFound()
 
+  const peak = peakData as Peak
   const allPeaks = (allData ?? []) as Peak[]
-  const peak = allPeaks.find(p => p.id === id)
-  if (!peak) notFound()
 
   const nearbyPeaks = getNearbyPeaks(peak, allPeaks)
   const nearest = nearbyPeaks.length > 0 ? null : nearestPeak(peak, allPeaks)

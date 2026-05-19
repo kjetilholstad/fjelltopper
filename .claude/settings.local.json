@@ -23,7 +23,10 @@
       "Bash(git commit *)",
       "Bash(git push *)",
       "Bash(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\kjho\\\\fjelltopper\\\\components\\\\profile\")",
-      "Bash(Out-Null)"
+      "Bash(Out-Null)",
+      "Bash(curl *)",
+      "Bash(python3 -c \"import sys,json; data=sys.stdin.read\\(\\); print\\(data[:3000]\\)\")",
+      "Bash(git rm *)"
     ]
   }
 }

@@ -4,17 +4,8 @@ import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import { useRouter } from 'next/navigation'
 import L from 'leaflet'
 import type { Peak } from '@/types'
+import { makeIcon } from '@/lib/mapIcons'
 import 'leaflet/dist/leaflet.css'
-
-function makeIcon(size: number, bg: string, borderColor = 'white'): L.DivIcon {
-  const half = size / 2
-  return L.divIcon({
-    html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${bg};border:2px solid ${borderColor};box-shadow:0 1px 4px rgba(0,0,0,.35)"></div>`,
-    className: '',
-    iconSize: [size, size],
-    iconAnchor: [half, half],
-  })
-}
 
 const ICON_SELECTED = makeIcon(14, '#1A3A0A', 'white')
 const ICON_NEARBY   = makeIcon(10, '#E8671A', 'white')

@@ -6,6 +6,7 @@ import L from 'leaflet'
 import { Layers, Route } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
 import { nearestPeak } from '@/lib/nearestPeaks'
+import { makeIcon } from '@/lib/mapIcons'
 import 'leaflet/dist/leaflet.css'
 
 const LAYERS = [
@@ -32,16 +33,6 @@ const LAYERS = [
   },
 ]
 
-function makeIcon(size: number, bg: string, borderColor = 'white'): L.DivIcon {
-  const half = size / 2
-  return L.divIcon({
-    html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${bg};border:2px solid ${borderColor};box-shadow:0 1px 4px rgba(0,0,0,.35)"></div>`,
-    className: '',
-    iconSize: [size, size],
-    iconAnchor: [half, half],
-    popupAnchor: [0, -(half + 2)],
-  })
-}
 
 const ICON_SELECTED = makeIcon(18, '#1A3A0A', 'white')
 const ICON_HIGHER   = makeIcon(13, '#D4A017', 'white')
