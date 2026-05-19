@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { MapContainer, TileLayer, Marker, Polyline, ZoomControl, useMapEvents } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Polyline, ZoomControl, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import { Layers, Route } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
@@ -69,6 +69,14 @@ function getPeakIcon(
   return ICON_REGULAR
 }
 
+function MapFitter({ from, to }: { from: [number, number]; to: [number, number] }) {
+  const map = useMap()
+  useEffect(() => {
+    map.fitBounds([from, to], { padding: [60, 60], maxZoom: 13 })
+  }, [from[0], from[1], to[0], to[1]])
+  return null
+}
+
 function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
   useMapEvents({ click: onMapClick })
   return null
@@ -114,6 +122,7 @@ export function PeakMap({
 
   const [compareMode, setCompareMode] = useState(false)
   const [compareFrom, setCompareFrom] = useState<EnrichedPeak | null>(null)
+  const [compareProfile, setCompareProfile] = useState<{ from: EnrichedPeak; to: EnrichedPeak } | null>(null)
 
   const selectedPeak = useMemo(
     () => peaks.find(p => p.id === selectedPeakId) ?? null,
@@ -160,7 +169,9 @@ export function PeakMap({
       } else if (compareFrom.id === peak.id) {
         setCompareFrom(null)
       } else {
-        onProfileChange({ from: compareFrom, to: peak })
+        const profile = { from: compareFrom, to: peak }
+        setCompareProfile(profile)
+        onProfileChange(profile)
         setCompareFrom(peak) // sliding window
       }
     } else {
@@ -178,7 +189,7 @@ export function PeakMap({
 
   const toggleCompareMode = () => {
     setCompareMode(m => {
-      if (m) setCompareFrom(null)
+      if (m) { setCompareFrom(null); setCompareProfile(null) }
       return !m
     })
   }
@@ -264,6 +275,23 @@ export function PeakMap({
             })}
           />
         ))}
+
+        {/* Profillinje mellom valgte topper i sammenligningsmodus */}
+        {compareProfile?.from.lat != null && compareProfile?.to.lat != null && (
+          <>
+            <Polyline
+              positions={[
+                [compareProfile.from.lat, compareProfile.from.lng!],
+                [compareProfile.to.lat,   compareProfile.to.lng!],
+              ]}
+              pathOptions={{ color: '#E8671A', weight: 2.5, opacity: 0.9 }}
+            />
+            <MapFitter
+              from={[compareProfile.from.lat, compareProfile.from.lng!]}
+              to={[compareProfile.to.lat, compareProfile.to.lng!]}
+            />
+          </>
+        )}
       </MapContainer>
 
       {/* Compare-mode hint — topp-midten */}
