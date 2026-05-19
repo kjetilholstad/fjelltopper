@@ -446,7 +446,14 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
               <p className="text-[11px] text-text-warm mb-1">
                 Nærmeste høyere:<br />
                 <span className="font-medium text-[#1A1A1A]">
-                  {selectedPeak.nearest_higher_peak} ({formatDist(distToHigher * 1000)})
+                  {selectedPeak.nearest_higher_peak}
+                  {(() => {
+                    const hp = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
+                    const parts: string[] = []
+                    if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
+                    parts.push(formatDist(distToHigher * 1000))
+                    return ` (${parts.join(' – ')})`
+                  })()}
                 </span>
               </p>
             ) : null}
@@ -456,7 +463,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
               <p className="text-[11px] text-text-warm mb-1">
                 Nærmeste over 2000 m (PF ≥ 30 m):<br />
                 <span className="font-medium text-[#1A1A1A]">
-                  {nearest.peak.name} ({formatDist(nearest.distanceKm * 1000)})
+                  {nearest.peak.name} ({nearest.peak.height.toLocaleString('no')} moh – {formatDist(nearest.distanceKm * 1000)})
                 </span>
               </p>
             )}
@@ -514,13 +521,22 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                 <p className="text-[11px] font-semibold text-[#DC2626] mb-1">
                   Nærliggende topper ({nearbyPeaks.length})
                 </p>
-                <div className="flex flex-col gap-0.5">
-                  {nearbyPeaks.map(p => (
-                    <div key={p.id} className="flex justify-between gap-2">
-                      <span className="text-[11px] text-[#1A1A1A] truncate">{p.name}</span>
-                      <span className="text-[11px] text-text-warm shrink-0">{p.height.toLocaleString('no')} m</span>
-                    </div>
-                  ))}
+                <div className="flex flex-col gap-1">
+                  {nearbyPeaks.map(p => {
+                    const distKm = selectedPeak.lat != null && selectedPeak.lng != null && p.lat != null && p.lng != null
+                      ? haversineKm(selectedPeak.lat, selectedPeak.lng, p.lat, p.lng)
+                      : null
+                    return (
+                      <div key={p.id} className="flex flex-col">
+                        <span className="text-[11px] font-medium text-[#1A1A1A]">{p.name}</span>
+                        <span className="text-[10px] text-text-warm">
+                          {p.height.toLocaleString('no')} moh
+                          {distKm != null && ` · ${formatDist(distKm * 1000)}`}
+                          {p.primary_factor != null && ` · PF ${p.primary_factor.toLocaleString('no')} m`}
+                        </span>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             )}

@@ -160,8 +160,12 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
               <span className="font-medium text-[#1A1A1A]">
                 {peak.nearest_higher_peak}
                 {(() => {
+                  const hp = allPeaks?.find(p => p.name === peak.nearest_higher_peak)
                   const dist = distanceToNearestHigher(peak, allPeaks ?? [])
-                  return dist != null ? ` (${formatDist(dist * 1000)})` : ''
+                  const parts: string[] = []
+                  if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
+                  if (dist != null) parts.push(formatDist(dist * 1000))
+                  return parts.length ? ` (${parts.join(' – ')})` : ''
                 })()}
               </span>
             </span>
@@ -175,7 +179,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
             <span className="text-xs text-text-warm">
               Nærmeste over 2000 m (PF ≥ 30 m):<br />
               <span className="font-medium text-[#1A1A1A]">
-                {nearest.peak.name} ({formatDist(nearest.distanceKm * 1000)})
+                {nearest.peak.name} ({nearest.peak.height.toLocaleString('no')} moh – {formatDist(nearest.distanceKm * 1000)})
               </span>
             </span>
           </div>
