@@ -3,14 +3,15 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Mountain, List, Map, User, Menu, X, LogIn, LogOut, Info } from 'lucide-react'
+import { Mountain, List, Map, User, Menu, X, LogIn, LogOut, Info, Trophy } from 'lucide-react'
 import { logout } from '@/app/auth/actions'
 
 const ALL_LINKS = [
-  { href: '/peaks',   label: 'Topper', icon: List,     requiresAuth: false },
-  { href: '/map',     label: 'Kart',   icon: Map,      requiresAuth: false },
-  { href: '/profile', label: 'Profil', icon: User,     requiresAuth: true  },
-  { href: '/info',    label: 'Info',   icon: Info,     requiresAuth: false },
+  { href: '/peaks',       label: 'Topper',   icon: List,    requiresAuth: false },
+  { href: '/map',         label: 'Kart',     icon: Map,     requiresAuth: false },
+  { href: '/leaderboard', label: 'Toppliste', icon: Trophy, requiresAuth: false },
+  { href: '/profile',     label: 'Profil',   icon: User,    requiresAuth: true  },
+  { href: '/info',        label: 'Info',     icon: Info,    requiresAuth: false },
 ]
 
 interface NavbarClientProps {

@@ -12,6 +12,7 @@ interface PeakListProps {
   peaks: EnrichedPeak[]
   ascendedMap?: Record<string, AscentMapEntry>
   userId?: string | null
+  countMap?: Record<string, number>
 }
 
 const HEIGHT_OPTIONS = [
@@ -69,7 +70,7 @@ function Select({
   )
 }
 
-export function PeakList({ peaks, ascendedMap = {}, userId = null }: PeakListProps) {
+export function PeakList({ peaks, ascendedMap = {}, userId = null, countMap }: PeakListProps) {
 
   const {
     query, setQuery,
@@ -182,6 +183,7 @@ export function PeakList({ peaks, ascendedMap = {}, userId = null }: PeakListPro
                 ascentNotes={entry?.notes ?? null}
                 ascentWeather={entry?.weather ?? null}
                 userId={userId}
+                ascentCount={countMap?.[peak.id]}
               />
             )
           })}

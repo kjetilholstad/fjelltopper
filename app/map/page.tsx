@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { enrichPeaks } from '@/lib/enrichPeaks'
+import { getAscentCounts } from '@/lib/ascentCounts'
 import type { Peak } from '@/types'
 import { MapWithFilters } from '@/components/peaks/MapWithFilters'
 
@@ -15,7 +16,7 @@ export default async function MapPage() {
 
   type AscentEntry = { id: string; peak_id: string; date: string; notes: string | null; weather: string | null }
 
-  const [{ data: peaksData }, { data: ascentsData }] = await Promise.all([
+  const [{ data: peaksData }, { data: ascentsData }, countMap] = await Promise.all([
     supabase
       .from('peaks')
       .select('*')
@@ -24,6 +25,7 @@ export default async function MapPage() {
     user
       ? supabase.from('ascents').select('id, peak_id, date, notes, weather').eq('user_id', user.id)
       : Promise.resolve({ data: [] as AscentEntry[] }),
+    getAscentCounts(),
   ])
 
   const peaks = (peaksData ?? []) as Peak[]
@@ -40,6 +42,7 @@ export default async function MapPage() {
       ascendedMap={ascendedMap}
       isLoggedIn={!!user}
       userId={user?.id ?? null}
+      countMap={countMap}
     />
   )
 }

@@ -1,6 +1,7 @@
 import { PeakList } from '@/components/peaks/PeakList'
 import { createClient } from '@/lib/supabase/server'
 import { enrichPeaks } from '@/lib/enrichPeaks'
+import { getAscentCounts } from '@/lib/ascentCounts'
 import type { Peak } from '@/types'
 
 export const metadata = {
@@ -14,11 +15,12 @@ export default async function PeaksPage() {
 
   type AscentEntry = { id: string; peak_id: string; date: string; notes: string | null; weather: string | null }
 
-  const [{ data }, { data: ascentsData }] = await Promise.all([
+  const [{ data }, { data: ascentsData }, countMap] = await Promise.all([
     supabase.from('peaks').select('*').order('height', { ascending: false }),
     user
       ? supabase.from('ascents').select('id, peak_id, date, notes, weather').eq('user_id', user.id)
       : Promise.resolve({ data: [] as AscentEntry[] }),
+    getAscentCounts(),
   ])
 
   const peaks = (data ?? []) as Peak[]
@@ -34,7 +36,7 @@ export default async function PeaksPage() {
         <h1 className="text-3xl font-bold text-[#1A1A1A]">Norske fjelltopper</h1>
         <p className="text-text-warm mt-1 font-light">Søk, filtrer og sorter blant alle registrerte topper — standard filter: PF ≥ 30 m</p>
       </div>
-      <PeakList peaks={enriched} ascendedMap={ascendedMap} userId={user?.id ?? null} />
+      <PeakList peaks={enriched} ascendedMap={ascendedMap} userId={user?.id ?? null} countMap={countMap} />
     </div>
   )
 }

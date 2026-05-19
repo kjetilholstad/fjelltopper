@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
-import { CheckCircle2, ExternalLink } from 'lucide-react'
+import { CheckCircle2, ExternalLink, Users } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { nearestPeak, distanceToNearestHigher } from '@/lib/nearestPeaks'
 import { getNearbyPeaks } from '@/lib/nearbyPeaks'
+import { getAscentCounts } from '@/lib/ascentCounts'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { EditAscentButton } from '@/components/profile/EditAscentButton'
 import { formatDist } from '@/lib/utils'
@@ -30,12 +31,13 @@ export default async function PeakPage({ params }: PeakPageProps) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const [{ data: peakData }, { data: allData }, { data: ascentData }] = await Promise.all([
+  const [{ data: peakData }, { data: allData }, { data: ascentData }, countMap] = await Promise.all([
     supabase.from('peaks').select('*').eq('id', id).single(),
     supabase.from('peaks').select('id, name, height, lat, lng, primary_factor, nearest_higher_peak'),
     user
       ? supabase.from('ascents').select('*').eq('peak_id', id).eq('user_id', user.id).maybeSingle()
       : Promise.resolve({ data: null as Ascent | null }),
+    getAscentCounts(),
   ])
 
   if (!peakData) notFound()
@@ -73,6 +75,13 @@ export default async function PeakPage({ params }: PeakPageProps) {
             <ExternalLink size={10} />
           </a>
         </>
+      )}
+
+      {(countMap[id] ?? 0) > 0 && (
+        <p className="flex items-center gap-1.5 text-sm text-text-warm mt-3">
+          <Users size={14} strokeWidth={1.75} />
+          {countMap[id].toLocaleString('no')} personer har bestått denne toppen
+        </p>
       )}
 
       {peak.description && (

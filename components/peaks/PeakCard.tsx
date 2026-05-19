@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useTransition } from 'react'
 import Link from 'next/link'
-import { Mountain, TrendingUp, Navigation, ArrowUpToLine, MapPin, CheckCircle2, ChevronRight, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react'
+import { Mountain, TrendingUp, Navigation, ArrowUpToLine, MapPin, CheckCircle2, ChevronRight, ChevronDown, ChevronUp, ExternalLink, Users } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
 import { nearestPeak, distanceToNearestHigher } from '@/lib/nearestPeaks'
 import { getNearbyPeaks } from '@/lib/nearbyPeaks'
@@ -21,9 +21,10 @@ interface PeakCardProps {
   ascentWeather?: string | null
   userId?: string | null
   allPeaks?: EnrichedPeak[]
+  ascentCount?: number
 }
 
-export function PeakCard({ peak, rank, isAscended = false, ascentId = null, ascentDate = null, ascentNotes = null, ascentWeather = null, userId = null, allPeaks }: PeakCardProps) {
+export function PeakCard({ peak, rank, isAscended = false, ascentId = null, ascentDate = null, ascentNotes = null, ascentWeather = null, userId = null, allPeaks, ascentCount }: PeakCardProps) {
   const [open, setOpen] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -258,9 +259,16 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-end mt-3 pt-3 border-t border-border-warm">
+        <div className="flex items-center justify-between mt-3 pt-3 border-t border-border-warm">
+          {ascentCount && ascentCount > 0 ? (
+            <span className="flex items-center gap-1 text-[10px] text-text-warm">
+              <Users size={11} strokeWidth={1.75} />
+              {ascentCount.toLocaleString('no')} bestigninger
+            </span>
+          ) : <span />}
           <ChevronRight size={15} className="text-border-warm group-hover:text-forest transition-colors" strokeWidth={1.75} />
         </div>
+
       </div>
     </Link>
   )

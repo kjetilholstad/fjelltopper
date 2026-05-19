@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect, useTransition } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Search, ChevronDown, ChevronUp, CheckCircle2, SlidersHorizontal } from 'lucide-react'
+import { Search, ChevronDown, ChevronUp, CheckCircle2, SlidersHorizontal, Users } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
 import { nearestPeak, distanceToNearestHigher } from '@/lib/nearestPeaks'
 import { usePeakFilters } from '@/lib/hooks/usePeakFilters'
@@ -91,9 +91,10 @@ interface MapWithFiltersProps {
   ascendedMap?: Record<string, AscentMapEntry>
   isLoggedIn?: boolean
   userId?: string | null
+  countMap?: Record<string, number>
 }
 
-export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, userId = null }: MapWithFiltersProps) {
+export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, userId = null, countMap }: MapWithFiltersProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
 
@@ -470,7 +471,15 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
 
             {/* Sted */}
             {location && (
-              <p className="text-[11px] text-text-warm mb-1.5">{location}</p>
+              <p className="text-[11px] text-text-warm mb-1">{location}</p>
+            )}
+
+            {/* Bestigningsstatistikk */}
+            {countMap && (countMap[selectedPeak.id] ?? 0) > 0 && (
+              <p className="flex items-center gap-1 text-[10px] text-text-warm mb-1.5">
+                <Users size={11} strokeWidth={1.75} />
+                {countMap[selectedPeak.id].toLocaleString('no')} bestigninger
+              </p>
             )}
 
             {/* Bestigning */}
