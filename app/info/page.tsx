@@ -323,6 +323,29 @@ export default function InfoPage() {
           <p className="mt-4 text-xs text-[#6B6560] bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9] leading-relaxed">
             Estimatet forutsetter jevnt terreng og ingen sti — reell gangtid kan variere betydelig avhengig av underlag og rute.
           </p>
+
+          <div className="mt-5 border-t border-[#E8E2D9] pt-4">
+            <p className="text-sm font-semibold text-[#1A1A1A] mb-3">Slik åpner du høydeprofil i kartet</p>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-start gap-3 bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
+                <div className="flex gap-1 shrink-0 mt-1">
+                  <div className="w-3 h-3 rounded-full bg-[#D4A017]" />
+                  <div className="w-3 h-3 rounded-full bg-[#E8671A]" />
+                </div>
+                <p className="text-sm text-[#6B6560] leading-relaxed">
+                  <strong className="text-[#1A1A1A] font-medium">Via tegnforklaringen:</strong> Velg en topp i kartet og aktiver
+                  «Nærmeste høyere fjell» (gull) eller «Nærmeste over 2000 m» (oransje) — profilen åpnes automatisk mellom de to toppene.
+                </p>
+              </div>
+              <div className="flex items-start gap-3 bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
+                <Route size={14} className="mt-0.5 text-[#E8671A] shrink-0" strokeWidth={1.75} />
+                <p className="text-sm text-[#6B6560] leading-relaxed">
+                  <strong className="text-[#1A1A1A] font-medium">Sammenlign to topper:</strong> Klikk ruteikon-knappen øverst til høyre
+                  i kartet. Klikk første topp, deretter andre — kartet zoomer inn til begge og profilen vises.
+                </p>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* ── 4. Nærliggende Topper ── */}
@@ -492,8 +515,8 @@ export default function InfoPage() {
               </p>
               <div className="flex flex-col gap-2">
                 {[
-                  { color: '#D4A017', label: 'Nærmeste høyere fjell', desc: 'Stiplet gul linje til den topografisk nærmeste høyere toppen.' },
-                  { color: '#E8671A', label: 'Nærmeste over 2000 m (PF ≥ 30 m)',  desc: 'Stiplet oransje linje til den geografisk nærmeste toppen over 2 000 moh med primærfaktor ≥ 30 m.' },
+                  { color: '#D4A017', label: 'Nærmeste høyere fjell', desc: 'Stiplet gul linje til den topografisk nærmeste høyere toppen. Åpner høydeprofil automatisk.' },
+                  { color: '#E8671A', label: 'Nærmeste over 2000 m (PF ≥ 30 m)',  desc: 'Stiplet oransje linje til den geografisk nærmeste toppen over 2 000 moh med primærfaktor ≥ 30 m. Åpner høydeprofil automatisk.' },
                   { color: '#DC2626', label: 'Nærliggende topper',    desc: 'Røde linjer til alle topper som oppfyller nærliggende-kriteriene.' },
                 ].map(({ color, label, desc }) => (
                   <div key={label} className="flex items-start gap-2.5">
