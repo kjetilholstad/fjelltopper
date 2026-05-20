@@ -10,7 +10,11 @@ export interface LegStats {
   distanceKm: number
   ascentM: number
   descentM: number
-  estimatedHours: number
+  timeEstimates: {
+    naismith:    number
+    toblerStd:   number
+    toblerCal:   number
+  }
   geometry: [number, number][]
   elevationPoints: Array<{ dist: number; elevation: number }>
   snapped: boolean

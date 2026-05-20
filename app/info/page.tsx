@@ -205,46 +205,65 @@ function NaerliggendeTopperSVG() {
 function NaismithFormelSVG() {
   return (
     <svg
-      viewBox="0 0 480 80"
+      viewBox="0 0 600 80"
       xmlns="http://www.w3.org/2000/svg"
-      className="w-full max-w-lg mx-auto block"
-      aria-label="Naismiths regel: Gangtid ≈ avstand delt på 5 km/t pluss stigning delt på 600 hm/t"
+      className="w-full max-w-xl mx-auto block"
+      aria-label="Naismiths regel: Gangtid ≈ avstand / 5 km/t + stigning / 600 hm/t + nedstigning / 1 000 hm/t"
     >
       {/* "Gangtid ≈" */}
-      <text x="4" y="44" fontSize="14" fontWeight="700" fill="#2D5016" fontFamily="system-ui, sans-serif">
+      <text x="4" y="44" fontSize="13" fontWeight="700" fill="#2D5016" fontFamily="system-ui, sans-serif">
         Gangtid ≈
       </text>
 
       {/* Brøk 1: Avstand / 5 km/t */}
-      <g transform="translate(112, 0)">
-        <text x="36" y="28" fontSize="12" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
+      <g transform="translate(102, 0)">
+        <text x="36" y="27" fontSize="11" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
           Avstand
         </text>
-        <text x="36" y="42" fontSize="10" fill="#6B6560" textAnchor="middle" fontFamily="system-ui, sans-serif">
+        <text x="36" y="40" fontSize="9.5" fill="#6B6560" textAnchor="middle" fontFamily="system-ui, sans-serif">
           (km)
         </text>
-        <line x1="0" y1="52" x2="72" y2="52" stroke="#2D5016" strokeWidth="1.8" />
-        <text x="36" y="66" fontSize="12" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
+        <line x1="0" y1="50" x2="72" y2="50" stroke="#2D5016" strokeWidth="1.8" />
+        <text x="36" y="64" fontSize="11" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
           5 km/t
         </text>
       </g>
 
       {/* "+" */}
-      <text x="200" y="44" fontSize="18" fontWeight="300" fill="#6B6560" textAnchor="middle" fontFamily="system-ui, sans-serif">
+      <text x="190" y="44" fontSize="17" fontWeight="300" fill="#6B6560" textAnchor="middle" fontFamily="system-ui, sans-serif">
         +
       </text>
 
       {/* Brøk 2: Stigning / 600 hm/t */}
-      <g transform="translate(218, 0)">
-        <text x="56" y="28" fontSize="12" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
-          Akkumulert stigning
+      <g transform="translate(205, 0)">
+        <text x="48" y="27" fontSize="11" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
+          Stigning
         </text>
-        <text x="56" y="42" fontSize="10" fill="#6B6560" textAnchor="middle" fontFamily="system-ui, sans-serif">
+        <text x="48" y="40" fontSize="9.5" fill="#6B6560" textAnchor="middle" fontFamily="system-ui, sans-serif">
           (høydemeter)
         </text>
-        <line x1="0" y1="52" x2="112" y2="52" stroke="#2D5016" strokeWidth="1.8" />
-        <text x="56" y="66" fontSize="12" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
+        <line x1="0" y1="50" x2="96" y2="50" stroke="#2D5016" strokeWidth="1.8" />
+        <text x="48" y="64" fontSize="11" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
           600 hm/t
+        </text>
+      </g>
+
+      {/* "+" */}
+      <text x="316" y="44" fontSize="17" fontWeight="300" fill="#6B6560" textAnchor="middle" fontFamily="system-ui, sans-serif">
+        +
+      </text>
+
+      {/* Brøk 3: Nedstigning / 1 000 hm/t */}
+      <g transform="translate(332, 0)">
+        <text x="56" y="27" fontSize="11" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
+          Nedstigning
+        </text>
+        <text x="56" y="40" fontSize="9.5" fill="#6B6560" textAnchor="middle" fontFamily="system-ui, sans-serif">
+          (høydemeter)
+        </text>
+        <line x1="0" y1="50" x2="112" y2="50" stroke="#2D5016" strokeWidth="1.8" />
+        <text x="56" y="64" fontSize="11" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
+          1 000 hm/t
         </text>
       </g>
     </svg>
@@ -397,19 +416,43 @@ export default function InfoPage() {
             over terrenget mellom toppene — vist som de grønne punktene under.
           </p>
           <p className="text-sm text-[#6B6560] leading-relaxed mb-4">
-            Fra profilen beregnes <strong className="text-[#1A1A1A] font-medium">akkumulert stigning</strong> — summen av
-            alle høydemeter opp langs profilen (nedturer telles ikke med). Deretter brukes
-            Naismiths regel for å estimere gangtiden:
+            Fra profilen beregnes <strong className="text-[#1A1A1A] font-medium">akkumulert stigning og nedstigning</strong>,
+            og turplanleggeren beregner gangtid med tre forskjellige metoder:
           </p>
-          <div className="bg-[#f0f5e8] rounded-lg px-4 py-4 border border-[#C8D8A0] mb-5">
-            <NaismithFormelSVG />
+          <div className="flex flex-col gap-3 mb-5">
+            <div className="rounded-lg border border-[#E8E2D9] px-4 py-3">
+              <p className="text-sm font-semibold text-[#1A1A1A] mb-1">Naismith (klassisk)</p>
+              <p className="text-xs text-[#6B6560] leading-relaxed">
+                Gangtid ≈ distanse / 5 km/t + stigning / 600 hm/t.
+                Enkel og kjent, men ignorerer nedstigning og er noe optimistisk for norsk fjellterreng.
+              </p>
+            </div>
+            <div className="rounded-lg border border-[#E8E2D9] px-4 py-3">
+              <p className="text-sm font-semibold text-[#1A1A1A] mb-1">Standard Tobler</p>
+              <p className="text-xs text-[#6B6560] leading-relaxed">
+                Hastighet = 6 · e<sup>−3.5 · |s + 0.05|</sup> der s er helningsbrøk.
+                Tar hensyn til at litt nedoverbakke går raskere enn flatt, men er kalibrert på europeiske veier
+                og overvurderer tempo i norsk fjell.
+              </p>
+            </div>
+            <div className="rounded-lg border border-[#2D5016]/30 bg-[#f0f5e8] px-4 py-3">
+              <div className="flex items-center gap-2 mb-1">
+                <p className="text-sm font-semibold text-[#1A1A1A]">Kalibrert Tobler</p>
+                <span className="text-[10px] font-semibold bg-[#2D5016] text-white rounded-full px-2 py-0.5">Anbefalt</span>
+              </div>
+              <p className="text-xs text-[#6B6560] leading-relaxed">
+                Hastighet = 4.1 · e<sup>−1.8 · |s + 0.02|</sup> — kalibrert på 6 norske fjellturar (totalt ~114 km).
+                Flatt tempo ~3.9 km/t. Bruker rutens faktiske høydeprofil segment for segment.
+                Mest presis for norsk fjellheim.
+              </p>
+            </div>
           </div>
           <HoydeprofilSVG />
           <p className="text-xs text-[#6B6560] text-center mt-3 italic">
             Grønne punkter = 50 samplingspunkter langs luftlinjen. Høyde fra Kartverkets API.
           </p>
           <p className="mt-4 text-xs text-[#6B6560] bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9] leading-relaxed">
-            Estimatet forutsetter jevnt terreng og ingen sti — reell gangtid kan variere betydelig avhengig av underlag og rute.
+            Estimatene forutsetter jevnt terreng — reell gangtid kan variere avhengig av underlag og rute.
           </p>
 
           <div className="mt-5 border-t border-[#E8E2D9] pt-4">
@@ -451,7 +494,7 @@ export default function InfoPage() {
             {[
               { label: 'Maks 1,5 km unna', desc: 'Luftlinjeavstand fra toppen.' },
               { label: 'Primærfaktor under 100 m', desc: 'Filtrerer bort selvstendige nabofjell — kun underordnede topper vises.' },
-              { label: 'Høydeforskjell maks 200 m', desc: 'Sikrer at toppene er på omtrent samme høydenivå.' },
+              { label: 'Høydeforskjell maks 300 m', desc: 'Sikrer at toppene er på omtrent samme høydenivå.' },
             ].map(({ label, desc }) => (
               <div key={label} className="flex items-start gap-3 bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
                 <span className="mt-0.5 text-[#2D5016]">✓</span>
@@ -466,6 +509,11 @@ export default function InfoPage() {
           <NaerliggendeTopperSVG />
           <p className="text-xs text-[#6B6560] text-center mt-3 italic">
             Grønne topper oppfyller alle tre kriteriene. Grå topper faller utenfor (for langt unna eller for høy PF).
+          </p>
+          <p className="text-sm text-[#6B6560] leading-relaxed mt-4">
+            På kartet kan du klikke på <strong className="text-[#1A1A1A] font-medium">«vis i kart»-ikonet</strong> i tegnforklaringen
+            under «Nærliggende topper». Da tegnes en stiplet rød sirkel med 1,5 km radius rundt valgt topp,
+            slik at du ser nærliggende-sonen visuelt på kartet.
           </p>
         </section>
 
@@ -605,7 +653,7 @@ export default function InfoPage() {
                 {[
                   { color: '#D4A017', label: 'Nærmeste høyere fjell', desc: 'Stiplet gul linje til den topografisk nærmeste høyere toppen. Åpner høydeprofil automatisk.' },
                   { color: '#E8671A', label: 'Nærmeste over 2000 m (PF ≥ 30 m)',  desc: 'Stiplet oransje linje til den geografisk nærmeste toppen over 2 000 moh med primærfaktor ≥ 30 m. Åpner høydeprofil automatisk.' },
-                  { color: '#DC2626', label: 'Nærliggende topper',    desc: 'Røde linjer til alle topper som oppfyller nærliggende-kriteriene.' },
+                  { color: '#DC2626', label: 'Nærliggende topper',    desc: 'Røde linjer til alle topper som oppfyller nærliggende-kriteriene, pluss en stiplet sirkel som markerer 1,5 km-sonen rundt valgt topp.' },
                 ].map(({ color, label, desc }) => (
                   <div key={label} className="flex items-start gap-2.5">
                     <div className="mt-1 w-3 h-3 rounded-full shrink-0" style={{ background: color }} />

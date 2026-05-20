@@ -9,7 +9,7 @@ export function getNearbyPeaks(peak: Peak, allPeaks: Peak[]): Peak[] {
     return (
       dist < 1.5 &&
       (p.primary_factor ?? 999) < 100 &&
-      Math.abs(p.height - peak.height) < 200
+      Math.abs(p.height - peak.height) < 300
     )
   })
 }

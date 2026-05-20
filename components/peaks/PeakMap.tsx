@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { MapContainer, TileLayer, Marker, Polyline, ZoomControl, ScaleControl, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Polyline, Circle, ZoomControl, ScaleControl, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import { Layers, Route } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
@@ -267,6 +267,19 @@ export function PeakMap({
             })}
           />
         ))}
+        {activeLines.has('nearby') && selectedPeak?.lat && selectedPeak?.lng && (
+          <Circle
+            center={[selectedPeak.lat, selectedPeak.lng]}
+            radius={1500}
+            pathOptions={{
+              color: '#DC2626',
+              fillColor: '#DC2626',
+              fillOpacity: 0.04,
+              weight: 1.5,
+              dashArray: '5 5',
+            }}
+          />
+        )}
 
         {/* Profillinje mellom valgte topper i sammenligningsmodus */}
         {compareProfile?.from.lat != null && compareProfile?.to.lat != null && (

@@ -175,6 +175,17 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
     [legs]
   )
 
+  const totalTime = useMemo(() => {
+    const sum = { naismith: 0, toblerStd: 0, toblerCal: 0 }
+    for (const leg of legs) {
+      if (!leg) continue
+      sum.naismith  += leg.timeEstimates.naismith
+      sum.toblerStd += leg.timeEstimates.toblerStd
+      sum.toblerCal += leg.timeEstimates.toblerCal
+    }
+    return sum
+  }, [legs])
+
   const waypointLabels = useMemo(
     () => waypoints.map((wp, i) => wp.label ?? `Punkt ${i + 1}`),
     [waypoints]
@@ -187,6 +198,7 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
       <PlannerPanel
         waypoints={waypoints}
         legs={legs}
+        totalTime={totalTime}
         activeLayer={activeLayer}
         minHeight={minHeight}
         minPF={minPF}

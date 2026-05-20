@@ -64,6 +64,6 @@ export function calcProfileStats(
     if (diff > 0) ascentM += diff
     else descentM += Math.abs(diff)
   }
-  const estimatedHours = distanceKm / 5 + ascentM / 600
+  const estimatedHours = distanceKm / 5 + ascentM / 600 + descentM / 1000
   return { distanceKm, ascentM: Math.round(ascentM), descentM: Math.round(descentM), estimatedHours }
 }

@@ -64,6 +64,7 @@ function exportGPX(waypoints: Waypoint[], legs: (LegStats | null)[], name: strin
 interface PlannerPanelProps {
   waypoints: Waypoint[]
   legs: (LegStats | null)[]
+  totalTime: { naismith: number; toblerStd: number; toblerCal: number }
   activeLayer: 'topo' | 'topo2'
   minHeight: string
   minPF: string
@@ -81,7 +82,7 @@ interface PlannerPanelProps {
 }
 
 export function PlannerPanel({
-  waypoints, legs, activeLayer, minHeight, minPF, loading,
+  waypoints, legs, totalTime, activeLayer, minHeight, minPF, loading,
   peakCount, totalPeakCount,
   onLayerChange, onMinHeightChange, onMinPFChange, onRemoveWaypoint, onClearAll, onMoveUp, onMoveDown,
   onToggleLegSnap,
@@ -103,7 +104,6 @@ export function PlannerPanel({
   const totalDist  = legs.reduce((s, l) => s + (l?.distanceKm ?? 0), 0)
   const totalAsc   = legs.reduce((s, l) => s + (l?.ascentM   ?? 0), 0)
   const totalDesc  = legs.reduce((s, l) => s + (l?.descentM  ?? 0), 0)
-  const totalHours = legs.reduce((s, l) => s + (l?.estimatedHours ?? 0), 0)
 
   const content = (
     <div className="flex flex-col h-full overflow-hidden">
@@ -163,17 +163,37 @@ export function PlannerPanel({
       {/* Stats */}
       {waypoints.length >= 2 && (
         <div className="grid grid-cols-2 gap-2 p-3 border-b border-[#E8E2D9]">
-          {[
-            { label: 'Distanse',    value: `${totalDist.toFixed(1)} km` },
-            { label: 'Gangtid',     value: formatTime(totalHours) },
-            { label: 'Stigning',    value: `${totalAsc.toLocaleString('no')} m` },
-            { label: 'Nedstigning', value: `${totalDesc.toLocaleString('no')} m` },
-          ].map(({ label, value }) => (
-            <div key={label} className="bg-[#F7F4EF] rounded-lg px-3 py-2 text-center border border-[#E8E2D9]">
-              <p className="text-[10px] text-[#6B6560]">{label}</p>
-              <p className="text-sm font-bold text-[#1A1A1A]">{value}</p>
+          <div className="bg-[#F7F4EF] rounded-lg px-3 py-2 text-center border border-[#E8E2D9]">
+            <p className="text-[10px] text-[#6B6560]">Distanse</p>
+            <p className="text-sm font-bold text-[#1A1A1A]">{totalDist.toFixed(1)} km</p>
+          </div>
+          <div className="bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9]">
+            <div className="flex flex-col gap-0.5">
+              <p className="text-[10px] text-[#A89F96] uppercase tracking-wide">Gangtid</p>
+              <div className="flex flex-col gap-0.5 text-[11px]">
+                <span>
+                  <span className="text-[#A89F96] w-20 inline-block">Naismith</span>
+                  <span className="font-medium text-[#1A1A1A]">{formatTime(totalTime.naismith)}</span>
+                </span>
+                <span>
+                  <span className="text-[#A89F96] w-20 inline-block">Tobler</span>
+                  <span className="font-medium text-[#1A1A1A]">{formatTime(totalTime.toblerStd)}</span>
+                </span>
+                <span>
+                  <span className="text-[#A89F96] w-20 inline-block">Kalibrert</span>
+                  <span className="font-medium text-[#2D5016]">{formatTime(totalTime.toblerCal)}</span>
+                </span>
+              </div>
             </div>
-          ))}
+          </div>
+          <div className="bg-[#F7F4EF] rounded-lg px-3 py-2 text-center border border-[#E8E2D9]">
+            <p className="text-[10px] text-[#6B6560]">Stigning</p>
+            <p className="text-sm font-bold text-[#1A1A1A]">{totalAsc.toLocaleString('no')} m</p>
+          </div>
+          <div className="bg-[#F7F4EF] rounded-lg px-3 py-2 text-center border border-[#E8E2D9]">
+            <p className="text-[10px] text-[#6B6560]">Nedstigning</p>
+            <p className="text-sm font-bold text-[#1A1A1A]">{totalDesc.toLocaleString('no')} m</p>
+          </div>
         </div>
       )}
 
