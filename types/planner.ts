@@ -3,6 +3,7 @@ export interface Waypoint {
   lat: number
   lng: number
   label?: string
+  snapToNext?: boolean
 }
 
 export interface LegStats {
@@ -12,4 +13,7 @@ export interface LegStats {
   estimatedHours: number
   geometry: [number, number][]
   elevationPoints: Array<{ dist: number; elevation: number }>
+  snapped: boolean
+  offTrailStart?: [number, number][]
+  offTrailEnd?: [number, number][]
 }

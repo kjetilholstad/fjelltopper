@@ -1,4 +1,4 @@
-import { Mountain, MapPin, Navigation, Route, Upload, PenLine } from 'lucide-react'
+import { Mountain, MapPin, Navigation, Route, Upload, PenLine, Calendar, Layers } from 'lucide-react'
 
 // ─── SVG-illustrasjoner ────────────────────────────────────────────────────
 
@@ -202,11 +202,98 @@ function NaerliggendeTopperSVG() {
   )
 }
 
+function NaismithFormelSVG() {
+  return (
+    <svg
+      viewBox="0 0 480 80"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-full max-w-lg mx-auto block"
+      aria-label="Naismiths regel: Gangtid ≈ avstand delt på 5 km/t pluss stigning delt på 600 hm/t"
+    >
+      {/* "Gangtid ≈" */}
+      <text x="4" y="44" fontSize="14" fontWeight="700" fill="#2D5016" fontFamily="system-ui, sans-serif">
+        Gangtid ≈
+      </text>
+
+      {/* Brøk 1: Avstand / 5 km/t */}
+      <g transform="translate(112, 0)">
+        <text x="36" y="28" fontSize="12" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
+          Avstand
+        </text>
+        <text x="36" y="42" fontSize="10" fill="#6B6560" textAnchor="middle" fontFamily="system-ui, sans-serif">
+          (km)
+        </text>
+        <line x1="0" y1="52" x2="72" y2="52" stroke="#2D5016" strokeWidth="1.8" />
+        <text x="36" y="66" fontSize="12" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
+          5 km/t
+        </text>
+      </g>
+
+      {/* "+" */}
+      <text x="200" y="44" fontSize="18" fontWeight="300" fill="#6B6560" textAnchor="middle" fontFamily="system-ui, sans-serif">
+        +
+      </text>
+
+      {/* Brøk 2: Stigning / 600 hm/t */}
+      <g transform="translate(218, 0)">
+        <text x="56" y="28" fontSize="12" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
+          Akkumulert stigning
+        </text>
+        <text x="56" y="42" fontSize="10" fill="#6B6560" textAnchor="middle" fontFamily="system-ui, sans-serif">
+          (høydemeter)
+        </text>
+        <line x1="0" y1="52" x2="112" y2="52" stroke="#2D5016" strokeWidth="1.8" />
+        <text x="56" y="66" fontSize="12" fontWeight="600" fill="#1A1A1A" textAnchor="middle" fontFamily="system-ui, sans-serif">
+          600 hm/t
+        </text>
+      </g>
+    </svg>
+  )
+}
+
+function InfoTOC() {
+  const seksjoner = [
+    { n: 1, kort: 'Primærfaktor',  full: 'Hva er primærfaktor?' },
+    { n: 2, kort: 'Nærmeste topp', full: 'Nærmeste høyere topp' },
+    { n: 3, kort: 'Gangtid',       full: 'Høydeprofil og gangtid' },
+    { n: 4, kort: 'Nærliggende',   full: 'Nærliggende topper' },
+    { n: 5, kort: 'Bestigning',    full: 'Registrere bestigning' },
+    { n: 6, kort: 'Kartvisning',   full: 'Kart og tegnforklaring' },
+    { n: 7, kort: 'Planlegger',    full: 'Turplanlegger' },
+  ]
+
+  return (
+    <div className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-5 mb-8">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-1 h-4 rounded-full bg-[#2D5016]" />
+        <p className="text-xs font-semibold text-[#6B6560] uppercase tracking-widest">Innhold</p>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {seksjoner.map(({ n, kort, full }) => (
+          <a
+            key={n}
+            href={`#seksjon-${n}`}
+            title={full}
+            className="group flex items-center gap-2.5 bg-[#F7F4EF] hover:bg-[#f0f5e8] border border-[#E8E2D9] hover:border-[#C8D8A0] rounded-lg px-3 py-2.5 transition-all no-underline"
+          >
+            <span className="shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-full bg-white group-hover:bg-[#2D5016] border border-[#E8E2D9] group-hover:border-[#2D5016] text-[#2D5016] group-hover:text-white text-xs font-bold transition-all shadow-sm">
+              {n}
+            </span>
+            <span className="text-xs font-medium text-[#6B6560] group-hover:text-[#2D5016] leading-tight transition-colors">
+              {kort}
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // ─── Side ─────────────────────────────────────────────────────────────────
 
 export default function InfoPage() {
   return (
-    <main className="min-h-screen bg-[#F7F4EF]">
+    <main className="min-h-screen bg-[#F7F4EF] scroll-smooth">
       <div className="max-w-2xl mx-auto px-4 py-10">
 
         {/* Ingress */}
@@ -222,8 +309,11 @@ export default function InfoPage() {
           </p>
         </div>
 
+        {/* Innholdsfortegnelse */}
+        <InfoTOC />
+
         {/* ── 1. Primærfaktor ── */}
-        <section className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
+        <section id="seksjon-1" className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
           <h2 className="text-base font-semibold text-[#1A1A1A] mb-3 flex items-center gap-2">
             <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">1</span>
             Primærfaktor
@@ -247,7 +337,7 @@ export default function InfoPage() {
         </section>
 
         {/* ── 2. Nærmeste Høyere Topp vs Nærmeste Over 2000 m ── */}
-        <section className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
+        <section id="seksjon-2" className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
           <h2 className="text-base font-semibold text-[#1A1A1A] mb-3 flex items-center gap-2">
             <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">2</span>
             To ulike «nærmeste»
@@ -295,7 +385,7 @@ export default function InfoPage() {
         </section>
 
         {/* ── 3. Høydeprofil og gangtidsestimat ── */}
-        <section className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
+        <section id="seksjon-3" className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
           <h2 className="text-base font-semibold text-[#1A1A1A] mb-3 flex items-center gap-2">
             <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">3</span>
             Høydeprofil og gangtidsestimat
@@ -311,10 +401,8 @@ export default function InfoPage() {
             alle høydemeter opp langs profilen (nedturer telles ikke med). Deretter brukes
             Naismiths regel for å estimere gangtiden:
           </p>
-          <div className="bg-[#f0f5e8] rounded-lg px-4 py-3 border border-[#C8D8A0] mb-5 text-center">
-            <p className="text-sm text-[#2D5016] font-medium">
-              Gangtid ≈ (luftlinjeavstand ÷ 5&nbsp;km/t) + (akkumulert stigning ÷ 600&nbsp;hm/t)
-            </p>
+          <div className="bg-[#f0f5e8] rounded-lg px-4 py-4 border border-[#C8D8A0] mb-5">
+            <NaismithFormelSVG />
           </div>
           <HoydeprofilSVG />
           <p className="text-xs text-[#6B6560] text-center mt-3 italic">
@@ -349,7 +437,7 @@ export default function InfoPage() {
         </section>
 
         {/* ── 4. Nærliggende Topper ── */}
-        <section className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
+        <section id="seksjon-4" className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
           <h2 className="text-base font-semibold text-[#1A1A1A] mb-3 flex items-center gap-2">
             <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">4</span>
             Nærliggende Topper
@@ -382,7 +470,7 @@ export default function InfoPage() {
         </section>
 
         {/* ── 4. Registrere Bestigning ── */}
-        <section className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
+        <section id="seksjon-5" className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
           <h2 className="text-base font-semibold text-[#1A1A1A] mb-4 flex items-center gap-2">
             <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">5</span>
             Registrere Bestigning
@@ -441,7 +529,7 @@ export default function InfoPage() {
         </section>
 
         {/* ── 5. Kartvisning og tegnforklaring ── */}
-        <section className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
+        <section id="seksjon-6" className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
           <h2 className="text-base font-semibold text-[#1A1A1A] mb-3 flex items-center gap-2">
             <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">6</span>
             Kartvisning og tegnforklaring
@@ -528,6 +616,135 @@ export default function InfoPage() {
               <p className="text-xs bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9] leading-relaxed">
                 Radene er grået ut så lenge ingen topp er valgt. Klikk på en toppmarkør i kartet for å aktivere dem.
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── 7. Turplanlegger ── */}
+        <section id="seksjon-7" className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
+          <h2 className="text-base font-semibold text-[#1A1A1A] mb-3 flex items-center gap-2">
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">7</span>
+            Turplanlegger
+          </h2>
+          <p className="text-sm text-[#6B6560] leading-relaxed mb-4">
+            Turplanleggeren lar deg sette sammen en rute med flere stopp, se distanse og høydeprofil,
+            og laste ned ruten som GPX. Du finner den under <strong className="text-[#1A1A1A] font-medium">Planlegg</strong> i menyen.
+          </p>
+
+          {/* Slik legger du til vegpunkter */}
+          <div className="mb-5">
+            <p className="text-sm font-semibold text-[#1A1A1A] mb-2">Slik legger du til vegpunkter</p>
+            <div className="flex flex-col gap-2">
+              {[
+                {
+                  icon: <MapPin size={14} className="text-[#2D5016] shrink-0 mt-0.5" strokeWidth={1.75} />,
+                  text: <><strong className="text-[#1A1A1A] font-medium">Klikk på kartet</strong> for å plassere et vegpunkt akkurat der du vil.</>,
+                },
+                {
+                  icon: <div className="w-3.5 h-3.5 rounded-full bg-[#2D5016] border-[1.5px] border-white shadow shrink-0 mt-0.5" />,
+                  text: <><strong className="text-[#1A1A1A] font-medium">Klikk på en fjelltopp</strong> (grønn markør) for å legge den til som vegpunkt med navn.</>,
+                },
+                {
+                  icon: <div className="w-3.5 h-3.5 rounded-full bg-[#E8671A] border-[1.5px] border-white shadow shrink-0 mt-0.5" />,
+                  text: <>Vegpunkter kan <strong className="text-[#1A1A1A] font-medium">dras</strong> til ny posisjon direkte i kartet. <strong className="text-[#1A1A1A] font-medium">Høyreklikk</strong> (eller trykk lenge på mobil) for å slette.</>,
+                },
+                {
+                  icon: <span className="text-[#2D5016] font-bold text-sm shrink-0 mt-0.5">↑↓</span>,
+                  text: <>Rekkefølgen på vegpunkter kan endres med <strong className="text-[#1A1A1A] font-medium">pilknappene</strong> i sidepanelet.</>,
+                },
+              ].map(({ icon, text }, i) => (
+                <div key={i} className="flex items-start gap-3 bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
+                  {icon}
+                  <p className="text-sm text-[#6B6560] leading-relaxed">{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Ruting langs stier */}
+          <div className="mb-5">
+            <p className="text-sm font-semibold text-[#1A1A1A] mb-2">Ruting langs stier — per etappe</p>
+            <p className="text-sm text-[#6B6560] leading-relaxed mb-3">
+              Hver etappe mellom to vegpunkter kan velge mellom to rutingmodi.
+              Bytt modus med knappen som vises mellom vegpunktene i sidepanelet:
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-sm font-bold text-[#2D5016] bg-[#f0f5e8] border border-[#2D5016]/30 rounded px-1.5">~</span>
+                  <span className="text-sm font-semibold text-[#1A1A1A]">Rute langs sti</span>
+                </div>
+                <p className="text-xs text-[#6B6560] leading-relaxed">
+                  GraphHopper beregner korteste vei langs merkede stier og veier. Viser reell gangdistanse og
+                  korrekt høydeprofil. Krever nettforbindelse. Vises som heltrukken linje på kartet.
+                </p>
+              </div>
+              <div className="bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-sm font-bold text-[#A89F96] bg-[#F7F4EF] border border-[#E8E2D9] rounded px-1.5">—</span>
+                  <span className="text-sm font-semibold text-[#1A1A1A]">Rett linje</span>
+                </div>
+                <p className="text-xs text-[#6B6560] leading-relaxed">
+                  Luftlinje mellom vegpunktene med høydeprofil fra Kartverkets høyde-API. Egnet for fri
+                  fjellferd uten merkede stier. Vises som stiplet linje på kartet.
+                </p>
+              </div>
+            </div>
+            <p className="mt-2 text-xs text-[#6B6560] bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9]">
+              Når et vegpunkt er plassert utenfor en merkede sti, vil snap-ruten inkludere en stiplet oransje linje
+              fra vegpunktet bort til nærmeste sti — slik at ruten alltid går fra ditt faktiske vegpunkt.
+            </p>
+          </div>
+
+          {/* Statistikk og høydeprofil */}
+          <div className="mb-5">
+            <p className="text-sm font-semibold text-[#1A1A1A] mb-2">Statistikk og høydeprofil</p>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-start gap-3 bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
+                <Calendar size={14} className="text-[#2D5016] shrink-0 mt-0.5" strokeWidth={1.75} />
+                <p className="text-sm text-[#6B6560] leading-relaxed">
+                  Sidepanelet viser <strong className="text-[#1A1A1A] font-medium">total distanse, gangtid, stigning og nedstigning</strong> for hele
+                  ruten. Gangtiden beregnes med Naismiths regel (se seksjon 3).
+                </p>
+              </div>
+              <div className="flex items-start gap-3 bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
+                <Route size={14} className="text-[#2D5016] shrink-0 mt-0.5" strokeWidth={1.75} />
+                <p className="text-sm text-[#6B6560] leading-relaxed">
+                  En <strong className="text-[#1A1A1A] font-medium">høydeprofil</strong> for hele ruten vises i bunnen av kartet når du har
+                  minst to vegpunkter. Klikk på <strong className="text-[#1A1A1A] font-medium">↗-ikonet</strong> for å åpne profilen i stor
+                  visning — der ser du vegpunkt-navn langs ruten, høyde på start og slutt, og
+                  fjelltopper langs ruten markert med navn og høyde.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Kartlag og GPX */}
+          <div>
+            <p className="text-sm font-semibold text-[#1A1A1A] mb-2">Kartlag og GPX-eksport</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Layers size={14} className="text-[#2D5016] shrink-0" strokeWidth={1.75} />
+                  <span className="text-sm font-semibold text-[#1A1A1A]">Kartlag</span>
+                </div>
+                <p className="text-xs text-[#6B6560] leading-relaxed">
+                  Velg mellom <strong className="text-[#1A1A1A] font-medium">Kartverket Topo</strong> (norsk offisielt kart)
+                  og <strong className="text-[#1A1A1A] font-medium">OpenTopoMap</strong> (globalt topografisk kart med
+                  tydelige stinett) via knappene i sidepanelet.
+                </p>
+              </div>
+              <div className="bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Upload size={14} className="text-[#8B6914] shrink-0" strokeWidth={1.75} />
+                  <span className="text-sm font-semibold text-[#1A1A1A]">Last ned GPX</span>
+                </div>
+                <p className="text-xs text-[#6B6560] leading-relaxed">
+                  Klikk <strong className="text-[#1A1A1A] font-medium">GPX</strong>-knappen nederst i sidepanelet for å laste ned ruten.
+                  Du kan gi filen et eget navn (f.eks. «Jotunheimen-rundtur») — standardnavn
+                  genereres automatisk fra første og siste vegpunkt.
+                </p>
+              </div>
             </div>
           </div>
         </section>

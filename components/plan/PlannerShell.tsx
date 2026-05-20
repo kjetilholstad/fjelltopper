@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import { PlannerPanel } from './PlannerPanel'
 import { PlannerProfile } from './PlannerProfile'
@@ -15,16 +15,18 @@ const PlannerMap = dynamic(
   { ssr: false }
 )
 
-function loadState(): { waypoints: Waypoint[]; snapEnabled: boolean; minHeight: string; minPF: string } | null {
+type LayerKey = 'topo' | 'topo2'
+
+function loadState(): { waypoints: Waypoint[]; minHeight: string; minPF: string; activeLayer: LayerKey } | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     return raw ? JSON.parse(raw) : null
   } catch { return null }
 }
 
-function saveState(waypoints: Waypoint[], snapEnabled: boolean, minHeight: string, minPF: string) {
+function saveState(waypoints: Waypoint[], minHeight: string, minPF: string, activeLayer: LayerKey) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ waypoints, snapEnabled, minHeight, minPF }))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ waypoints, minHeight, minPF, activeLayer }))
   } catch {}
 }
 
@@ -33,32 +35,35 @@ interface PlannerShellProps {
 }
 
 export function PlannerShell({ peaks }: PlannerShellProps) {
-  const [waypoints, setWaypoints]       = useState<Waypoint[]>([])
-  const [legs, setLegs]                 = useState<(LegStats | null)[]>([])
-  const [snapEnabled, setSnapEnabled]   = useState(false)
-  const [minHeight, setMinHeight]       = useState('0')
-  const [minPF, setMinPF]               = useState('0')
-  const [loading, setLoading]           = useState(false)
+  const [waypoints, setWaypoints]             = useState<Waypoint[]>([])
+  const [legs, setLegs]                       = useState<(LegStats | null)[]>([])
+  const [activeLayer, setActiveLayer]         = useState<LayerKey>('topo')
+  const [minHeight, setMinHeight]             = useState('0')
+  const [minPF, setMinPF]                     = useState('0')
+  const [loading, setLoading]                 = useState(false)
   const [creditExhausted, setCreditExhausted] = useState(false)
-  const [hydrated, setHydrated]         = useState(false)
-  const batchRef                        = useRef(0)
+  const [hydrated, setHydrated]               = useState(false)
+  const [profileExpanded, setProfileExpanded] = useState(false)
+  const batchRef                              = useRef(0)
+  const abortRef                              = useRef<AbortController | null>(null)
+  const moveDebounceRef                       = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Restore from localStorage
   useEffect(() => {
     const saved = loadState()
     if (saved) {
       setWaypoints(saved.waypoints)
-      setSnapEnabled(saved.snapEnabled)
       if (saved.minHeight) setMinHeight(saved.minHeight)
       if (saved.minPF) setMinPF(saved.minPF)
+      if (saved.activeLayer) setActiveLayer(saved.activeLayer)
     }
     setHydrated(true)
   }, [])
 
-  // Recalculate all legs when waypoints or snap changes
+  // Recalculate legs when waypoints change — each leg uses its own waypoints[i].snapToNext
   useEffect(() => {
     if (!hydrated) return
-    saveState(waypoints, snapEnabled, minHeight, minPF)
+    saveState(waypoints, minHeight, minPF, activeLayer)
 
     if (waypoints.length < 2) {
       setLegs([])
@@ -66,15 +71,21 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
       return
     }
 
+    abortRef.current?.abort()
+    const controller = new AbortController()
+    abortRef.current = controller
+
     const batchId = ++batchRef.current
     setLegs(Array(waypoints.length - 1).fill(null))
     setLoading(true)
 
     Promise.all(
       waypoints.slice(1).map(async (to, i) => {
+        const useSnap = waypoints[i].snapToNext ?? false
         try {
-          return await calcLeg(waypoints[i], to, snapEnabled)
+          return await calcLeg(waypoints[i], to, useSnap, controller.signal)
         } catch (err) {
+          if (err instanceof DOMException && err.name === 'AbortError') return null
           if (err instanceof CreditExhaustedError) {
             setCreditExhausted(true)
             try { return await calcLeg(waypoints[i], to, false) } catch { return null }
@@ -89,28 +100,34 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
       }
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [waypoints, snapEnabled, hydrated])
+  }, [waypoints, hydrated])
 
-  // Save filter changes to localStorage without recalculating legs
+  // Save filter/layer changes without recalculating legs
   useEffect(() => {
     if (!hydrated) return
-    saveState(waypoints, snapEnabled, minHeight, minPF)
+    saveState(waypoints, minHeight, minPF, activeLayer)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [minHeight, minPF])
+  }, [minHeight, minPF, activeLayer])
 
   const addWaypoint = useCallback((lat: number, lng: number, label?: string) => {
-    setWaypoints(prev => [...prev, { id: crypto.randomUUID(), lat, lng, label }])
+    setWaypoints(prev => [...prev, { id: crypto.randomUUID(), lat, lng, label, snapToNext: false }])
+  }, [])
+
+  const moveWaypointRaw = useCallback((id: string, lat: number, lng: number) => {
+    setWaypoints(prev => prev.map(wp => wp.id === id ? { ...wp, lat, lng } : wp))
   }, [])
 
   const moveWaypoint = useCallback((id: string, lat: number, lng: number) => {
-    setWaypoints(prev => prev.map(wp => wp.id === id ? { ...wp, lat, lng } : wp))
-  }, [])
+    if (moveDebounceRef.current) clearTimeout(moveDebounceRef.current)
+    moveDebounceRef.current = setTimeout(() => moveWaypointRaw(id, lat, lng), 300)
+  }, [moveWaypointRaw])
 
   const removeWaypoint = useCallback((id: string) => {
     setWaypoints(prev => prev.filter(wp => wp.id !== id))
   }, [])
 
   const clearAll = useCallback(() => {
+    abortRef.current?.abort()
     batchRef.current++
     setWaypoints([])
     setLegs([])
@@ -136,21 +153,32 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
     })
   }, [])
 
-  const toggleSnap = useCallback(() => {
-    setCreditExhausted(false)
-    setSnapEnabled(s => !s)
+  const toggleLegSnap = useCallback((waypointIndex: number) => {
+    setWaypoints(prev => prev.map((wp, i) =>
+      i === waypointIndex ? { ...wp, snapToNext: !(wp.snapToNext ?? false) } : wp
+    ))
   }, [])
 
-  const minH = parseInt(minHeight, 10)
-  const minP = parseInt(minPF, 10)
-  const visiblePeaks = peaks.filter(p =>
-    p.lat != null && p.lng != null &&
-    p.height >= minH &&
-    (minP === 0 || (p.primary_factor != null && p.primary_factor >= minP))
+  const visiblePeaks = useMemo(() =>
+    peaks.filter(p => {
+      if (p.lat == null || p.lng == null) return false
+      if (p.height < parseInt(minHeight, 10)) return false
+      const minP = parseInt(minPF, 10)
+      if (minP > 0 && (p.primary_factor == null || p.primary_factor < minP)) return false
+      return true
+    }),
+    [peaks, minHeight, minPF]
   )
 
-  const hasProfile = legs.some(l => l !== null && l.elevationPoints.length >= 2)
-  const waypointLabels = waypoints.map((wp, i) => wp.label ?? `Punkt ${i + 1}`)
+  const hasProfile = useMemo(
+    () => legs.some(l => l !== null && l.elevationPoints.length >= 2),
+    [legs]
+  )
+
+  const waypointLabels = useMemo(
+    () => waypoints.map((wp, i) => wp.label ?? `Punkt ${i + 1}`),
+    [waypoints]
+  )
 
   if (!hydrated) return null
 
@@ -159,20 +187,20 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
       <PlannerPanel
         waypoints={waypoints}
         legs={legs}
-        snapEnabled={snapEnabled}
+        activeLayer={activeLayer}
         minHeight={minHeight}
         minPF={minPF}
         loading={loading}
-        creditExhausted={creditExhausted}
         peakCount={visiblePeaks.length}
         totalPeakCount={peaks.length}
-        onSnapToggle={toggleSnap}
+        onLayerChange={setActiveLayer}
         onMinHeightChange={setMinHeight}
         onMinPFChange={setMinPF}
         onRemoveWaypoint={removeWaypoint}
         onClearAll={clearAll}
         onMoveUp={moveUp}
         onMoveDown={moveDown}
+        onToggleLegSnap={toggleLegSnap}
       />
 
       <div className="flex-1 flex flex-col min-h-0 min-w-0">
@@ -181,7 +209,7 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
             waypoints={waypoints}
             legs={legs}
             peaks={visiblePeaks}
-            snapEnabled={snapEnabled}
+            activeLayer={activeLayer}
             onAddWaypoint={addWaypoint}
             onMoveWaypoint={moveWaypoint}
             onRemoveWaypoint={removeWaypoint}
@@ -189,7 +217,13 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
         </div>
         {hasProfile && (
           <div className="hidden sm:block shrink-0">
-            <PlannerProfile legs={legs} waypointLabels={waypointLabels} />
+            <PlannerProfile
+              legs={legs}
+              waypointLabels={waypointLabels}
+              peaks={visiblePeaks}
+              expanded={profileExpanded}
+              onExpandChange={setProfileExpanded}
+            />
           </div>
         )}
       </div>

@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { MapContainer, TileLayer, Marker, Polyline, ZoomControl, ScaleControl, Tooltip, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import type { Waypoint, LegStats } from '@/types/planner'
@@ -42,11 +43,39 @@ function MapClickAdder({ onAdd }: { onAdd: (lat: number, lng: number) => void })
   return null
 }
 
+const PeakMarkers = React.memo(function PeakMarkers({
+  peaks,
+  onAdd,
+}: {
+  peaks: Peak[]
+  onAdd: (lat: number, lng: number, label: string) => void
+}) {
+  return (
+    <>
+      {peaks.map(peak => (
+        <Marker
+          key={peak.id}
+          position={[peak.lat!, peak.lng!]}
+          icon={ICON_PEAK}
+          eventHandlers={{
+            click() { onAdd(peak.lat!, peak.lng!, peak.name) },
+          }}
+        >
+          <Tooltip direction="top" offset={[0, -6]} opacity={0.92}>
+            <span className="text-xs font-medium">{peak.name}</span>
+            <span className="text-[10px] text-[#6B6560] ml-1">{peak.height.toLocaleString('no')} moh</span>
+          </Tooltip>
+        </Marker>
+      ))}
+    </>
+  )
+})
+
 interface PlannerMapProps {
   waypoints: Waypoint[]
   legs: (LegStats | null)[]
   peaks: Peak[]
-  snapEnabled: boolean
+  activeLayer: 'topo' | 'topo2'
   onAddWaypoint: (lat: number, lng: number, label?: string) => void
   onMoveWaypoint: (id: string, lat: number, lng: number) => void
   onRemoveWaypoint: (id: string) => void
@@ -56,12 +85,12 @@ export function PlannerMap({
   waypoints,
   legs,
   peaks,
-  snapEnabled,
+  activeLayer,
   onAddWaypoint,
   onMoveWaypoint,
   onRemoveWaypoint,
 }: PlannerMapProps) {
-  const layer = snapEnabled ? LAYERS.topo2 : LAYERS.topo
+  const layer = LAYERS[activeLayer]
 
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative' }}>
@@ -74,7 +103,7 @@ export function PlannerMap({
         <ZoomControl position="bottomright" />
         <ScaleControl position="bottomleft" imperial={false} />
         <TileLayer
-          key={snapEnabled ? 'topo2' : 'topo'}
+          key={activeLayer}
           attribution={layer.attribution}
           url={layer.url}
           {...(layer.subdomains ? { subdomains: layer.subdomains } : {})}
@@ -82,26 +111,9 @@ export function PlannerMap({
 
         <MapClickAdder onAdd={onAddWaypoint} />
 
-        {/* Peak markers */}
-        {peaks.map(peak => (
-          <Marker
-            key={peak.id}
-            position={[peak.lat!, peak.lng!]}
-            icon={ICON_PEAK}
-            eventHandlers={{
-              click() {
-                onAddWaypoint(peak.lat!, peak.lng!, peak.name)
-              },
-            }}
-          >
-            <Tooltip direction="top" offset={[0, -6]} opacity={0.92}>
-              <span className="text-xs font-medium">{peak.name}</span>
-              <span className="text-[10px] text-[#6B6560] ml-1">{peak.height.toLocaleString('no')} moh</span>
-            </Tooltip>
-          </Marker>
-        ))}
+        <PeakMarkers peaks={peaks} onAdd={onAddWaypoint} />
 
-        {/* Calculated leg lines */}
+        {/* Trail-rute (solid) */}
         {legs.map((leg, i) =>
           leg && leg.geometry.length >= 2 ? (
             <Polyline
@@ -111,8 +123,30 @@ export function PlannerMap({
                 color: '#2D5016',
                 weight: 3,
                 opacity: 0.85,
-                dashArray: snapEnabled ? undefined : '7 5',
+                dashArray: leg.snapped ? undefined : '7 5',
               }}
+            />
+          ) : null
+        )}
+
+        {/* Off-trail start-segment (stiplet, oransje) — vises kun for snappede etapper */}
+        {legs.map((leg, i) =>
+          leg?.offTrailStart ? (
+            <Polyline
+              key={`offtrail-start-${i}`}
+              positions={leg.offTrailStart}
+              pathOptions={{ color: '#E8671A', weight: 2, dashArray: '5 5', opacity: 0.7 }}
+            />
+          ) : null
+        )}
+
+        {/* Off-trail slutt-segment (stiplet, oransje) — vises kun for snappede etapper */}
+        {legs.map((leg, i) =>
+          leg?.offTrailEnd ? (
+            <Polyline
+              key={`offtrail-end-${i}`}
+              positions={leg.offTrailEnd}
+              pathOptions={{ color: '#E8671A', weight: 2, dashArray: '5 5', opacity: 0.7 }}
             />
           ) : null
         )}

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronUp, ChevronDown, Trash2, Download, RotateCcw } from 'lucide-react'
+import { ChevronUp, ChevronDown, Trash2, Download, RotateCcw, Route, Minus } from 'lucide-react'
 import type { Waypoint, LegStats } from '@/types/planner'
 
 const HEIGHT_OPTIONS = [
@@ -33,7 +33,8 @@ function formatTime(hours: number): string {
   return m > 0 ? `${h}t ${m}min` : `${h}t`
 }
 
-function exportGPX(waypoints: Waypoint[], legs: (LegStats | null)[]) {
+function exportGPX(waypoints: Waypoint[], legs: (LegStats | null)[], name: string) {
+  const safeName = name.trim().replace(/[^\w\s\-æøåÆØÅ]/g, '').trim() || 'turplan'
   const trackpts = legs.flatMap((leg, i): string[] => {
     if (leg?.geometry && leg.geometry.length >= 2) {
       return leg.geometry.map(([lat, lng]) => `\n      <trkpt lat="${lat.toFixed(6)}" lon="${lng.toFixed(6)}"></trkpt>`)
@@ -49,42 +50,55 @@ function exportGPX(waypoints: Waypoint[], legs: (LegStats | null)[]) {
   const gpx =
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
     `<gpx version="1.1" creator="Fjelltopper" xmlns="http://www.topografix.com/GPX/1/1">\n` +
-    `  <trk><name>Turplan</name><trkseg>` +
+    `  <trk><name>${safeName}</name><trkseg>` +
     trackpts.join('') +
     `\n  </trkseg></trk>\n</gpx>`
 
   const blob = new Blob([gpx], { type: 'application/gpx+xml' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
-  a.href = url; a.download = 'turplan.gpx'; a.click()
+  a.href = url; a.download = `${safeName}.gpx`; a.click()
   URL.revokeObjectURL(url)
 }
 
 interface PlannerPanelProps {
   waypoints: Waypoint[]
   legs: (LegStats | null)[]
-  snapEnabled: boolean
+  activeLayer: 'topo' | 'topo2'
   minHeight: string
   minPF: string
   loading: boolean
-  creditExhausted: boolean
   peakCount: number
   totalPeakCount: number
-  onSnapToggle: () => void
+  onLayerChange: (layer: 'topo' | 'topo2') => void
   onMinHeightChange: (v: string) => void
   onMinPFChange: (v: string) => void
   onRemoveWaypoint: (id: string) => void
   onClearAll: () => void
   onMoveUp: (index: number) => void
   onMoveDown: (index: number) => void
+  onToggleLegSnap: (waypointIndex: number) => void
 }
 
 export function PlannerPanel({
-  waypoints, legs, snapEnabled, minHeight, minPF, loading, creditExhausted,
+  waypoints, legs, activeLayer, minHeight, minPF, loading,
   peakCount, totalPeakCount,
-  onSnapToggle, onMinHeightChange, onMinPFChange, onRemoveWaypoint, onClearAll, onMoveUp, onMoveDown,
+  onLayerChange, onMinHeightChange, onMinPFChange, onRemoveWaypoint, onClearAll, onMoveUp, onMoveDown,
+  onToggleLegSnap,
 }: PlannerPanelProps) {
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [gpxDialogOpen, setGpxDialogOpen] = useState(false)
+  const [gpxName, setGpxName] = useState('')
+
+  function openGpxDialog() {
+    const first = waypoints[0]?.label
+    const last  = waypoints[waypoints.length - 1]?.label
+    const defaultName = first && last && first !== last
+      ? `${first}–${last}`
+      : first ?? 'Turplan'
+    setGpxName(defaultName)
+    setGpxDialogOpen(true)
+  }
 
   const totalDist  = legs.reduce((s, l) => s + (l?.distanceKm ?? 0), 0)
   const totalAsc   = legs.reduce((s, l) => s + (l?.ascentM   ?? 0), 0)
@@ -93,6 +107,26 @@ export function PlannerPanel({
 
   const content = (
     <div className="flex flex-col h-full overflow-hidden">
+      {/* Kartlag */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#E8E2D9]">
+        <p className="text-xs font-semibold text-[#1A1A1A]">Kartlag</p>
+        <div className="flex gap-1">
+          {(['topo', 'topo2'] as const).map(key => (
+            <button
+              key={key}
+              onClick={() => onLayerChange(key)}
+              className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${
+                activeLayer === key
+                  ? 'bg-forest text-white'
+                  : 'bg-[#F7F4EF] text-[#6B6560] border border-[#E8E2D9]'
+              }`}
+            >
+              {key === 'topo' ? 'Kartverket' : 'OpenTopo'}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Peak height filter */}
       <div className="px-4 py-3 border-b border-[#E8E2D9]">
         <div className="flex items-center justify-between mb-2">
@@ -125,30 +159,6 @@ export function PlannerPanel({
         </div>
         <p className="text-[10px] text-[#A89F96] mt-1.5">Klikk på en topp for å legge den til</p>
       </div>
-
-      {/* Snap toggle */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#E8E2D9]">
-        <div>
-          <p className="text-xs font-semibold text-[#1A1A1A]">Rute langs stier</p>
-          <p className="text-[10px] text-[#A89F96]">GraphHopper · krever nett</p>
-        </div>
-        <button
-          onClick={onSnapToggle}
-          className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${
-            snapEnabled
-              ? 'bg-forest text-white'
-              : 'bg-[#F7F4EF] text-[#6B6560] border border-[#E8E2D9]'
-          }`}
-        >
-          {snapEnabled ? 'På' : 'Av'}
-        </button>
-      </div>
-
-      {creditExhausted && (
-        <div className="mx-3 mt-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
-          GraphHopper-kvota er tom. Bruker luftlinje.
-        </div>
-      )}
 
       {/* Stats */}
       {waypoints.length >= 2 && (
@@ -208,6 +218,19 @@ export function PlannerPanel({
                   >
                     <ChevronDown size={13} />
                   </button>
+                  {i < waypoints.length - 1 && (
+                    <button
+                      onClick={() => onToggleLegSnap(i)}
+                      title={wp.snapToNext ? 'Følger sti → klikk for rett linje' : 'Rett linje → klikk for rute langs sti'}
+                      className={`p-0.5 rounded transition-colors ${
+                        wp.snapToNext
+                          ? 'text-[#2D5016] bg-[#f0f5e8] border border-[#2D5016]/30'
+                          : 'text-[#A89F96] bg-[#F7F4EF] border border-[#E8E2D9]'
+                      }`}
+                    >
+                      {wp.snapToNext ? <Route size={11} /> : <Minus size={11} />}
+                    </button>
+                  )}
                   <button
                     onClick={() => onRemoveWaypoint(wp.id)}
                     className="p-0.5 text-[#A89F96] hover:text-red-500 transition-colors"
@@ -234,13 +257,45 @@ export function PlannerPanel({
       {/* Actions */}
       <div className="flex items-center gap-2 px-3 py-3 border-t border-[#E8E2D9]">
         {waypoints.length >= 2 && (
-          <button
-            onClick={() => exportGPX(waypoints, legs)}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-[#F7F4EF] border border-[#E8E2D9] rounded-lg text-[#6B6560] hover:text-forest hover:border-forest/30 transition-colors"
-          >
-            <Download size={13} />
-            GPX
-          </button>
+          <div className="relative">
+            {!gpxDialogOpen ? (
+              <button
+                onClick={openGpxDialog}
+                className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-[#F7F4EF] border border-[#E8E2D9] rounded-lg text-[#6B6560] hover:text-forest hover:border-forest/30 transition-colors"
+              >
+                <Download size={13} />
+                GPX
+              </button>
+            ) : (
+              <div className="flex items-center gap-1.5">
+                <input
+                  type="text"
+                  value={gpxName}
+                  onChange={e => setGpxName(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') { exportGPX(waypoints, legs, gpxName); setGpxDialogOpen(false) }
+                    if (e.key === 'Escape') setGpxDialogOpen(false)
+                  }}
+                  autoFocus
+                  placeholder="Filnavn"
+                  className="text-xs px-2 py-1 border border-[#E8E2D9] rounded-lg bg-white text-[#1A1A1A] focus:outline-none focus:border-forest w-32"
+                />
+                <button
+                  onClick={() => { exportGPX(waypoints, legs, gpxName); setGpxDialogOpen(false) }}
+                  className="text-xs px-2.5 py-1.5 bg-forest text-white rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1"
+                >
+                  <Download size={12} />
+                  Last ned
+                </button>
+                <button
+                  onClick={() => setGpxDialogOpen(false)}
+                  className="text-[#A89F96] hover:text-[#1A1A1A] transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+          </div>
         )}
         {waypoints.length > 0 && (
           <button

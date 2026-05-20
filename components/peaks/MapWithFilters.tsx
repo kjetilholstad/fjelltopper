@@ -277,7 +277,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
       {/* Venstre kolonne: filter + tegnforklaring + detaljpanel */}
       <div
         style={{ position: 'absolute', top: 12, left: 12, zIndex: 1000, maxWidth: 400 }}
-        className="w-[calc(100%-24px)] sm:w-auto flex flex-col gap-2"
+        className={`${panelOpen ? 'w-[calc(100%-24px)]' : 'w-auto'} sm:w-auto flex flex-col gap-2`}
       >
         {/* Kollaps-knapp */}
         <button
