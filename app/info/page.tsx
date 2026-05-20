@@ -417,22 +417,21 @@ export default function InfoPage() {
           </p>
           <p className="text-sm text-[#6B6560] leading-relaxed mb-4">
             Fra profilen beregnes <strong className="text-[#1A1A1A] font-medium">akkumulert stigning og nedstigning</strong>,
-            og turplanleggeren beregner gangtid med tre forskjellige metoder:
+            og både kartsiden og turplanleggeren beregner gangtid med tre forskjellige metoder:
           </p>
           <div className="flex flex-col gap-3 mb-5">
             <div className="rounded-lg border border-[#E8E2D9] px-4 py-3">
               <p className="text-sm font-semibold text-[#1A1A1A] mb-1">Naismith (klassisk)</p>
               <p className="text-xs text-[#6B6560] leading-relaxed">
-                Gangtid ≈ distanse / 5 km/t + stigning / 600 hm/t.
-                Enkel og kjent, men ignorerer nedstigning og er noe optimistisk for norsk fjellterreng.
+                Formel: dist / 5 km/t + stigning / 600 hm/t.
+                Enkel og kjent. Ignorerer nedstigning og er ~30 % optimistisk for norsk fjellterreng. Brukes som referanse.
               </p>
             </div>
             <div className="rounded-lg border border-[#E8E2D9] px-4 py-3">
               <p className="text-sm font-semibold text-[#1A1A1A] mb-1">Standard Tobler</p>
               <p className="text-xs text-[#6B6560] leading-relaxed">
-                Hastighet = 6 · e<sup>−3.5 · |s + 0.05|</sup> der s er helningsbrøk.
-                Tar hensyn til at litt nedoverbakke går raskere enn flatt, men er kalibrert på europeiske veier
-                og overvurderer tempo i norsk fjell.
+                W(s) = 6 · e<sup>−3.5 · |s + 0.05|</sup> der s er helningsbrøk.
+                Tar hensyn til helningsgrad segment for segment. Kalibrert på europeiske turveier — overvurderer fart i norsk fjell.
               </p>
             </div>
             <div className="rounded-lg border border-[#2D5016]/30 bg-[#f0f5e8] px-4 py-3">
@@ -441,9 +440,9 @@ export default function InfoPage() {
                 <span className="text-[10px] font-semibold bg-[#2D5016] text-white rounded-full px-2 py-0.5">Anbefalt</span>
               </div>
               <p className="text-xs text-[#6B6560] leading-relaxed">
-                Hastighet = 4.1 · e<sup>−1.8 · |s + 0.02|</sup> — kalibrert på 6 norske fjellturar (totalt ~114 km).
-                Flatt tempo ~3.9 km/t. Bruker rutens faktiske høydeprofil segment for segment.
-                Mest presis for norsk fjellheim.
+                W(s) = 4.1 · e<sup>−1.7 · |s + 0.02|</sup> — kalibrert på 6 norske fjellturar (~114 km).
+                Flat hastighet ~4.0 km/t. Svak nedstigning er optimal, bratt ned bremser som opp.
+                Alle tre estimater viser <strong className="text-[#1A1A1A] font-medium">bevegelsestid</strong> — legg til 25–35 % for pauser.
               </p>
             </div>
           </div>

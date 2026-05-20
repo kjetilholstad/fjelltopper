@@ -1,4 +1,4 @@
-import { fetchElevationProfile, calcProfileStats } from './elevationProfile'
+import { fetchElevationProfile, calcProfileStats, toblerTime } from './elevationProfile'
 import { fetchSnapRoute, CreditExhaustedError, RateLimitedError } from './graphhopper'
 import { haversineKm } from './nearestPeaks'
 import type { SnapRouteResult } from './graphhopper'
@@ -9,25 +9,6 @@ export { CreditExhaustedError, RateLimitedError }
 const SNAP_THRESHOLD_KM = 0.05
 
 const sleep = (ms: number) => new Promise<void>(res => setTimeout(res, ms))
-
-function toblerTime(
-  points: Array<{ dist: number; elevation: number }>,
-  totalKm: number,
-  A: number, B: number, C: number
-): number {
-  if (points.length < 2) return totalKm / (A * Math.exp(-B * Math.abs(C)))
-  const scale = points[points.length - 1].dist > 0
-    ? totalKm / points[points.length - 1].dist : 1
-  let h = 0
-  for (let i = 1; i < points.length; i++) {
-    const dDist = (points[i].dist - points[i - 1].dist) * scale
-    const dElev = points[i].elevation - points[i - 1].elevation
-    if (dDist <= 0) continue
-    const s = (dElev / 1000) / dDist
-    h += dDist / (A * Math.exp(-B * Math.abs(s + C)))
-  }
-  return h
-}
 
 function buildSnapLeg(result: SnapRouteResult, from: Waypoint, to: Waypoint): LegStats {
   const startOffsetKm = haversineKm(from.lat, from.lng, result.snappedFrom[0], result.snappedFrom[1])
@@ -54,7 +35,7 @@ function buildSnapLeg(result: SnapRouteResult, from: Waypoint, to: Waypoint): Le
     timeEstimates: {
       naismith:  result.distanceKm / 5 + result.ascentM / 600,
       toblerStd: toblerTime(result.elevationPoints, result.distanceKm, 6,   3.5, 0.05),
-      toblerCal: toblerTime(result.elevationPoints, result.distanceKm, 4.1, 1.8, 0.02),
+      toblerCal: toblerTime(result.elevationPoints, result.distanceKm, 4.1, 1.7, 0.02),
     },
     geometry: fullGeometry,
     elevationPoints: result.elevationPoints,
@@ -75,11 +56,7 @@ async function calcLegStraight(from: Waypoint, to: Waypoint): Promise<LegStats> 
     distanceKm: stats.distanceKm,
     ascentM: stats.ascentM,
     descentM: stats.descentM,
-    timeEstimates: {
-      naismith:  stats.distanceKm / 5 + stats.ascentM / 600,
-      toblerStd: toblerTime(elevationPoints, stats.distanceKm, 6,   3.5, 0.05),
-      toblerCal: toblerTime(elevationPoints, stats.distanceKm, 4.1, 1.8, 0.02),
-    },
+    timeEstimates: stats.timeEstimates,
     geometry: points.map(p => [p.lat, p.lng] as [number, number]),
     elevationPoints,
     snapped: false,

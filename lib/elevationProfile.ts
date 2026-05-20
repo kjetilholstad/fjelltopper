@@ -47,11 +47,35 @@ export async function fetchElevationProfile(
   return { points, distanceKm }
 }
 
+export function toblerTime(
+  points: Array<{ dist: number; elevation: number }>,
+  totalKm: number,
+  A: number, B: number, C: number
+): number {
+  if (points.length < 2) return totalKm / (A * Math.exp(-B * Math.abs(C)))
+  const scale = points[points.length - 1].dist > 0
+    ? totalKm / points[points.length - 1].dist : 1
+  let h = 0
+  for (let i = 1; i < points.length; i++) {
+    const dDist = (points[i].dist - points[i - 1].dist) * scale
+    const dElev = points[i].elevation - points[i - 1].elevation
+    if (dDist <= 0) continue
+    const s = (dElev / 1000) / dDist
+    h += dDist / (A * Math.exp(-B * Math.abs(s + C)))
+  }
+  return h
+}
+
 export interface ProfileStats {
   distanceKm: number
   ascentM: number
   descentM: number
-  estimatedHours: number
+  estimatedHours: number   // = toblerCal, beholdes for bakoverkompatibilitet
+  timeEstimates: {
+    naismith:  number
+    toblerStd: number
+    toblerCal: number
+  }
 }
 
 export function calcProfileStats(
@@ -64,6 +88,20 @@ export function calcProfileStats(
     if (diff > 0) ascentM += diff
     else descentM += Math.abs(diff)
   }
-  const estimatedHours = distanceKm / 5 + ascentM / 600 + descentM / 1000
-  return { distanceKm, ascentM: Math.round(ascentM), descentM: Math.round(descentM), estimatedHours }
+  const elevPts = points.map((p, i) => ({
+    dist: (i / (points.length - 1)) * distanceKm,
+    elevation: p.elevation,
+  }))
+  const timeEstimates = {
+    naismith:  distanceKm / 5 + ascentM / 600,
+    toblerStd: toblerTime(elevPts, distanceKm, 6.0, 3.5, 0.05),
+    toblerCal: toblerTime(elevPts, distanceKm, 4.1, 1.7, 0.02),
+  }
+  return {
+    distanceKm,
+    ascentM: Math.round(ascentM),
+    descentM: Math.round(descentM),
+    estimatedHours: timeEstimates.toblerCal,
+    timeEstimates,
+  }
 }

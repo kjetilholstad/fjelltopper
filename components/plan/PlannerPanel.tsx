@@ -25,13 +25,8 @@ const PF_OPTIONS = [
   { label: 'PF over 2000 m',      value: '2000' },
 ]
 
-function formatTime(hours: number): string {
-  if (hours === 0) return '0 min'
-  const h = Math.floor(hours)
-  const m = Math.round((hours - h) * 60)
-  if (h === 0) return `${m} min`
-  return m > 0 ? `${h}t ${m}min` : `${h}t`
-}
+const formatTime = (h: number) =>
+  `${Math.floor(h)}t ${Math.round((h % 1) * 60)}min`
 
 function exportGPX(waypoints: Waypoint[], legs: (LegStats | null)[], name: string) {
   const safeName = name.trim().replace(/[^\w\s\-æøåÆØÅ]/g, '').trim() || 'turplan'
@@ -168,22 +163,23 @@ export function PlannerPanel({
             <p className="text-sm font-bold text-[#1A1A1A]">{totalDist.toFixed(1)} km</p>
           </div>
           <div className="bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9]">
-            <div className="flex flex-col gap-0.5">
-              <p className="text-[10px] text-[#A89F96] uppercase tracking-wide">Gangtid</p>
-              <div className="flex flex-col gap-0.5 text-[11px]">
-                <span>
-                  <span className="text-[#A89F96] w-20 inline-block">Naismith</span>
+            <div className="flex flex-col gap-1">
+              <p className="text-[10px] text-[#A89F96] uppercase tracking-wide">Gangtid (bevegelse)</p>
+              <div className="space-y-0.5 text-[11px]">
+                <div className="flex justify-between">
+                  <span className="text-[#A89F96]">Naismith</span>
                   <span className="font-medium text-[#1A1A1A]">{formatTime(totalTime.naismith)}</span>
-                </span>
-                <span>
-                  <span className="text-[#A89F96] w-20 inline-block">Tobler</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#A89F96]">Tobler</span>
                   <span className="font-medium text-[#1A1A1A]">{formatTime(totalTime.toblerStd)}</span>
-                </span>
-                <span>
-                  <span className="text-[#A89F96] w-20 inline-block">Kalibrert</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#2D5016] font-medium">Kalibrert ↗</span>
                   <span className="font-medium text-[#2D5016]">{formatTime(totalTime.toblerCal)}</span>
-                </span>
+                </div>
               </div>
+              <p className="text-[10px] text-[#A89F96] mt-1">+ ca. 25–35 % for pauser</p>
             </div>
           </div>
           <div className="bg-[#F7F4EF] rounded-lg px-3 py-2 text-center border border-[#E8E2D9]">

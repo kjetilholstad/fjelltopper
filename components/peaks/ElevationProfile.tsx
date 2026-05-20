@@ -181,11 +181,13 @@ export default function ElevationProfile({ fromName, toName, fromLat, fromLng, t
 
   const svgData = points.length && stats ? { points, distanceKm: stats.distanceKm } : null
 
-  const chips = stats ? [
+  const chips: Array<{ label: string; value: string; highlight?: boolean }> = stats ? [
     { label: 'Luftlinje',   value: `${stats.distanceKm.toFixed(1)} km` },
     { label: 'Stigning',    value: `${stats.ascentM} m` },
     { label: 'Nedstigning', value: `${stats.descentM} m` },
-    { label: 'Gangtid',     value: formatTime(stats.estimatedHours) },
+    { label: 'Naismith',    value: formatTime(stats.timeEstimates.naismith) },
+    { label: 'Tobler',      value: formatTime(stats.timeEstimates.toblerStd) },
+    { label: 'Kalibrert ↗', value: formatTime(stats.timeEstimates.toblerCal), highlight: true },
   ] : []
 
   return (
@@ -211,16 +213,16 @@ export default function ElevationProfile({ fromName, toName, fromLat, fromLng, t
             >
               <ProfileSVG data={svgData} compact />
             </button>
-            <div className="grid grid-cols-4 gap-2">
-              {chips.map(({ label, value }) => (
+            <div className="grid grid-cols-3 gap-2">
+              {chips.map(({ label, value, highlight }) => (
                 <div key={label} className="bg-[#F7F4EF] rounded-lg px-3 py-2 text-center border border-[#E8E2D9]">
                   <p className="text-[10px] text-[#6B6560]">{label}</p>
-                  <p className="text-sm font-semibold text-[#1A1A1A]">{value}</p>
+                  <p className={`text-sm font-semibold ${highlight ? 'text-[#2D5016]' : 'text-[#1A1A1A]'}`}>{value}</p>
                 </div>
               ))}
             </div>
             <p className="text-[10px] text-[#A89F96] mt-2 text-center">
-              Gangtid per Naismiths regel · Kartverket høydedata
+              Bevegelsestid · Kalibrert Tobler anbefalt · +25–35 % for pauser · Kartverket høydedata
             </p>
           </>
         )}
@@ -253,17 +255,17 @@ export default function ElevationProfile({ fromName, toName, fromLat, fromLng, t
               <ProfileSVG data={svgData} compact={false} />
             </div>
 
-            <div className="grid grid-cols-4 gap-3">
-              {chips.map(({ label, value }) => (
+            <div className="grid grid-cols-3 gap-3">
+              {chips.map(({ label, value, highlight }) => (
                 <div key={label} className="bg-[#F7F4EF] rounded-xl px-3 py-3 text-center border border-[#E8E2D9]">
                   <p className="text-[10px] text-[#6B6560] mb-0.5">{label}</p>
-                  <p className="text-base font-bold text-[#1A1A1A]">{value}</p>
+                  <p className={`text-base font-bold ${highlight ? 'text-[#2D5016]' : 'text-[#1A1A1A]'}`}>{value}</p>
                 </div>
               ))}
             </div>
 
             <p className="text-[10px] text-[#A89F96] mt-3 text-center">
-              Gangtid per Naismiths regel · Kartverket høydedata · 50 samplingspunkter
+              Bevegelsestid · Kalibrert Tobler anbefalt · +25–35 % for pauser · Kartverket høydedata · 50 samplingspunkter
             </p>
           </div>
         </div>
