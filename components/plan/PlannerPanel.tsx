@@ -510,7 +510,8 @@ export function PlannerPanel({
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-2 px-3 py-3 border-t border-[#E8E2D9]">
+      <div className="flex items-center gap-2 px-3 py-3 border-t border-[#E8E2D9]"
+           style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
         {waypoints.length >= 2 && (
           <div className="relative">
             {!gpxDialogOpen ? (
@@ -566,6 +567,7 @@ export function PlannerPanel({
   )
 
   return (
+
     <>
       {/* Desktop sidebar */}
       <div className="hidden sm:flex flex-col w-72 shrink-0 bg-white border-r border-[#E8E2D9]" style={{ height: '100%' }}>
@@ -580,7 +582,8 @@ export function PlannerPanel({
       <div className="sm:hidden fixed bottom-0 left-0 right-0 z-[2000]">
         <button
           onClick={() => setDrawerOpen(o => !o)}
-          className="w-full flex items-center justify-center gap-2 bg-white border-t border-[#E8E2D9] py-3 text-sm font-medium text-[#1A1A1A] shadow-md"
+          className="w-full flex items-center justify-center gap-2 bg-white border-t border-[#E8E2D9] pt-3 text-sm font-medium text-[#1A1A1A] shadow-md"
+          style={{ paddingBottom: 'max(12px, env(safe-area-inset-bottom))' }}
         >
           {drawerOpen ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
           {waypoints.length > 0

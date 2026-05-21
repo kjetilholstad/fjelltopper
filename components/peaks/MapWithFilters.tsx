@@ -578,7 +578,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
       {/* Mobil bottom sheet */}
       <div
         className="sm:hidden fixed bottom-0 left-0 right-0 z-[2000] bg-white rounded-t-2xl shadow-2xl border-t border-[#E8E2D9] transition-transform duration-300 ease-out flex flex-col"
-        style={{ height: '65vh', transform: sheetExpanded ? 'translateY(0)' : 'translateY(calc(65vh - 64px))' }}
+        style={{ height: '65vh', transform: sheetExpanded ? 'translateY(0)' : 'translateY(calc(65vh - 64px))', paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         {/* Håndtak */}
         <button
@@ -841,6 +841,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
               </Link>
             </div>
           )}
+          <div style={{ height: 'env(safe-area-inset-bottom)' }} />
         </div>
       </div>
 
