@@ -114,9 +114,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
   } = usePeakFilters(peaks, '0')
 
   const [panelOpen, setPanelOpen] = useState(true)
-  useEffect(() => {
-    if (window.innerWidth < 640) setPanelOpen(false)
-  }, [])
+  const [sheetExpanded, setSheetExpanded] = useState(false)
 
   const [selectedPeak, setSelectedPeak] = useState<EnrichedPeak | null>(null)
   const [activeLines, setActiveLines] = useState<Set<LineType>>(new Set())
@@ -264,7 +262,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
       <PeakMap
         peaks={filteredWithAscended}
         selectedPeakId={selectedPeak?.id ?? null}
-        onSelectPeak={peak => { setSelectedPeak(peak); if (peak) setPanelOpen(true) }}
+        onSelectPeak={peak => { setSelectedPeak(peak); if (peak) { setPanelOpen(true); setSheetExpanded(true) } }}
         activeLines={activeLines}
         lineData={lineData}
         higherPeakId={higherPeakId}
@@ -277,7 +275,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
       {/* Venstre kolonne: filter + tegnforklaring + detaljpanel */}
       <div
         style={{ position: 'absolute', top: 12, left: 12, zIndex: 1000, maxWidth: 400 }}
-        className={`${panelOpen ? 'w-[calc(100%-24px)]' : 'w-auto'} sm:w-auto flex flex-col gap-2`}
+        className={`hidden sm:flex ${panelOpen ? 'w-[calc(100%-24px)]' : 'w-auto'} sm:w-auto flex-col gap-2`}
       >
         {/* Kollaps-knapp */}
         <button
@@ -575,6 +573,218 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             onClose={() => setActiveProfile(null)}
           />
         )}
+      </div>
+
+      {/* Mobil bottom sheet */}
+      <div
+        className="sm:hidden fixed bottom-0 left-0 right-0 z-[2000] bg-white rounded-t-2xl shadow-2xl border-t border-[#E8E2D9] transition-transform duration-300 ease-out flex flex-col"
+        style={{ height: '65vh', transform: sheetExpanded ? 'translateY(0)' : 'translateY(calc(65vh - 64px))' }}
+      >
+        {/* Håndtak */}
+        <button
+          onClick={() => setSheetExpanded(o => !o)}
+          className="flex flex-col items-center gap-2 pt-2 pb-3 px-4 shrink-0"
+          aria-label={sheetExpanded ? 'Lukk panel' : 'Åpne panel'}
+        >
+          <div className="w-10 h-1 rounded-full bg-[#E8E2D9]" />
+          <div className="flex items-center justify-between w-full">
+            {selectedPeak ? (
+              <span className="text-sm font-semibold text-[#1A1A1A] truncate">
+                {selectedPeak.name} — {selectedPeak.height.toLocaleString('no')} moh
+              </span>
+            ) : (
+              <span className="text-sm font-medium text-[#6B6560]">
+                {filteredWithAscended.length} topper vises
+              </span>
+            )}
+            {sheetExpanded ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
+          </div>
+        </button>
+
+        {/* Scrollbart innhold */}
+        <div className="flex-1 overflow-y-auto px-4 pb-6 flex flex-col gap-3">
+          {/* Filter-seksjon */}
+          <div className="flex flex-col gap-2">
+            <p className="text-xs font-semibold text-[#1A1A1A]">Filter</p>
+            <div className="relative">
+              <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-warm pointer-events-none" />
+              <input
+                type="text"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                placeholder="Søk etter topp…"
+                className="w-full bg-parchment border border-border-warm rounded-lg pl-7 pr-3 py-2 text-sm text-[#1A1A1A] placeholder:text-text-warm focus:outline-none focus:border-forest"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <Select value={minHeight} onChange={setMinHeight} options={HEIGHT_OPTIONS} />
+              <Select value={minPF} onChange={setMinPF} options={PF_OPTIONS} />
+              <Select
+                value={county}
+                onChange={handleCountyChange}
+                options={[{ label: 'Alle fylker', value: '' }, ...counties.map(c => ({ label: c, value: c }))]}
+              />
+              <Select
+                value={municipality}
+                onChange={setMunicipality}
+                options={[{ label: 'Alle kommuner', value: '' }, ...municipalities.map(m => ({ label: m, value: m }))]}
+              />
+            </div>
+            {isLoggedIn && ascendedSet.size > 0 && (
+              <button
+                onClick={() => setShowOnlyAscended(v => !v)}
+                className={[
+                  'flex items-center gap-2 w-full rounded-lg px-3 py-2 text-sm font-medium border transition-colors text-left',
+                  showOnlyAscended
+                    ? 'bg-forest-50 text-forest border-forest/30'
+                    : 'bg-white text-text-warm border-border-warm',
+                ].join(' ')}
+              >
+                <CheckCircle2
+                  size={14}
+                  strokeWidth={showOnlyAscended ? 2 : 1.5}
+                  className={showOnlyAscended ? 'text-forest' : 'text-text-warm'}
+                />
+                {showOnlyAscended ? `Viser ${ascendedSet.size} bestigninger` : `Kun mine (${ascendedSet.size})`}
+              </button>
+            )}
+            <p className="text-xs text-text-warm">
+              <span className="font-semibold text-[#1A1A1A]">{filteredWithAscended.length}</span>
+              {' '}av{' '}
+              <span className="font-semibold text-[#1A1A1A]">{peaks.length}</span>
+              {' '}topper
+            </p>
+          </div>
+
+          {/* Valgt topp */}
+          {selectedPeak && (
+            <div className="border-t border-[#E8E2D9] pt-3 flex flex-col gap-2">
+              <div className="flex items-start justify-between gap-2">
+                <p className="font-bold text-[#1A1A1A] text-base leading-tight">{selectedPeak.name}</p>
+                <button
+                  onClick={() => setSelectedPeak(null)}
+                  className="text-text-warm hover:text-[#1A1A1A] leading-none shrink-0 mt-0.5"
+                  aria-label="Lukk"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <p className="text-sm text-[#6B6560]">
+                <strong className="text-[#1A1A1A]">{selectedPeak.height.toLocaleString('no')} moh</strong>
+                <span className="mx-1.5 text-[#C8BFB5]">·</span>
+                Primærfaktor <strong className="text-[#1A1A1A]">{(selectedPeak.primary_factor ?? 0).toLocaleString('no')} m</strong>
+              </p>
+
+              {selectedPeak.nearest_higher_peak && distToHigher != null && (
+                <p className="text-sm text-text-warm">
+                  Nærmeste høyere:{' '}
+                  <span className="font-medium text-[#1A1A1A]">
+                    {selectedPeak.nearest_higher_peak}
+                    {(() => {
+                      const hp = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
+                      const parts: string[] = []
+                      if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
+                      parts.push(formatDist(distToHigher * 1000))
+                      return ` (${parts.join(' – ')})`
+                    })()}
+                  </span>
+                </p>
+              )}
+
+              {nearest && (
+                <p className="text-sm text-text-warm">
+                  Nærmeste over 2000 m (PF ≥ 30 m):{' '}
+                  <span className="font-medium text-[#1A1A1A]">
+                    {nearest.peak.name} ({nearest.peak.height.toLocaleString('no')} moh – {formatDist(nearest.distanceKm * 1000)})
+                  </span>
+                </p>
+              )}
+
+              {location && <p className="text-sm text-text-warm">{location}</p>}
+
+              {countMap && (countMap[selectedPeak.id] ?? 0) > 0 && (
+                <p className="flex items-center gap-1 text-sm text-text-warm">
+                  <Users size={13} strokeWidth={1.75} />
+                  {countMap[selectedPeak.id].toLocaleString('no')} bestigninger
+                </p>
+              )}
+
+              {isLoggedIn && (
+                <div className="border-t border-border-warm pt-3">
+                  {ascendedSet.has(selectedPeak.id) ? (
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="flex items-center gap-1 text-sm font-medium px-2 py-1 rounded-full bg-forest-50 text-forest border border-forest/20">
+                        <CheckCircle2 size={13} strokeWidth={2} />
+                        {new Date((ascendedMap[selectedPeak.id]?.date ?? '') + 'T12:00:00').toLocaleDateString('no-NO', {
+                          day: 'numeric', month: 'short', year: 'numeric',
+                        })}
+                      </span>
+                      <button
+                        onClick={() => setConfirmOpen(true)}
+                        disabled={isPending}
+                        className="text-sm text-red-400 hover:text-red-600 transition-colors disabled:opacity-50"
+                      >
+                        Fjern
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2 items-end">
+                      <div className="flex-1">
+                        <label className="block text-xs font-medium text-[#1A1A1A] mb-1">Dato</label>
+                        <input
+                          type="date"
+                          value={ascentDate}
+                          onChange={e => setAscentDate(e.target.value)}
+                          className="w-full bg-parchment border border-border-warm rounded-md px-2 py-1.5 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest transition-colors"
+                        />
+                      </div>
+                      <button
+                        onClick={handleLogAscent}
+                        disabled={isPending}
+                        className="bg-forest text-white text-sm font-medium px-4 py-1.5 rounded-md hover:opacity-90 transition-opacity shrink-0 disabled:opacity-50"
+                      >
+                        {isPending ? '…' : '+ Bestigning'}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {nearbyPeaks.length > 0 && (
+                <div className="border-t border-border-warm pt-2">
+                  <p className="text-sm font-semibold text-[#DC2626] mb-1">
+                    Nærliggende topper ({nearbyPeaks.length})
+                  </p>
+                  <div className="flex flex-col gap-1.5">
+                    {nearbyPeaks.map(p => {
+                      const distKm = selectedPeak.lat != null && selectedPeak.lng != null && p.lat != null && p.lng != null
+                        ? haversineKm(selectedPeak.lat, selectedPeak.lng, p.lat, p.lng)
+                        : null
+                      return (
+                        <div key={p.id} className="flex flex-col">
+                          <span className="text-sm font-medium text-[#1A1A1A]">{p.name}</span>
+                          <span className="text-xs text-text-warm">
+                            {p.height.toLocaleString('no')} moh
+                            {distKm != null && ` · ${formatDist(distKm * 1000)}`}
+                            {p.primary_factor != null && ` · PF ${p.primary_factor.toLocaleString('no')} m`}
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <Link
+                href={`/peaks/${selectedPeak.id}`}
+                className="text-sm font-semibold text-forest hover:underline"
+              >
+                Se detaljer →
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
 
       <ConfirmDialog
