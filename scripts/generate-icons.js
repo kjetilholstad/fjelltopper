@@ -7,10 +7,17 @@ if (!fs.existsSync(iconsDir)) {
   fs.mkdirSync(iconsDir, { recursive: true })
 }
 
+// Exact Lucide Mountain path (lucide-react v1.16.0)
+// Source: node_modules/lucide-react/dist/esm/icons/mountain.mjs
+const MOUNTAIN_PATH = 'm8 3 4 8 5-5 5 15H2L8 3z'
+
+// 100x100 wrapper: parchment bg + mountain icon centered at 60% width
+// 24px icon scaled 2.5x = 60px; offset = (100-60)/2 = 20
 const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="50" fill="#2D5016"/>
-  <polygon points="50,20 80,75 20,75" fill="#E8E2D9"/>
-  <polygon points="50,20 60,42 40,42" fill="#FFFFFF"/>
+  <rect width="100" height="100" fill="#F7F4EF"/>
+  <g transform="translate(20,20) scale(2.5)">
+    <path d="${MOUNTAIN_PATH}" fill="none" stroke="#2D5016" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
 </svg>`
 
 const svgBuffer = Buffer.from(svgContent)
@@ -26,6 +33,7 @@ async function generate() {
   console.log('Generated apple-touch-icon.png')
 
   console.log('All icons generated successfully.')
+  console.log(`Mountain path used: ${MOUNTAIN_PATH}`)
 }
 
 generate().catch(err => {
