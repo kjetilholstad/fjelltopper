@@ -656,6 +656,63 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             </p>
           </div>
 
+          {/* Tegnforklaring */}
+          <div className="border-t border-[#E8E2D9] pt-3 flex flex-col gap-1">
+            <p className="text-xs font-semibold text-[#6B6560] uppercase tracking-wide mb-1">
+              Tegnforklaring
+            </p>
+            {LEGEND_ITEMS.map(({ color, size, label, lineType, dash, ascended }) => {
+              const isToggleable = lineType !== null
+              const available = isToggleable ? lineAvailable(lineType) : true
+              const isActive = isToggleable && activeLines.has(lineType)
+              if (isToggleable) {
+                return (
+                  <button
+                    key={label}
+                    onClick={() => available && toggleLine(lineType)}
+                    disabled={!selectedPeak || !available}
+                    className={[
+                      'flex items-center gap-2 rounded-lg px-2 py-2 -mx-2 transition-colors text-left w-full',
+                      !selectedPeak || !available ? 'opacity-35 cursor-not-allowed' : 'cursor-pointer active:bg-parchment',
+                      isActive ? 'bg-parchment' : '',
+                    ].join(' ')}
+                  >
+                    <div style={{ width: size, height: size, borderRadius: '50%', flexShrink: 0,
+                      background: color, border: '1.5px solid white',
+                      boxShadow: '0 1px 3px rgba(0,0,0,.25)' }} />
+                    <svg width="20" height="10" viewBox="0 0 20 10" style={{ flexShrink: 0 }}>
+                      <line x1="0" y1="5" x2="20" y2="5" stroke={color} strokeWidth="2"
+                        strokeDasharray={dash ? '4 3' : undefined} />
+                    </svg>
+                    <span className="text-sm text-[#1A1A1A]">{label}</span>
+                    {isActive && (
+                      <span className="ml-auto text-xs font-semibold" style={{ color }}>PÅ</span>
+                    )}
+                  </button>
+                )
+              }
+              return (
+                <div key={label} className="flex items-center gap-2 px-2 py-1.5">
+                  {ascended ? (
+                    <div style={{ width: size, height: size, borderRadius: '50%', flexShrink: 0,
+                      background: 'white', border: '2px solid #2D5016',
+                      boxShadow: '0 1px 3px rgba(0,0,0,.25)' }} />
+                  ) : (
+                    <div style={{ width: size, height: size, borderRadius: '50%', flexShrink: 0,
+                      background: color, border: '1.5px solid white',
+                      boxShadow: '0 1px 3px rgba(0,0,0,.25)' }} />
+                  )}
+                  <span className="text-sm text-[#1A1A1A]">{label}</span>
+                </div>
+              )
+            })}
+            {!selectedPeak && (
+              <p className="text-xs text-text-warm italic mt-0.5">
+                Velg en topp for å aktivere linjer
+              </p>
+            )}
+          </div>
+
           {/* Valgt topp */}
           {selectedPeak && (
             <div className="border-t border-[#E8E2D9] pt-3 flex flex-col gap-2">
@@ -677,9 +734,9 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
               </p>
 
               {selectedPeak.nearest_higher_peak && distToHigher != null && (
-                <p className="text-sm text-text-warm">
-                  Nærmeste høyere:{' '}
-                  <span className="font-medium text-[#1A1A1A]">
+                <div>
+                  <p className="text-xs text-text-warm">Nærmeste høyere</p>
+                  <p className="text-sm font-medium text-[#1A1A1A]">
                     {selectedPeak.nearest_higher_peak}
                     {(() => {
                       const hp = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
@@ -688,17 +745,17 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                       parts.push(formatDist(distToHigher * 1000))
                       return ` (${parts.join(' – ')})`
                     })()}
-                  </span>
-                </p>
+                  </p>
+                </div>
               )}
 
               {nearest && (
-                <p className="text-sm text-text-warm">
-                  Nærmeste over 2000 m (PF ≥ 30 m):{' '}
-                  <span className="font-medium text-[#1A1A1A]">
+                <div>
+                  <p className="text-xs text-text-warm">Nærmeste over 2000 m (PF ≥ 30 m)</p>
+                  <p className="text-sm font-medium text-[#1A1A1A]">
                     {nearest.peak.name} ({nearest.peak.height.toLocaleString('no')} moh – {formatDist(nearest.distanceKm * 1000)})
-                  </span>
-                </p>
+                  </p>
+                </div>
               )}
 
               {location && <p className="text-sm text-text-warm">{location}</p>}
