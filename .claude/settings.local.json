@@ -26,7 +26,13 @@
       "Bash(Out-Null)",
       "Bash(curl *)",
       "Bash(python3 -c \"import sys,json; data=sys.stdin.read\\(\\); print\\(data[:3000]\\)\")",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(npx next *)",
+      "Bash(Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue)",
+      "Bash(Write-Output \"Cache cleared\")",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(git config *)"
     ]
   }
 }
