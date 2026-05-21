@@ -24,6 +24,10 @@ export async function fetchSnapRoute(
   signal?: AbortSignal
 ): Promise<SnapRouteResult> {
   const key = process.env.NEXT_PUBLIC_GRAPHHOPPER_API_KEY
+  if (!key) {
+    console.error('[GraphHopper] API key missing — NEXT_PUBLIC_GRAPHHOPPER_API_KEY er ikke satt')
+    throw new Error('GraphHopper API key missing')
+  }
   const url =
     `https://graphhopper.com/api/1/route` +
     `?point=${from.lat},${from.lng}&point=${to.lat},${to.lng}` +
@@ -45,6 +49,10 @@ export async function fetchSnapRoute(
     if (/credit|quota/i.test(msg)) throw new CreditExhaustedError()
     if (/limit|too many/i.test(msg)) throw new RateLimitedError()
     throw new Error(msg || 'GraphHopper error')
+  }
+
+  if (!data.paths?.length) {
+    throw new Error('GraphHopper returned no paths')
   }
 
   const path = data.paths[0]

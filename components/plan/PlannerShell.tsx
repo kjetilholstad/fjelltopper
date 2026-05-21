@@ -42,6 +42,7 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
   const [minPF, setMinPF]                     = useState('0')
   const [loading, setLoading]                 = useState(false)
   const [creditExhausted, setCreditExhausted] = useState(false)
+  const [snapFailed, setSnapFailed]           = useState(false)
   const [hydrated, setHydrated]               = useState(false)
   const [profileExpanded, setProfileExpanded] = useState(false)
   const batchRef                              = useRef(0)
@@ -78,6 +79,7 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
     const batchId = ++batchRef.current
     setLegs(Array(waypoints.length - 1).fill(null))
     setLoading(true)
+    setSnapFailed(false)
 
     Promise.all(
       waypoints.slice(1).map(async (to, i) => {
@@ -90,6 +92,7 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
             setCreditExhausted(true)
             try { return await calcLeg(waypoints[i], to, false) } catch { return null }
           }
+          setSnapFailed(true)
           return null
         }
       })
@@ -101,6 +104,16 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [waypoints, hydrated])
+
+  useEffect(() => {
+    return () => { abortRef.current?.abort() }
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (moveDebounceRef.current) clearTimeout(moveDebounceRef.current)
+    }
+  }, [])
 
   // Save filter/layer changes without recalculating legs
   useEffect(() => {
@@ -213,6 +226,7 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
         onMoveUp={moveUp}
         onMoveDown={moveDown}
         onToggleLegSnap={toggleLegSnap}
+        snapFailed={snapFailed}
       />
 
       <div className="flex-1 flex flex-col min-h-0 min-w-0">

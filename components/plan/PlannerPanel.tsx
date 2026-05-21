@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronUp, ChevronDown, Trash2, Download, RotateCcw, Route, Minus } from 'lucide-react'
+import { ChevronUp, ChevronDown, Trash2, Download, RotateCcw, Route, Minus, AlertTriangle } from 'lucide-react'
 import type { Waypoint, LegStats } from '@/types/planner'
 
 const HEIGHT_OPTIONS = [
@@ -74,11 +74,12 @@ interface PlannerPanelProps {
   onMoveUp: (index: number) => void
   onMoveDown: (index: number) => void
   onToggleLegSnap: (waypointIndex: number) => void
+  snapFailed: boolean
 }
 
 export function PlannerPanel({
   waypoints, legs, totalTime, activeLayer, minHeight, minPF, loading,
-  peakCount, totalPeakCount,
+  peakCount, totalPeakCount, snapFailed,
   onLayerChange, onMinHeightChange, onMinPFChange, onRemoveWaypoint, onClearAll, onMoveUp, onMoveDown,
   onToggleLegSnap,
 }: PlannerPanelProps) {
@@ -102,6 +103,12 @@ export function PlannerPanel({
 
   const desktopContent = (
     <div className="flex flex-col h-full overflow-hidden">
+      {snapFailed && (
+        <div className="flex items-center gap-2 mx-3 mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
+          <AlertTriangle size={13} className="shrink-0" />
+          Snap til sti feilet — viser luftlinje. Sjekk at GraphHopper API-nøkkel er satt.
+        </div>
+      )}
       {/* Kartlag */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[#E8E2D9]">
         <p className="text-xs font-semibold text-[#1A1A1A]">Kartlag</p>
@@ -328,6 +335,12 @@ export function PlannerPanel({
 
   const mobileContent = (
     <div className="flex flex-col">
+      {snapFailed && (
+        <div className="flex items-center gap-2 mx-3 mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
+          <AlertTriangle size={13} className="shrink-0" />
+          Snap til sti feilet — viser luftlinje. Sjekk at GraphHopper API-nøkkel er satt.
+        </div>
+      )}
       {/* Kartlag */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[#E8E2D9]">
         <p className="text-xs font-semibold text-[#1A1A1A]">Kartlag</p>
