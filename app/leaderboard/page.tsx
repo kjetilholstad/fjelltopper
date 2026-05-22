@@ -53,10 +53,10 @@ export default async function LeaderboardPage({ searchParams }: Props) {
       </div>
 
       {/* Årsfilter */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex overflow-x-auto gap-2 mb-6 pb-1 scrollbar-hide">
         <Link
           href="/leaderboard"
-          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+          className={`shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
             !activeYear
               ? 'bg-forest text-white'
               : 'border border-border-warm text-text-warm hover:text-forest hover:border-forest'
@@ -68,7 +68,7 @@ export default async function LeaderboardPage({ searchParams }: Props) {
           <Link
             key={y}
             href={`/leaderboard?year=${y}`}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            className={`shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
               activeYear === y
                 ? 'bg-forest text-white'
                 : 'border border-border-warm text-text-warm hover:text-forest hover:border-forest'

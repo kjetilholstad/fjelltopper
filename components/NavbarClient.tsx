@@ -28,14 +28,14 @@ export function NavbarClient({ userEmail, isLoggedIn }: NavbarClientProps) {
 
   const linkClass = (href: string) =>
     `flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-      pathname.startsWith(href)
+      pathname === href || pathname.startsWith(href + '/')
         ? 'bg-forest-50 text-forest'
         : 'text-text-warm hover:text-forest hover:bg-forest-50'
     }`
 
   const mobileLinkClass = (href: string) =>
     `flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-      pathname.startsWith(href)
+      pathname === href || pathname.startsWith(href + '/')
         ? 'bg-forest-50 text-forest'
         : 'text-text-warm hover:text-forest hover:bg-forest-50'
     }`
