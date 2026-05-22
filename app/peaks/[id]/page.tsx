@@ -248,7 +248,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
                     type="date"
                     required
                     defaultValue={today}
-                    className="w-full h-10 bg-parchment border border-border-warm rounded-lg px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest transition-colors"
+                    className="w-full h-10 bg-white border border-border-warm rounded-lg px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest transition-colors"
                   />
                 </div>
                 <div>

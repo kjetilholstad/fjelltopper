@@ -1,14 +1,14 @@
 import Link from 'next/link'
 import { Users } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { getAscentCounts, getAscentCountsByYear } from '@/lib/ascentCounts'
+import { getAscentCounts, getAscentCountsByYear, getAscentsByYear, getAvailableAscentYears } from '@/lib/ascentCounts'
+import { YearSelect } from '@/components/leaderboard/YearSelect'
+import { AscentsByYearChart } from '@/components/profile/AscentsByYearChart'
 import type { Peak } from '@/types'
 
 export const dynamic = 'force-dynamic'
 
 export const metadata = { title: 'Toppliste — Fjelltopper' }
-
-const YEARS = [2022, 2023, 2024, 2025, 2026]
 
 const RANK_COLORS: Record<number, string> = {
   1: '#D4A017',
@@ -26,9 +26,11 @@ export default async function LeaderboardPage({ searchParams }: Props) {
 
   const supabase = await createClient()
 
-  const [countMap, { data: peaksData }] = await Promise.all([
+  const [countMap, { data: peaksData }, ascentsByYear, availableYears] = await Promise.all([
     activeYear ? getAscentCountsByYear(activeYear) : getAscentCounts(),
     supabase.from('peaks').select('id, name, height, county, municipality'),
+    getAscentsByYear(),
+    getAvailableAscentYears(),
   ])
 
   const peaks = (peaksData ?? []) as Pick<Peak, 'id' | 'name' | 'height' | 'county' | 'municipality'>[]
@@ -52,32 +54,13 @@ export default async function LeaderboardPage({ searchParams }: Props) {
         </p>
       </div>
 
-      {/* Årsfilter */}
-      <div className="flex overflow-x-auto gap-2 mb-6 pb-1 scrollbar-hide">
-        <Link
-          href="/leaderboard"
-          className={`shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-            !activeYear
-              ? 'bg-forest text-white'
-              : 'border border-border-warm text-text-warm hover:text-forest hover:border-forest'
-          }`}
-        >
-          Alle tider
-        </Link>
-        {YEARS.map(y => (
-          <Link
-            key={y}
-            href={`/leaderboard?year=${y}`}
-            className={`shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-              activeYear === y
-                ? 'bg-forest text-white'
-                : 'border border-border-warm text-text-warm hover:text-forest hover:border-forest'
-            }`}
-          >
-            {y}
-          </Link>
-        ))}
-      </div>
+      {/* Årstall-dropdown */}
+      <YearSelect years={availableYears} activeYear={activeYear} />
+
+      {/* Bestigninger per år — community-statistikk */}
+      {Object.keys(ascentsByYear).length > 0 && (
+        <AscentsByYearChart byYear={ascentsByYear} />
+      )}
 
       {/* Liste */}
       {ranked.length === 0 ? (

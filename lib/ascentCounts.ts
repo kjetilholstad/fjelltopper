@@ -21,3 +21,24 @@ export async function getAscentCountsByYear(year: number): Promise<Record<string
   const { data } = await supabase.rpc('get_peak_ascent_counts_by_year', { p_year: year })
   return toRecord(data as RpcRow[] | null)
 }
+
+export async function getAscentsByYear(): Promise<Record<string, number>> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('ascents').select('date')
+  const byYear: Record<string, number> = {}
+  for (const row of data ?? []) {
+    const year = (row.date as string).slice(0, 4)
+    byYear[year] = (byYear[year] ?? 0) + 1
+  }
+  return byYear
+}
+
+export async function getAvailableAscentYears(): Promise<number[]> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('ascents').select('date')
+  const yearsMap: Record<number, true> = {}
+  for (const row of data ?? []) {
+    yearsMap[parseInt((row.date as string).slice(0, 4), 10)] = true
+  }
+  return Object.keys(yearsMap).map(Number).sort((a, b) => b - a)
+}

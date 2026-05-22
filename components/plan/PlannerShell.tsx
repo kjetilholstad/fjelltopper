@@ -227,6 +227,15 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
         onMoveDown={moveDown}
         onToggleLegSnap={toggleLegSnap}
         snapFailed={snapFailed}
+        mobileProfile={hasProfile ? (
+          <PlannerProfile
+            legs={legs}
+            waypointLabels={waypointLabels}
+            peaks={visiblePeaks}
+            expanded={profileExpanded}
+            onExpandChange={setProfileExpanded}
+          />
+        ) : undefined}
       />
 
       <div className="flex-1 flex flex-col min-h-0 min-w-0">
