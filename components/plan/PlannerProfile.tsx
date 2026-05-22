@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { Maximize2, X } from 'lucide-react'
 import { haversineKm } from '@/lib/nearestPeaks'
 import type { LegStats } from '@/types/planner'
@@ -22,6 +23,14 @@ interface PlannerProfileProps {
 }
 
 export function PlannerProfile({ legs, waypointLabels, peaks, expanded, onExpandChange }: PlannerProfileProps) {
+  const [isLandscape, setIsLandscape] = useState(false)
+  useEffect(() => {
+    const check = () => setIsLandscape(window.innerHeight < 500)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
   // Build combined elevation points with cumulative distances
   const combined: Array<{ dist: number; elevation: number }> = []
   const legBreakDists: number[] = []
@@ -217,7 +226,7 @@ export function PlannerProfile({ legs, waypointLabels, peaks, expanded, onExpand
         >
           <div
             className="mt-auto bg-white border-t border-[#E8E2D9] w-full"
-            style={{ maxHeight: '65vh', padding: '16px 16px 10px', overflowY: 'auto' }}
+            style={{ maxHeight: '70vh', padding: '16px 16px 10px', overflowY: 'auto' }}
             onClick={ev => ev.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-3">
@@ -229,7 +238,7 @@ export function PlannerProfile({ legs, waypointLabels, peaks, expanded, onExpand
 
             <svg
               viewBox="0 0 1000 240"
-              style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '28vh' }}
+              style={{ display: 'block', width: '100%', height: 'auto', maxHeight: isLandscape ? '20vh' : '28vh' }}
               aria-label="Høydeprofil"
             >
               {/* 3. Fill + 3b. Over-2000m shading + 4. Profile curve */}

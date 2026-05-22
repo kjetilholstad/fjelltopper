@@ -115,10 +115,33 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
 
   const [panelOpen, setPanelOpen] = useState(true)
   const [sheetExpanded, setSheetExpanded] = useState(false)
+  const [flyBottomOffsetPx, setFlyBottomOffsetPx] = useState(0)
+  const [resetToken, setResetToken] = useState(0)
+
+  useEffect(() => {
+    if (window.innerWidth < 640) {
+      setFlyBottomOffsetPx(Math.round(window.innerHeight * 0.325))
+    }
+  }, [])
 
   const [selectedPeak, setSelectedPeak] = useState<EnrichedPeak | null>(null)
   const [activeLines, setActiveLines] = useState<Set<LineType>>(new Set())
   const [activeProfile, setActiveProfile] = useState<{ from: EnrichedPeak; to: EnrichedPeak } | null>(null)
+
+  const activeProfileBounds = useMemo<[[number, number], [number, number]] | null>(() => {
+    if (!activeProfile?.from.lat || !activeProfile?.to.lat) return null
+    return [
+      [activeProfile.from.lat, activeProfile.from.lng!],
+      [activeProfile.to.lat, activeProfile.to.lng!],
+    ]
+  }, [activeProfile])
+
+  function resetRouteMode() {
+    setActiveProfile(null)
+    setSelectedPeak(null)
+    setResetToken(t => t + 1)
+    setSheetExpanded(false)
+  }
   const [showOnlyAscended, setShowOnlyAscended] = useState(false)
   const [ascentDate, setAscentDate] = useState(new Date().toISOString().split('T')[0])
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -139,6 +162,10 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
   useEffect(() => {
     setActiveLines(new Set())
   }, [selectedPeak?.id])
+
+  useEffect(() => {
+    if (activeProfile) setSheetExpanded(true)
+  }, [activeProfile])
 
   const nearest = useMemo(() => {
     if (!selectedPeak) return null
@@ -270,6 +297,9 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
         nearbyIds={nearbyIds}
         ascendedIds={ascendedSet}
         onProfileChange={setActiveProfile}
+        flyBottomOffsetPx={flyBottomOffsetPx}
+        activeProfileBounds={activeProfileBounds}
+        resetToken={resetToken}
       />
 
       {/* Venstre kolonne: filter + tegnforklaring + detaljpanel */}
@@ -578,7 +608,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             fromLng={activeProfile.from.lng}
             toLat={activeProfile.to.lat}
             toLng={activeProfile.to.lng}
-            onClose={() => setActiveProfile(null)}
+            onClose={resetRouteMode}
           />
         )}
       </div>
@@ -596,7 +626,11 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
         >
           <div className="w-10 h-1 rounded-full bg-[#E8E2D9]" />
           <div className="flex items-center justify-between w-full">
-            {selectedPeak ? (
+            {activeProfile ? (
+              <span className="text-sm font-semibold text-[#1A1A1A] truncate">
+                {activeProfile.from.name} → {activeProfile.to.name}
+              </span>
+            ) : selectedPeak ? (
               <span className="text-sm font-semibold text-[#1A1A1A] truncate">
                 {selectedPeak.name} — {selectedPeak.height.toLocaleString('no')} moh
               </span>
@@ -611,8 +645,57 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
 
         {/* Scrollbart innhold */}
         <div className="flex-1 overflow-y-auto px-4 pb-6 flex flex-col gap-3">
+
+          {/* Rutevisning når to topper er valgt i sammenligningsmodus */}
+          {activeProfile && (
+            <div className="border-b border-[#E8E2D9] pb-3">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs font-semibold text-[#E8671A]">Rute</p>
+                <button
+                  onClick={resetRouteMode}
+                  className="text-xs text-text-warm hover:text-[#1A1A1A] transition-colors"
+                >
+                  Nullstill
+                </button>
+              </div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-5 h-5 rounded-full bg-[#2D5016] text-white text-[10px] font-bold flex items-center justify-center shrink-0">1</span>
+                <span className="text-sm font-medium text-[#1A1A1A] truncate">{activeProfile.from.name}</span>
+                <span className="text-xs text-text-warm shrink-0">{activeProfile.from.height.toLocaleString('no')} moh</span>
+              </div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-5 h-5 rounded-full bg-[#D4A017] text-white text-[10px] font-bold flex items-center justify-center shrink-0">2</span>
+                <span className="text-sm font-medium text-[#1A1A1A] truncate">{activeProfile.to.name}</span>
+                <span className="text-xs text-text-warm shrink-0">{activeProfile.to.height.toLocaleString('no')} moh</span>
+              </div>
+              {activeProfile.from.lat != null && activeProfile.to.lat != null && (
+                <p className="text-xs text-text-warm mb-2">
+                  Luftlinje:{' '}
+                  <span className="font-medium text-[#1A1A1A]">
+                    {formatDist(haversineKm(
+                      activeProfile.from.lat!, activeProfile.from.lng!,
+                      activeProfile.to.lat!,   activeProfile.to.lng!
+                    ) * 1000)}
+                  </span>
+                </p>
+              )}
+              {activeProfile.from.lat != null && activeProfile.from.lng != null &&
+               activeProfile.to.lat != null && activeProfile.to.lng != null && (
+                <ElevationProfile
+                  fromName={activeProfile.from.name}
+                  toName={activeProfile.to.name}
+                  fromLat={activeProfile.from.lat}
+                  fromLng={activeProfile.from.lng}
+                  toLat={activeProfile.to.lat}
+                  toLng={activeProfile.to.lng}
+                  onClose={resetRouteMode}
+                />
+              )}
+            </div>
+          )}
+
           {/* Filter-seksjon */}
-          <div className="flex flex-col gap-2">
+          {!activeProfile && <div className="flex flex-col gap-2">
             <p className="text-xs font-semibold text-[#1A1A1A]">Filter</p>
             <div className="relative">
               <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-warm pointer-events-none" />
@@ -662,10 +745,10 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
               <span className="font-semibold text-[#1A1A1A]">{peaks.length}</span>
               {' '}topper
             </p>
-          </div>
+          </div>}
 
           {/* Tegnforklaring */}
-          <div className="border-t border-[#E8E2D9] pt-3 flex flex-col gap-1">
+          {!activeProfile && <div className="border-t border-[#E8E2D9] pt-3 flex flex-col gap-1">
             <p className="text-xs font-semibold text-[#6B6560] uppercase tracking-wide mb-1">
               Tegnforklaring
             </p>
@@ -719,10 +802,10 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                 Velg en topp for å aktivere linjer
               </p>
             )}
-          </div>
+          </div>}
 
           {/* Valgt topp */}
-          {selectedPeak && (
+          {!activeProfile && selectedPeak && (
             <div className="border-t border-[#E8E2D9] pt-3 flex flex-col gap-2">
               <div className="flex items-start justify-between gap-2">
                 <p className="font-bold text-[#1A1A1A] text-base leading-tight">{selectedPeak.name}</p>

@@ -21,19 +21,22 @@ export interface SnapRouteResult {
 export async function fetchSnapRoute(
   from: { lat: number; lng: number },
   to: { lat: number; lng: number },
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  options?: { disableCH?: boolean }
 ): Promise<SnapRouteResult> {
   const key = process.env.NEXT_PUBLIC_GRAPHHOPPER_API_KEY
   if (!key) {
     console.error('[GraphHopper] API key missing — NEXT_PUBLIC_GRAPHHOPPER_API_KEY er ikke satt')
     throw new Error('GraphHopper API key missing')
   }
+  const extra = options?.disableCH ? '&ch.disable=true' : ''
   const url =
     `https://graphhopper.com/api/1/route` +
     `?point=${from.lat},${from.lng}&point=${to.lat},${to.lng}` +
-    `&profile=foot&locale=no&points_encoded=false&elevation=true&key=${key}`
+    `&profile=hike&locale=no&points_encoded=false&elevation=true` +
+    `&avoid=ferry&avoid=motorway&avoid=trunk&key=${key}${extra}`
 
-  console.log('[GraphHopper] GET', url.replace(key ?? '', '<KEY>'))
+  console.log('[GraphHopper] GET', url.replace(key ?? '', '<KEY>'), options?.disableCH ? '(CH disabled)' : '')
 
   const res = await fetch(url, { signal })
 
@@ -56,6 +59,13 @@ export async function fetchSnapRoute(
   }
 
   const path = data.paths[0]
+  const airKm = haversineKm(from.lat, from.lng, to.lat, to.lng)
+  const routeKm = path.distance / 1000
+  console.log(`[GraphHopper] route ${routeKm.toFixed(2)} km, air ${airKm.toFixed(2)} km, ratio ${(routeKm / airKm).toFixed(2)}`)
+  if (routeKm / airKm < 1.05) {
+    console.warn('[GraphHopper] Route distance nearly equals air distance — may be a straight-line fallback from the server')
+  }
+
   const rawCoords: [number, number, number][] = path.points.coordinates
 
   const snappedFrom: [number, number] = [rawCoords[0][1], rawCoords[0][0]]

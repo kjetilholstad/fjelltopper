@@ -74,7 +74,13 @@ function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
   return null
 }
 
-function FlyToSelected({ peaks, selectedPeakId }: { peaks: EnrichedPeak[]; selectedPeakId: string | null }) {
+function FlyToSelected({
+  peaks, selectedPeakId, bottomOffsetPx = 0,
+}: {
+  peaks: EnrichedPeak[]
+  selectedPeakId: string | null
+  bottomOffsetPx?: number
+}) {
   const map = useMap()
   const prevId = useRef<string | null>(null)
   useEffect(() => {
@@ -82,9 +88,36 @@ function FlyToSelected({ peaks, selectedPeakId }: { peaks: EnrichedPeak[]; selec
     prevId.current = selectedPeakId
     const peak = peaks.find(p => p.id === selectedPeakId)
     if (peak?.lat != null && peak?.lng != null) {
-      map.flyTo([peak.lat, peak.lng], 12, { duration: 0.8 })
+      const zoom = 12
+      if (bottomOffsetPx > 0) {
+        const targetPx = map.project([peak.lat, peak.lng], zoom)
+        targetPx.y += bottomOffsetPx
+        map.flyTo(map.unproject(targetPx, zoom), zoom, { duration: 0.8 })
+      } else {
+        map.flyTo([peak.lat, peak.lng], zoom, { duration: 0.8 })
+      }
     }
-  }, [selectedPeakId, peaks, map])
+  }, [selectedPeakId, peaks, map, bottomOffsetPx])
+  return null
+}
+
+function FitBoundsToProfile({ bounds, bottomOffsetPx = 0 }: {
+  bounds: [[number, number], [number, number]] | null
+  bottomOffsetPx?: number
+}) {
+  const map = useMap()
+  const prevKey = useRef<string | null>(null)
+  useEffect(() => {
+    if (!bounds) { prevKey.current = null; return }
+    const key = `${bounds[0][0]},${bounds[0][1]}|${bounds[1][0]},${bounds[1][1]}`
+    if (key === prevKey.current) return
+    prevKey.current = key
+    map.fitBounds(bounds, {
+      paddingTopLeft: [40, 40],
+      paddingBottomRight: [40, bottomOffsetPx > 0 ? bottomOffsetPx * 2 : 40],
+      maxZoom: 13,
+    })
+  }, [bounds, map, bottomOffsetPx])
   return null
 }
 
@@ -108,6 +141,9 @@ interface PeakMapProps {
   nearbyIds: Set<string>
   ascendedIds: Set<string>
   onProfileChange: (profile: { from: EnrichedPeak; to: EnrichedPeak } | null) => void
+  flyBottomOffsetPx?: number
+  activeProfileBounds?: [[number, number], [number, number]] | null
+  resetToken?: number
 }
 
 export function PeakMap({
@@ -121,6 +157,9 @@ export function PeakMap({
   nearbyIds,
   ascendedIds,
   onProfileChange,
+  flyBottomOffsetPx = 0,
+  activeProfileBounds,
+  resetToken,
 }: PeakMapProps) {
   const [activeLayerId, setActiveLayerId] = useState('topo')
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -129,6 +168,13 @@ export function PeakMap({
   const [compareMode, setCompareMode] = useState(false)
   const [compareFrom, setCompareFrom] = useState<EnrichedPeak | null>(null)
   const [compareProfile, setCompareProfile] = useState<{ from: EnrichedPeak; to: EnrichedPeak } | null>(null)
+
+  useEffect(() => {
+    if (!resetToken) return
+    setCompareMode(false)
+    setCompareFrom(null)
+    setCompareProfile(null)
+  }, [resetToken])
 
   const selectedPeak = useMemo(
     () => peaks.find(p => p.id === selectedPeakId) ?? null,
@@ -218,7 +264,8 @@ export function PeakMap({
         />
 
         <MapClickHandler onMapClick={handleMapClick} />
-        <FlyToSelected peaks={peaks} selectedPeakId={selectedPeakId} />
+        <FlyToSelected peaks={peaks} selectedPeakId={selectedPeakId} bottomOffsetPx={flyBottomOffsetPx} />
+        <FitBoundsToProfile bounds={activeProfileBounds ?? null} bottomOffsetPx={flyBottomOffsetPx} />
 
         {peaks.map(peak => (
           <Marker
@@ -301,6 +348,7 @@ export function PeakMap({
         {compareProfile?.from.lat != null && compareProfile?.to.lat != null && (
           <>
             <Polyline
+              key={`compare-${compareProfile.from.id}-${compareProfile.to.id}`}
               positions={[
                 [compareProfile.from.lat, compareProfile.from.lng!],
                 [compareProfile.to.lat,   compareProfile.to.lng!],
@@ -351,7 +399,7 @@ export function PeakMap({
             <span className="hidden sm:inline">Profil</span>
           </button>
 
-          <div>
+          <div className="relative">
             <button
               onClick={() => setDropdownOpen(o => !o)}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium shadow-md hover:bg-parchment transition-colors"
@@ -362,7 +410,7 @@ export function PeakMap({
             </button>
 
             {dropdownOpen && (
-              <div className="mt-1 bg-white rounded-xl shadow-md border border-border-warm overflow-hidden min-w-[160px]">
+              <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-md border border-border-warm overflow-hidden min-w-[160px] z-10">
                 {LAYERS.map(layer => (
                   <button
                     key={layer.id}
