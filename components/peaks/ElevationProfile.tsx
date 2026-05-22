@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { fetchElevationProfile, calcProfileStats, ProfileStats } from '@/lib/elevationProfile'
 
 interface Props {
@@ -228,18 +229,21 @@ export default function ElevationProfile({ fromName, toName, fromLat, fromLng, t
         )}
       </div>
 
-      {/* Utvidet modal */}
-      {expanded && svgData && (
+      {/* Utvidet modal — rendret via portal utenfor transformert container */}
+      {expanded && svgData && createPortal(
         <div
-          className="fixed inset-0 z-[3000] flex items-center justify-center p-4"
-          style={{ background: 'rgba(0,0,0,0.45)' }}
+          className="fixed inset-0 z-[3000] flex flex-col"
+          style={{ background: 'rgba(0,0,0,0.5)' }}
           onClick={() => setExpanded(false)}
+          onTouchEnd={(e) => { e.preventDefault(); setExpanded(false) }}
         >
           <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-6"
+            className="mt-auto bg-white border-t border-[#E8E2D9] w-full"
+            style={{ maxHeight: '70vh', padding: '16px 16px 10px', overflowY: 'auto' }}
             onClick={e => e.stopPropagation()}
+            onTouchEnd={e => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <p className="font-semibold text-[#1A1A1A] text-sm truncate pr-4">
                 {fromName} → {toName}
               </p>
@@ -251,24 +255,25 @@ export default function ElevationProfile({ fromName, toName, fromLat, fromLng, t
               </button>
             </div>
 
-            <div className="mb-5">
+            <div className="mb-4">
               <ProfileSVG data={svgData} compact={false} />
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2">
               {chips.map(({ label, value, highlight }) => (
                 <div key={label} className="bg-[#F7F4EF] rounded-xl px-3 py-3 text-center border border-[#E8E2D9]">
                   <p className="text-[10px] text-[#6B6560] mb-0.5">{label}</p>
-                  <p className={`text-base font-bold ${highlight ? 'text-[#2D5016]' : 'text-[#1A1A1A]'}`}>{value}</p>
+                  <p className={`text-sm font-bold ${highlight ? 'text-[#2D5016]' : 'text-[#1A1A1A]'}`}>{value}</p>
                 </div>
               ))}
             </div>
 
             <p className="text-[10px] text-[#A89F96] mt-3 text-center">
-              Bevegelsestid · Kalibrert Tobler anbefalt · +25–35 % for pauser · Kartverket høydedata · 50 samplingspunkter
+              Bevegelsestid · Kalibrert Tobler anbefalt · +25–35 % for pauser · Kartverket høydedata
             </p>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   )

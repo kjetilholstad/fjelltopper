@@ -86,7 +86,7 @@ export function NavbarClient({ userEmail, isLoggedIn }: NavbarClientProps) {
 
         {/* Mobile hamburger */}
         <button
-          onClick={() => setOpen(o => !o)}
+          onClick={(e) => { if (e.detail === 0) return; setOpen(o => !o) }}
           className="sm:hidden p-2 rounded-lg text-text-warm hover:text-forest hover:bg-forest-50 transition-colors"
           aria-label="Meny"
         >

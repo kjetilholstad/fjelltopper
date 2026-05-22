@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import type { ReactNode } from 'react'
 import { ChevronUp, ChevronDown, Trash2, Download, RotateCcw, Route, Minus, AlertTriangle } from 'lucide-react'
 import type { Waypoint, LegStats } from '@/types/planner'
 
@@ -75,11 +76,12 @@ interface PlannerPanelProps {
   onMoveDown: (index: number) => void
   onToggleLegSnap: (waypointIndex: number) => void
   snapFailed: boolean
+  mobileProfile?: ReactNode
 }
 
 export function PlannerPanel({
   waypoints, legs, totalTime, activeLayer, minHeight, minPF, loading,
-  peakCount, totalPeakCount, snapFailed,
+  peakCount, totalPeakCount, snapFailed, mobileProfile,
   onLayerChange, onMinHeightChange, onMinPFChange, onRemoveWaypoint, onClearAll, onMoveUp, onMoveDown,
   onToggleLegSnap,
 }: PlannerPanelProps) {
@@ -164,30 +166,10 @@ export function PlannerPanel({
 
       {/* Stats */}
       {waypoints.length >= 2 && (
-        <div className="grid grid-cols-2 gap-2 p-3 border-b border-[#E8E2D9]">
+        <div className="grid grid-cols-3 gap-2 p-3 border-b border-[#E8E2D9]">
           <div className="bg-[#F7F4EF] rounded-lg px-3 py-2 text-center border border-[#E8E2D9]">
             <p className="text-[10px] text-[#6B6560]">Distanse</p>
             <p className="text-sm font-bold text-[#1A1A1A]">{totalDist.toFixed(1)} km</p>
-          </div>
-          <div className="bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9]">
-            <div className="flex flex-col gap-1">
-              <p className="text-[10px] text-[#A89F96] uppercase tracking-wide">Gangtid (bevegelse)</p>
-              <div className="space-y-0.5 text-[11px]">
-                <div className="flex justify-between">
-                  <span className="text-[#A89F96]">Naismith</span>
-                  <span className="font-medium text-[#1A1A1A]">{formatTime(totalTime.naismith)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#A89F96]">Tobler</span>
-                  <span className="font-medium text-[#1A1A1A]">{formatTime(totalTime.toblerStd)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#2D5016] font-medium">Kalibrert ↗</span>
-                  <span className="font-medium text-[#2D5016]">{formatTime(totalTime.toblerCal)}</span>
-                </div>
-              </div>
-              <p className="text-[10px] text-[#A89F96] mt-1">+ ca. 25–35 % for pauser</p>
-            </div>
           </div>
           <div className="bg-[#F7F4EF] rounded-lg px-3 py-2 text-center border border-[#E8E2D9]">
             <p className="text-[10px] text-[#6B6560]">Stigning</p>
@@ -196,6 +178,24 @@ export function PlannerPanel({
           <div className="bg-[#F7F4EF] rounded-lg px-3 py-2 text-center border border-[#E8E2D9]">
             <p className="text-[10px] text-[#6B6560]">Nedstigning</p>
             <p className="text-sm font-bold text-[#1A1A1A]">{totalDesc.toLocaleString('no')} m</p>
+          </div>
+          <div className="col-span-3 bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9]">
+            <p className="text-[10px] text-[#A89F96] uppercase tracking-wide mb-1">Gangtid</p>
+            <div className="space-y-0.5 text-[11px]">
+              <div className="flex justify-between gap-4">
+                <span className="text-[#A89F96]">Naismith</span>
+                <span className="font-medium text-[#1A1A1A] whitespace-nowrap">{formatTime(totalTime.naismith)}</span>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span className="text-[#A89F96]">Tobler</span>
+                <span className="font-medium text-[#1A1A1A] whitespace-nowrap">{formatTime(totalTime.toblerStd)}</span>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span className="text-[#2D5016] font-medium">Kalibrert ↗</span>
+                <span className="font-medium text-[#2D5016] whitespace-nowrap">{formatTime(totalTime.toblerCal)}</span>
+              </div>
+            </div>
+            <p className="text-[10px] text-[#A89F96] mt-1">+ ca. 25–35 % for pauser</p>
           </div>
         </div>
       )}
@@ -397,30 +397,10 @@ export function PlannerPanel({
 
       {/* Stats */}
       {waypoints.length >= 2 && (
-        <div className="grid grid-cols-2 gap-2 p-3 border-b border-[#E8E2D9]">
+        <div className="grid grid-cols-3 gap-2 p-3 border-b border-[#E8E2D9]">
           <div className="bg-[#F7F4EF] rounded-lg px-3 py-2 text-center border border-[#E8E2D9]">
             <p className="text-[10px] text-[#6B6560]">Distanse</p>
             <p className="text-sm font-bold text-[#1A1A1A]">{totalDist.toFixed(1)} km</p>
-          </div>
-          <div className="bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9]">
-            <div className="flex flex-col gap-1">
-              <p className="text-[10px] text-[#A89F96] uppercase tracking-wide">Gangtid (bevegelse)</p>
-              <div className="space-y-0.5 text-[11px]">
-                <div className="flex justify-between">
-                  <span className="text-[#A89F96]">Naismith</span>
-                  <span className="font-medium text-[#1A1A1A]">{formatTime(totalTime.naismith)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#A89F96]">Tobler</span>
-                  <span className="font-medium text-[#1A1A1A]">{formatTime(totalTime.toblerStd)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#2D5016] font-medium">Kalibrert ↗</span>
-                  <span className="font-medium text-[#2D5016]">{formatTime(totalTime.toblerCal)}</span>
-                </div>
-              </div>
-              <p className="text-[10px] text-[#A89F96] mt-1">+ ca. 25–35 % for pauser</p>
-            </div>
           </div>
           <div className="bg-[#F7F4EF] rounded-lg px-3 py-2 text-center border border-[#E8E2D9]">
             <p className="text-[10px] text-[#6B6560]">Stigning</p>
@@ -430,8 +410,29 @@ export function PlannerPanel({
             <p className="text-[10px] text-[#6B6560]">Nedstigning</p>
             <p className="text-sm font-bold text-[#1A1A1A]">{totalDesc.toLocaleString('no')} m</p>
           </div>
+          <div className="col-span-3 bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9]">
+            <p className="text-[10px] text-[#A89F96] uppercase tracking-wide mb-1">Gangtid</p>
+            <div className="space-y-0.5 text-[11px]">
+              <div className="flex justify-between gap-4">
+                <span className="text-[#A89F96]">Naismith</span>
+                <span className="font-medium text-[#1A1A1A] whitespace-nowrap">{formatTime(totalTime.naismith)}</span>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span className="text-[#A89F96]">Tobler</span>
+                <span className="font-medium text-[#1A1A1A] whitespace-nowrap">{formatTime(totalTime.toblerStd)}</span>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span className="text-[#2D5016] font-medium">Kalibrert ↗</span>
+                <span className="font-medium text-[#2D5016] whitespace-nowrap">{formatTime(totalTime.toblerCal)}</span>
+              </div>
+            </div>
+            <p className="text-[10px] text-[#A89F96] mt-1">+ ca. 25–35 % for pauser</p>
+          </div>
         </div>
       )}
+
+      {/* Høydeprofil — kompakt strip, bare på mobil */}
+      {mobileProfile}
 
       {/* Waypoint list */}
       <div className="px-3 py-2">

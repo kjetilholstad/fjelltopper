@@ -101,9 +101,8 @@ function FlyToSelected({
   return null
 }
 
-function FitBoundsToProfile({ bounds, bottomOffsetPx = 0 }: {
+function FitBoundsToProfile({ bounds }: {
   bounds: [[number, number], [number, number]] | null
-  bottomOffsetPx?: number
 }) {
   const map = useMap()
   const prevKey = useRef<string | null>(null)
@@ -112,12 +111,14 @@ function FitBoundsToProfile({ bounds, bottomOffsetPx = 0 }: {
     const key = `${bounds[0][0]},${bounds[0][1]}|${bounds[1][0]},${bounds[1][1]}`
     if (key === prevKey.current) return
     prevKey.current = key
+    const isMobile = window.innerWidth < 640
+    const bottomPad = isMobile ? Math.round(window.innerHeight * 0.65) : 40
     map.fitBounds(bounds, {
-      paddingTopLeft: [40, 40],
-      paddingBottomRight: [40, bottomOffsetPx > 0 ? bottomOffsetPx * 2 : 40],
+      paddingTopLeft: [40, 60],
+      paddingBottomRight: [40, bottomPad],
       maxZoom: 13,
     })
-  }, [bounds, map, bottomOffsetPx])
+  }, [bounds, map])
   return null
 }
 
@@ -265,7 +266,7 @@ export function PeakMap({
 
         <MapClickHandler onMapClick={handleMapClick} />
         <FlyToSelected peaks={peaks} selectedPeakId={selectedPeakId} bottomOffsetPx={flyBottomOffsetPx} />
-        <FitBoundsToProfile bounds={activeProfileBounds ?? null} bottomOffsetPx={flyBottomOffsetPx} />
+        <FitBoundsToProfile bounds={activeProfileBounds ?? null} />
 
         {peaks.map(peak => (
           <Marker

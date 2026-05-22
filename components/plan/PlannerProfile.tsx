@@ -223,11 +223,13 @@ export function PlannerProfile({ legs, waypointLabels, peaks, expanded, onExpand
           className="fixed inset-0 z-[3000] flex flex-col"
           style={{ background: 'rgba(0,0,0,0.5)' }}
           onClick={() => onExpandChange(false)}
+          onTouchEnd={(e) => { e.preventDefault(); onExpandChange(false) }}
         >
           <div
             className="mt-auto bg-white border-t border-[#E8E2D9] w-full"
             style={{ maxHeight: '70vh', padding: '16px 16px 10px', overflowY: 'auto' }}
             onClick={ev => ev.stopPropagation()}
+            onTouchEnd={ev => ev.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-semibold text-[#1A1A1A]">Høydeprofil</p>
