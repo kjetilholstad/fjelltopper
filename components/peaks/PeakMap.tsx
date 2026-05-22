@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { MapContainer, TileLayer, Marker, Polyline, Circle, ZoomControl, ScaleControl, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Polyline, Circle, ZoomControl, ScaleControl, Tooltip, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import { Layers, Route } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
-import { nearestPeak } from '@/lib/nearestPeaks'
+import { nearestPeak, haversineKm } from '@/lib/nearestPeaks'
+import { formatDist } from '@/lib/utils'
 import { makeIcon } from '@/lib/mapIcons'
 import 'leaflet/dist/leaflet.css'
 
@@ -70,6 +71,20 @@ function MapFitter({ from, to }: { from: [number, number]; to: [number, number] 
 
 function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
   useMapEvents({ click: onMapClick })
+  return null
+}
+
+function FlyToSelected({ peaks, selectedPeakId }: { peaks: EnrichedPeak[]; selectedPeakId: string | null }) {
+  const map = useMap()
+  const prevId = useRef<string | null>(null)
+  useEffect(() => {
+    if (!selectedPeakId || selectedPeakId === prevId.current) return
+    prevId.current = selectedPeakId
+    const peak = peaks.find(p => p.id === selectedPeakId)
+    if (peak?.lat != null && peak?.lng != null) {
+      map.flyTo([peak.lat, peak.lng], 12, { duration: 0.8 })
+    }
+  }, [selectedPeakId, peaks, map])
   return null
 }
 
@@ -203,6 +218,7 @@ export function PeakMap({
         />
 
         <MapClickHandler onMapClick={handleMapClick} />
+        <FlyToSelected peaks={peaks} selectedPeakId={selectedPeakId} />
 
         {peaks.map(peak => (
           <Marker
@@ -290,7 +306,14 @@ export function PeakMap({
                 [compareProfile.to.lat,   compareProfile.to.lng!],
               ]}
               pathOptions={{ color: '#E8671A', weight: 2.5, opacity: 0.9 }}
-            />
+            >
+              <Tooltip permanent direction="center" className="route-distance-label">
+                {formatDist(haversineKm(
+                  compareProfile.from.lat, compareProfile.from.lng!,
+                  compareProfile.to.lat,   compareProfile.to.lng!
+                ) * 1000)}
+              </Tooltip>
+            </Polyline>
             <MapFitter
               from={[compareProfile.from.lat, compareProfile.from.lng!]}
               to={[compareProfile.to.lat, compareProfile.to.lng!]}
@@ -299,10 +322,10 @@ export function PeakMap({
         )}
       </MapContainer>
 
-      {/* Compare-mode hint — topp-midten */}
+      {/* Compare-mode hint — øverst til venstre */}
       {compareMode && (
-        <div style={{ position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)', zIndex: 1000 }}>
-          <div className="bg-white rounded-lg shadow-md border border-[#E8E2D9] px-3 py-1.5 text-xs text-[#6B6560] whitespace-nowrap">
+        <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 1000 }}>
+          <div className="bg-white rounded-lg shadow-md border border-[#E8E2D9] px-3 py-1.5 text-xs text-[#6B6560] max-w-[180px] line-clamp-2">
             {compareFrom
               ? `Fra: ${compareFrom.name} — klikk neste topp`
               : 'Klikk på første topp'}
@@ -316,6 +339,7 @@ export function PeakMap({
           <button
             onClick={toggleCompareMode}
             title={compareMode ? 'Avslutt profilmodus' : 'Høydeprofil mellom to topper'}
+            aria-label={compareMode ? 'Avslutt høydeprofil' : 'Høydeprofil mellom topper'}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium shadow-md transition-colors"
             style={{
               background: compareMode ? '#E8671A' : 'white',
@@ -324,13 +348,14 @@ export function PeakMap({
             }}
           >
             <Route size={13} />
+            <span className="hidden sm:inline">Profil</span>
           </button>
 
           <div>
             <button
               onClick={() => setDropdownOpen(o => !o)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-white shadow-md"
-              style={{ background: '#2D5016' }}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium shadow-md hover:bg-parchment transition-colors"
+              style={{ background: 'white', color: '#6B6560', border: '1px solid #E8E2D9' }}
             >
               <Layers size={13} />
               {activeLayer.label}

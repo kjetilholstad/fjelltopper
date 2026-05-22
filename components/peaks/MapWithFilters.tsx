@@ -442,28 +442,36 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             </p>
 
             {/* Nærmeste høyere fjell */}
-            {selectedPeak.nearest_higher_peak && distToHigher != null ? (
-              <p className="text-[11px] text-text-warm mb-1">
-                Nærmeste høyere:<br />
-                <span className="font-medium text-[#1A1A1A]">
-                  {selectedPeak.nearest_higher_peak}
-                  {(() => {
-                    const hp = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
-                    const parts: string[] = []
-                    if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
-                    parts.push(formatDist(distToHigher * 1000))
-                    return ` (${parts.join(' – ')})`
-                  })()}
-                </span>
-              </p>
-            ) : null}
+            {selectedPeak.nearest_higher_peak && distToHigher != null ? (() => {
+              const hp = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
+              const parts: string[] = []
+              if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
+              parts.push(formatDist(distToHigher * 1000))
+              const suffix = ` (${parts.join(' – ')})`
+              return (
+                <p className="text-[11px] text-text-warm mb-1">
+                  Nærmeste høyere:<br />
+                  <span className="font-medium text-[#1A1A1A]">
+                    {hp ? (
+                      <button onClick={() => setSelectedPeak(hp)} className="underline decoration-dotted hover:text-forest transition-colors">
+                        {selectedPeak.nearest_higher_peak}
+                      </button>
+                    ) : selectedPeak.nearest_higher_peak}
+                    {suffix}
+                  </span>
+                </p>
+              )
+            })() : null}
 
             {/* Nærmeste fjell over 2000 m */}
             {nearest && (
               <p className="text-[11px] text-text-warm mb-1">
                 Nærmeste over 2000 m (PF ≥ 30 m):<br />
                 <span className="font-medium text-[#1A1A1A]">
-                  {nearest.peak.name} ({nearest.peak.height.toLocaleString('no')} moh – {formatDist(nearest.distanceKm * 1000)})
+                  <button onClick={() => setSelectedPeak(nearest.peak)} className="underline decoration-dotted hover:text-forest transition-colors">
+                    {nearest.peak.name}
+                  </button>
+                  {' '}({nearest.peak.height.toLocaleString('no')} moh – {formatDist(nearest.distanceKm * 1000)})
                 </span>
               </p>
             )}
@@ -733,27 +741,35 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                 Primærfaktor <strong className="text-[#1A1A1A]">{(selectedPeak.primary_factor ?? 0).toLocaleString('no')} m</strong>
               </p>
 
-              {selectedPeak.nearest_higher_peak && distToHigher != null && (
-                <div>
-                  <p className="text-xs text-text-warm">Nærmeste høyere</p>
-                  <p className="text-sm font-medium text-[#1A1A1A]">
-                    {selectedPeak.nearest_higher_peak}
-                    {(() => {
-                      const hp = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
-                      const parts: string[] = []
-                      if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
-                      parts.push(formatDist(distToHigher * 1000))
-                      return ` (${parts.join(' – ')})`
-                    })()}
-                  </p>
-                </div>
-              )}
+              {selectedPeak.nearest_higher_peak && distToHigher != null && (() => {
+                const hp = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
+                const parts: string[] = []
+                if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
+                parts.push(formatDist(distToHigher * 1000))
+                const suffix = ` (${parts.join(' – ')})`
+                return (
+                  <div>
+                    <p className="text-xs text-text-warm">Nærmeste høyere</p>
+                    <p className="text-sm font-medium text-[#1A1A1A]">
+                      {hp ? (
+                        <button onClick={() => setSelectedPeak(hp)} className="underline decoration-dotted hover:text-forest transition-colors">
+                          {selectedPeak.nearest_higher_peak}
+                        </button>
+                      ) : selectedPeak.nearest_higher_peak}
+                      {suffix}
+                    </p>
+                  </div>
+                )
+              })()}
 
               {nearest && (
                 <div>
                   <p className="text-xs text-text-warm">Nærmeste over 2000 m (PF ≥ 30 m)</p>
                   <p className="text-sm font-medium text-[#1A1A1A]">
-                    {nearest.peak.name} ({nearest.peak.height.toLocaleString('no')} moh – {formatDist(nearest.distanceKm * 1000)})
+                    <button onClick={() => setSelectedPeak(nearest.peak)} className="underline decoration-dotted hover:text-forest transition-colors">
+                      {nearest.peak.name}
+                    </button>
+                    {' '}({nearest.peak.height.toLocaleString('no')} moh – {formatDist(nearest.distanceKm * 1000)})
                   </p>
                 </div>
               )}
