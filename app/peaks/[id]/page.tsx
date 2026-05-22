@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
 import { CheckCircle2, ExternalLink, Users } from 'lucide-react'
@@ -60,6 +61,26 @@ export default async function PeakPage({ params }: PeakPageProps) {
         </p>
       </div>
 
+      {/* Bilde og beskrivelse */}
+      {peak.image_url && (
+        <div className="mt-4">
+          <Image
+            src={peak.image_url}
+            alt={peak.name}
+            width={800}
+            height={450}
+            className="rounded-lg w-full object-cover"
+            unoptimized
+          />
+          {peak.image_credit && (
+            <p className="text-xs text-stone-400 mt-1">{peak.image_credit}</p>
+          )}
+        </div>
+      )}
+      {peak.description && (
+        <p className="text-secondary mt-3 text-sm leading-relaxed">{peak.description}</p>
+      )}
+
       {peak.lat != null && peak.lng != null && (
         <>
           <div className="h-72 sm:h-96 rounded-xl overflow-hidden border border-border-warm mt-6">
@@ -82,10 +103,6 @@ export default async function PeakPage({ params }: PeakPageProps) {
           <Users size={14} strokeWidth={1.75} />
           {countMap[id].toLocaleString('no')} {countMap[id] === 1 ? 'person har besteget' : 'personer har besteget'} denne toppen
         </p>
-      )}
-
-      {peak.description && (
-        <p className="text-stone-700 text-lg mt-6">{peak.description}</p>
       )}
 
       {/* Stats */}

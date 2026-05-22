@@ -13,6 +13,7 @@ export interface Peak {
   topo_map: string | null
   description: string | null
   image_url: string | null
+  image_credit: string | null
   created_at: string
 }
 
