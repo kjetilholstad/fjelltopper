@@ -43,7 +43,7 @@ export default async function Home() {
     <div>
 
       {/* ── Hero ────────────────────────────────────────────────── */}
-      <section className="bg-parchment px-4 sm:px-6 lg:px-12 pt-14 pb-0">
+      <section className="bg-parchment px-4 sm:px-6 lg:px-12 pt-10 sm:pt-14 pb-0">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
@@ -57,10 +57,7 @@ export default async function Home() {
                 ▲ Norges fjelltopper
               </div>
 
-              <h1
-                className="text-[#1A1A1A] leading-snug mb-4"
-                style={{ fontSize: '2rem', fontWeight: 500 }}
-              >
+              <h1 className="text-[#1A1A1A] leading-snug mb-4 text-[1.5rem] sm:text-[2rem] font-medium">
                 Utforsk Norges<br />høyeste topper
               </h1>
 
@@ -89,8 +86,8 @@ export default async function Home() {
               </div>
             </div>
 
-            {/* Right column — featured peak */}
-            <div>
+            {/* Right column — featured peak (skjult på mobil) */}
+            <div className="hidden sm:block">
               {featured
                 ? <HomePeakCard peak={featured} rank={featuredRank} nearest={nearest ?? null} allPeaks={allPeaks} />
                 : (

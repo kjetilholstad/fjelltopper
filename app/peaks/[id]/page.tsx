@@ -94,17 +94,17 @@ export default async function PeakPage({ params }: PeakPageProps) {
           ? allPeaks.find(p => p.name === peak.nearest_higher_peak) ?? null
           : null
         return (
-          <div className="grid grid-cols-3 gap-6 mt-6 px-6 divide-x divide-stone-100">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 mt-6 px-4 sm:px-6">
             <div>
               <p className="text-[10px] font-semibold tracking-widest uppercase text-stone-400 mb-1">Høyde</p>
               <p className="font-semibold text-stone-900 text-sm">{peak.height.toLocaleString('no')} moh</p>
             </div>
-            <div className="pl-6">
+            <div className="sm:border-l sm:border-stone-100 sm:pl-6">
               <p className="text-[10px] font-semibold tracking-widest uppercase text-stone-400 mb-1">Primærfaktor</p>
               <p className="font-semibold text-stone-900 text-sm">{(peak.primary_factor ?? 0).toLocaleString('no')} m</p>
             </div>
-            <div className="pl-6">
-              <p className="text-[10px] font-semibold tracking-widest uppercase text-stone-400 mb-1">Nærmeste høyere fjell</p>
+            <div className="col-span-2 sm:col-span-1 border-t sm:border-t-0 sm:border-l border-stone-100 pt-3 sm:pt-0 sm:pl-6">
+              <p className="text-[10px] font-semibold tracking-widest uppercase text-stone-400 mb-1">Nærmeste høyere</p>
               <p className="font-semibold text-stone-900 text-sm">
                 {nearestHigherPeak && distanceToHigher != null
                   ? `${nearestHigherPeak.name} (${nearestHigherPeak.height.toLocaleString('no')} moh – ${formatDist(distanceToHigher * 1000)})`
@@ -167,7 +167,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
 
       {/* Nærmeste fjell over 2000 m — fallback når ingen nærliggende */}
       {nearest && (
-        <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+        <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
           <div className="bg-white rounded-lg border p-4">
             <p className="text-stone-500 mb-1">Nærmeste over 2000 m (PF ≥ 30 m)</p>
             <p className="font-semibold text-stone-800">
@@ -181,6 +181,8 @@ export default async function PeakPage({ params }: PeakPageProps) {
           </div>
         </div>
       )}
+
+      <hr className="border-stone-100 mt-6" />
 
       {/* Bestigningsseksjon */}
       {user && (
@@ -246,7 +248,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
                     type="date"
                     required
                     defaultValue={today}
-                    className="w-full bg-parchment border border-border-warm rounded-lg px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest transition-colors"
+                    className="w-full h-10 bg-parchment border border-border-warm rounded-lg px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest transition-colors"
                   />
                 </div>
                 <div>

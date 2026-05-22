@@ -39,4 +39,19 @@
   .text-balance {
     text-wrap: balance;
   }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+  .pt-safe { padding-top: env(safe-area-inset-top); }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 }
+
+.route-distance-label {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  font-size: 11px;
+  font-weight: 600;
+  color: #E8671A;
+  white-space: nowrap;
+}
+.route-distance-label::before { display: none !important; }

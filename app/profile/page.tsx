@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { DeleteAscentButton } from '@/components/profile/DeleteAscentButton'
 import { EditAscentButton } from '@/components/profile/EditAscentButton'
 import { GpxUploader } from '@/components/peaks/GpxUploader'
+import { AscentsByYearChart } from '@/components/profile/AscentsByYearChart'
 
 export const metadata = { title: 'Min profil — Fjelltopper' }
 
@@ -129,14 +130,14 @@ export default async function ProfilePage() {
         <div className="grid grid-cols-3 divide-x divide-border-warm border-t border-border-warm">
           {[
             {
-              value: totalHeight > 0 ? `${(totalHeight / 1000).toFixed(1).replace('.', ',')} km` : '—',
-              label: 'Summert høyde',
+              value: totalHeight > 0 ? `${totalHeight.toLocaleString('no')} m` : '—',
+              label: 'Summerte høydemeter',
             },
             { value: counties.size > 0 ? `${counties.size}` : '—', label: 'Fylker dekket' },
             {
               value: earliestDate
                 ? new Date(earliestDate + 'T12:00:00').toLocaleDateString('no-NO', {
-                    day: 'numeric', month: 'short', year: 'numeric',
+                    day: '2-digit', month: '2-digit', year: 'numeric',
                   })
                 : '—',
               label: 'Første bestigning',
@@ -152,6 +153,13 @@ export default async function ProfilePage() {
 
       {/* GPX uploader */}
       <GpxUploader ascendedIds={ascents.map(a => a.peak_id)} />
+
+      {/* Bestigninger per år */}
+      {years.length > 0 && (
+        <AscentsByYearChart
+          byYear={Object.fromEntries(Object.entries(byYear).map(([y, arr]) => [y, arr.length]))}
+        />
+      )}
 
       {/* Ascent list */}
       {ascents.length === 0 ? (

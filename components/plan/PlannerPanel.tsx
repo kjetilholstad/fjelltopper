@@ -104,9 +104,9 @@ export function PlannerPanel({
   const desktopContent = (
     <div className="flex flex-col h-full overflow-hidden">
       {snapFailed && (
-        <div className="flex items-center gap-2 mx-3 mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
-          <AlertTriangle size={13} className="shrink-0" />
-          Snap til sti feilet — viser luftlinje. Sjekk at GraphHopper API-nøkkel er satt.
+        <div className="flex items-start gap-2 mx-3 mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-amber-800">
+          <AlertTriangle size={13} className="shrink-0 mt-0.5" />
+          <p className="text-xs leading-snug line-clamp-2">Snap til sti feilet — viser luftlinje. Sjekk at GraphHopper API-nøkkel er satt.</p>
         </div>
       )}
       {/* Kartlag */}
@@ -245,6 +245,7 @@ export function PlannerPanel({
                     <button
                       onClick={() => onToggleLegSnap(i)}
                       title={wp.snapToNext ? 'Følger sti → klikk for rett linje' : 'Rett linje → klikk for rute langs sti'}
+                      aria-label={wp.snapToNext ? 'Følger sti — klikk for rett linje' : 'Rett linje — klikk for snap til sti'}
                       className={`p-0.5 rounded transition-colors ${
                         wp.snapToNext
                           ? 'text-[#2D5016] bg-[#f0f5e8] border border-[#2D5016]/30'
@@ -336,9 +337,9 @@ export function PlannerPanel({
   const mobileContent = (
     <div className="flex flex-col">
       {snapFailed && (
-        <div className="flex items-center gap-2 mx-3 mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
-          <AlertTriangle size={13} className="shrink-0" />
-          Snap til sti feilet — viser luftlinje. Sjekk at GraphHopper API-nøkkel er satt.
+        <div className="flex items-start gap-2 mx-3 mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-amber-800">
+          <AlertTriangle size={13} className="shrink-0 mt-0.5" />
+          <p className="text-xs leading-snug line-clamp-2">Snap til sti feilet — viser luftlinje. Sjekk at GraphHopper API-nøkkel er satt.</p>
         </div>
       )}
       {/* Kartlag */}
@@ -477,6 +478,7 @@ export function PlannerPanel({
                     <button
                       onClick={() => onToggleLegSnap(i)}
                       title={wp.snapToNext ? 'Følger sti → klikk for rett linje' : 'Rett linje → klikk for rute langs sti'}
+                      aria-label={wp.snapToNext ? 'Følger sti — klikk for rett linje' : 'Rett linje — klikk for snap til sti'}
                       className={`p-0.5 rounded transition-colors ${
                         wp.snapToNext
                           ? 'text-[#2D5016] bg-[#f0f5e8] border border-[#2D5016]/30'

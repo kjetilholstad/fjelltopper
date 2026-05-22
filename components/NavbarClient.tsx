@@ -11,8 +11,8 @@ const ALL_LINKS = [
   { href: '/map',         label: 'Kart',      icon: Map,    requiresAuth: false },
   { href: '/plan',        label: 'Planlegg',  icon: Route,  requiresAuth: false },
   { href: '/leaderboard', label: 'Toppliste', icon: Trophy, requiresAuth: false },
-  { href: '/profile',     label: 'Profil',   icon: User,    requiresAuth: true  },
   { href: '/info',        label: 'Info',     icon: Info,    requiresAuth: false },
+  { href: '/profile',     label: 'Profil',   icon: User,    requiresAuth: true  },
 ]
 
 interface NavbarClientProps {

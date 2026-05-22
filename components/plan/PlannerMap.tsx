@@ -125,7 +125,11 @@ export function PlannerMap({
                 opacity: 0.85,
                 dashArray: leg.snapped ? undefined : '7 5',
               }}
-            />
+            >
+              <Tooltip permanent direction="center" className="route-distance-label">
+                {leg.distanceKm.toFixed(1).replace('.', ',')} km
+              </Tooltip>
+            </Polyline>
           ) : null
         )}
 
