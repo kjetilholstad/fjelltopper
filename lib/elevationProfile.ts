@@ -22,7 +22,8 @@ function fillNulls(arr: (number | null)[]): number[] {
 export async function fetchElevationProfile(
   lat1: number, lng1: number,
   lat2: number, lng2: number,
-  n = 50
+  n = 50,
+  signal?: AbortSignal
 ): Promise<{ points: Array<{ lat: number; lng: number; elevation: number }>; distanceKm: number }> {
   const toRad = (d: number) => d * Math.PI / 180
   const R = 6371
@@ -36,6 +37,7 @@ export async function fetchElevationProfile(
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ points: coords }),
+    signal,
   })
   if (!res.ok) throw new Error('Elevation batch fetch failed')
 

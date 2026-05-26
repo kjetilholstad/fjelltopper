@@ -45,8 +45,8 @@ function buildSnapLeg(result: SnapRouteResult, from: Waypoint, to: Waypoint): Le
   }
 }
 
-async function calcLegStraight(from: Waypoint, to: Waypoint): Promise<LegStats> {
-  const { points, distanceKm } = await fetchElevationProfile(from.lat, from.lng, to.lat, to.lng, 50)
+async function calcLegStraight(from: Waypoint, to: Waypoint, signal?: AbortSignal): Promise<LegStats> {
+  const { points, distanceKm } = await fetchElevationProfile(from.lat, from.lng, to.lat, to.lng, 50, signal)
   const stats = calcProfileStats(points, distanceKm)
   const elevationPoints = points.map((p, i) => ({
     dist: (i / (points.length - 1)) * distanceKm,
@@ -78,7 +78,7 @@ export async function calcLeg(
       if (err instanceof DOMException && err.name === 'AbortError') throw err
       if (err instanceof RateLimitedError) {
         await sleep(2000)
-        if (signal?.aborted) return calcLegStraight(from, to)
+        if (signal?.aborted) return calcLegStraight(from, to, signal)
         try {
           const result = await fetchSnapRoute(from, to, signal)
           return buildSnapLeg(result, from, to)
@@ -102,5 +102,5 @@ export async function calcLeg(
       }
     }
   }
-  return calcLegStraight(from, to)
+  return calcLegStraight(from, to, signal)
 }
