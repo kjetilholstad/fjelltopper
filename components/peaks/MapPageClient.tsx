@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MapWithFilters } from '@/components/peaks/MapWithFilters'
 import { useCollection } from '@/context/CollectionContext'
 import { createClient } from '@/lib/supabase/client'
@@ -23,7 +23,6 @@ export function MapPageClient({ isLoggedIn, userId, isAdmin }: Props) {
   const [countMap, setCountMap] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
   const [fitToken, setFitToken] = useState(0)
-  const isFirstLoad = useRef(true)
 
   useEffect(() => {
     if (!activeCollection) return
@@ -54,8 +53,7 @@ export function MapPageClient({ isLoggedIn, userId, isAdmin }: Props) {
       }
       setCountMap(counts)
 
-      if (!isFirstLoad.current) setFitToken(t => t + 1)
-      isFirstLoad.current = false
+      setFitToken(t => t + 1)
       setLoading(false)
     })
     return () => { cancelled = true }

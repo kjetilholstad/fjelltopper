@@ -1,7 +1,7 @@
 'use client'
 
-import React from 'react'
-import { MapContainer, TileLayer, Marker, Polyline, ZoomControl, ScaleControl, Tooltip, useMapEvents } from 'react-leaflet'
+import React, { useEffect, useRef } from 'react'
+import { MapContainer, TileLayer, Marker, Polyline, ZoomControl, ScaleControl, Tooltip, useMapEvents, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import type { Waypoint, LegStats } from '@/types/planner'
 import type { Peak } from '@/types'
@@ -43,6 +43,19 @@ function MapClickAdder({ onAdd }: { onAdd: (lat: number, lng: number) => void })
   return null
 }
 
+function FitBoundsToCollection({ bounds }: { bounds: [[number, number], [number, number]] | null }) {
+  const map = useMap()
+  const prevKey = useRef<string | null>(null)
+  useEffect(() => {
+    if (!bounds) return
+    const key = `${bounds[0][0]},${bounds[0][1]}|${bounds[1][0]},${bounds[1][1]}`
+    if (key === prevKey.current) return
+    prevKey.current = key
+    map.fitBounds(bounds, { padding: [40, 40] })
+  }, [bounds, map])
+  return null
+}
+
 const PeakMarkers = React.memo(function PeakMarkers({
   peaks,
   onAdd,
@@ -76,6 +89,7 @@ interface PlannerMapProps {
   legs: (LegStats | null)[]
   peaks: Peak[]
   activeLayer: 'topo' | 'topo2'
+  collectionBounds: [[number, number], [number, number]] | null
   onAddWaypoint: (lat: number, lng: number, label?: string) => void
   onMoveWaypoint: (id: string, lat: number, lng: number) => void
   onRemoveWaypoint: (id: string) => void
@@ -86,6 +100,7 @@ export function PlannerMap({
   legs,
   peaks,
   activeLayer,
+  collectionBounds,
   onAddWaypoint,
   onMoveWaypoint,
   onRemoveWaypoint,
@@ -110,6 +125,7 @@ export function PlannerMap({
         />
 
         <MapClickAdder onAdd={onAddWaypoint} />
+        <FitBoundsToCollection bounds={collectionBounds} />
 
         <PeakMarkers peaks={peaks} onAdd={onAddWaypoint} />
 

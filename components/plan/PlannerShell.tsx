@@ -183,6 +183,14 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
     [peaks, minHeight, minPF]
   )
 
+  const collectionBounds = useMemo<[[number, number], [number, number]] | null>(() => {
+    const valid = peaks.filter(p => p.lat != null && p.lng != null)
+    if (valid.length === 0) return null
+    const lats = valid.map(p => p.lat!)
+    const lngs = valid.map(p => p.lng!)
+    return [[Math.min(...lats), Math.min(...lngs)], [Math.max(...lats), Math.max(...lngs)]]
+  }, [peaks])
+
   const hasProfile = useMemo(
     () => legs.some(l => l !== null && l.elevationPoints.length >= 2),
     [legs]
@@ -245,6 +253,7 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
             legs={legs}
             peaks={visiblePeaks}
             activeLayer={activeLayer}
+            collectionBounds={collectionBounds}
             onAddWaypoint={addWaypoint}
             onMoveWaypoint={moveWaypoint}
             onRemoveWaypoint={removeWaypoint}
