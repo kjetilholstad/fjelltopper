@@ -10,12 +10,13 @@ import type { Peak } from '@/types'
 interface Props {
   isLoggedIn: boolean
   userId: string | null
+  isAdmin: boolean
 }
 
 type AscentEntry = { id: string; peak_id: string; date: string; notes: string | null; weather: string | null }
 type CountRow = { peak_id: string; ascent_count: number }
 
-export function MapPageClient({ isLoggedIn, userId }: Props) {
+export function MapPageClient({ isLoggedIn, userId, isAdmin }: Props) {
   const { activeCollection } = useCollection()
   const [peaks, setPeaks] = useState<Peak[]>([])
   const [ascendedMap, setAscendedMap] = useState<Record<string, { id: string; date: string; notes: string | null; weather: string | null }>>({})
@@ -61,6 +62,10 @@ export function MapPageClient({ isLoggedIn, userId }: Props) {
     return <div style={{ height: 'calc(100vh - 64px)' }} className="bg-parchment animate-pulse" />
   }
 
+  function handlePeakUpdated(updatedPeak: Peak) {
+    setPeaks(prev => prev.map(p => p.id === updatedPeak.id ? updatedPeak : p))
+  }
+
   return (
     <MapWithFilters
       peaks={peaks}
@@ -69,6 +74,8 @@ export function MapPageClient({ isLoggedIn, userId }: Props) {
       userId={userId}
       countMap={countMap}
       fitToken={fitToken}
+      isAdmin={isAdmin}
+      onPeakUpdated={handlePeakUpdated}
     />
   )
 }

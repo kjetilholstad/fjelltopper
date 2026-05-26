@@ -4,8 +4,9 @@ import { useState, useMemo, useEffect, useTransition, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Search, ChevronDown, ChevronUp, CheckCircle2, SlidersHorizontal, Users } from 'lucide-react'
+import { Search, ChevronDown, ChevronUp, CheckCircle2, SlidersHorizontal, Users, ShieldCheck } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
+import { createClient } from '@/lib/supabase/client'
 import { nearestPeak, distanceToNearestHigher } from '@/lib/nearestPeaks'
 import { usePeakFilters } from '@/lib/hooks/usePeakFilters'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
@@ -95,9 +96,11 @@ interface MapWithFiltersProps {
   userId?: string | null
   countMap?: Record<string, number>
   fitToken?: number
+  isAdmin?: boolean
+  onPeakUpdated?: (peak: EnrichedPeak) => void
 }
 
-export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, userId = null, countMap, fitToken = 0 }: MapWithFiltersProps) {
+export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, userId = null, countMap, fitToken = 0, isAdmin = false, onPeakUpdated }: MapWithFiltersProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const { activeCollection } = useCollection()
@@ -158,10 +161,27 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
   const [ascentDate, setAscentDate] = useState(new Date().toISOString().split('T')[0])
   const [confirmOpen, setConfirmOpen] = useState(false)
 
+  const [adminMode, setAdminMode] = useState(false)
+  const [editingPeak, setEditingPeak] = useState<EnrichedPeak | null>(null)
+  const [editName, setEditName] = useState('')
+  const [editLat, setEditLat] = useState(0)
+  const [editLng, setEditLng] = useState(0)
+  const [editNhp, setEditNhp] = useState('')
+  const [selectingNhp, setSelectingNhp] = useState(false)
+  const [saving, setSaving] = useState(false)
+
   useEffect(() => {
     setAscentDate(new Date().toISOString().split('T')[0])
     setConfirmOpen(false)
   }, [selectedPeak?.id])
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape' && selectingNhp) setSelectingNhp(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [selectingNhp])
 
   function toggleLine(type: LineType) {
     setActiveLines(prev => {
@@ -296,12 +316,50 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
     setConfirmOpen(false)
   }
 
+  async function handleSavePeak() {
+    if (!editingPeak) return
+    setSaving(true)
+    const supabase = createClient()
+    const updates = {
+      name: editName,
+      lat: editLat,
+      lng: editLng,
+      nearest_higher_peak: editNhp || null,
+    }
+    const { data, error } = await supabase
+      .from('peaks')
+      .update(updates)
+      .eq('id', editingPeak.id)
+      .select()
+      .single()
+    setSaving(false)
+    if (!error && data) {
+      onPeakUpdated?.({ ...editingPeak, ...updates })
+      setEditingPeak(null)
+    }
+  }
+
   return (
     <div style={{ height: 'calc(100vh - 64px)', position: 'relative' }}>
       <PeakMap
         peaks={filteredWithAscended}
         selectedPeakId={selectedPeak?.id ?? null}
-        onSelectPeak={peak => { setSelectedPeak(peak); if (peak) { setPanelOpen(true); setSheetExpanded(true) } }}
+        onSelectPeak={peak => {
+          if (selectingNhp && peak) {
+            setEditNhp(peak.name)
+            setSelectingNhp(false)
+            return
+          }
+          if (adminMode && peak) {
+            setEditingPeak(peak)
+            setEditName(peak.name)
+            setEditLat(peak.lat ?? 0)
+            setEditLng(peak.lng ?? 0)
+            setEditNhp(peak.nearest_higher_peak ?? '')
+          }
+          setSelectedPeak(peak)
+          if (peak) { setPanelOpen(true); setSheetExpanded(true) }
+        }}
         activeLines={activeLines}
         lineData={lineData}
         higherPeakId={higherPeakId}
@@ -314,7 +372,183 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
         resetToken={resetToken}
         collectionBounds={collectionBounds}
         fitToken={fitToken}
+        isAdmin={isAdmin}
+        adminMode={adminMode}
+        onToggleAdmin={() => { setAdminMode(m => !m); setEditingPeak(null) }}
+        onMarkerDragEnd={(peak, lat, lng) => {
+          setEditingPeak(peak)
+          setEditName(peak.name)
+          setEditLat(lat)
+          setEditLng(lng)
+          setEditNhp(peak.nearest_higher_peak ?? '')
+        }}
       />
+
+      {/* NHP-velger banner */}
+      {selectingNhp && (
+        <div
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1200 }}
+          className="bg-amber-500 text-white text-sm font-medium px-4 py-2.5 flex items-center justify-between"
+        >
+          <span>Klikk på en topp for å velge nærmeste høyere fjell (Esc for å avbryte)</span>
+          <button onClick={() => setSelectingNhp(false)} className="ml-4 font-bold shrink-0">✕</button>
+        </div>
+      )}
+
+      {/* Admin redigeringspanel */}
+      {adminMode && editingPeak && (
+        <>
+          {/* Desktop */}
+          <div
+            className="hidden sm:block absolute bg-white rounded-xl shadow-lg border border-border-warm p-4"
+            style={{ left: 12, top: 60, zIndex: 1100, width: 280 }}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-bold text-[#1A1A1A]">Rediger topp</span>
+              <button onClick={() => setEditingPeak(null)} className="text-text-warm hover:text-[#1A1A1A] text-sm">✕</button>
+            </div>
+            <div className="flex flex-col gap-2">
+              <div>
+                <label className="block text-[10px] font-semibold text-text-warm uppercase mb-1">Navn</label>
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={e => setEditName(e.target.value)}
+                  className="w-full bg-parchment border border-border-warm rounded-md px-2 py-1.5 text-xs text-[#1A1A1A] focus:outline-none focus:border-forest"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[10px] font-semibold text-text-warm uppercase mb-1">Lat</label>
+                  <input
+                    type="number"
+                    step="0.000001"
+                    value={editLat}
+                    onChange={e => setEditLat(Number(e.target.value))}
+                    className="w-full bg-parchment border border-border-warm rounded-md px-2 py-1.5 text-xs text-[#1A1A1A] focus:outline-none focus:border-forest"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-semibold text-text-warm uppercase mb-1">Lng</label>
+                  <input
+                    type="number"
+                    step="0.000001"
+                    value={editLng}
+                    onChange={e => setEditLng(Number(e.target.value))}
+                    className="w-full bg-parchment border border-border-warm rounded-md px-2 py-1.5 text-xs text-[#1A1A1A] focus:outline-none focus:border-forest"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-semibold text-text-warm uppercase mb-1">Nærmeste høyere fjell</label>
+                <div className="flex gap-1">
+                  <input
+                    type="text"
+                    value={editNhp}
+                    onChange={e => setEditNhp(e.target.value)}
+                    className="flex-1 bg-parchment border border-border-warm rounded-md px-2 py-1.5 text-xs text-[#1A1A1A] focus:outline-none focus:border-forest"
+                    placeholder="Velg fra kart…"
+                  />
+                  <button
+                    onClick={() => setSelectingNhp(true)}
+                    className="text-[10px] bg-amber-100 text-amber-800 border border-amber-300 rounded-md px-2 py-1.5 hover:bg-amber-200 shrink-0"
+                  >
+                    Velg
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-2 mt-3">
+              <button
+                onClick={() => setEditingPeak(null)}
+                className="flex-1 text-xs py-1.5 border border-border-warm rounded-md hover:bg-parchment transition-colors"
+              >
+                Avbryt
+              </button>
+              <button
+                onClick={handleSavePeak}
+                disabled={saving}
+                className="flex-1 text-xs py-1.5 bg-forest text-white rounded-md hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                {saving ? 'Lagrer…' : 'Lagre'}
+              </button>
+            </div>
+          </div>
+
+          {/* Mobil */}
+          <div className="sm:hidden fixed bottom-0 left-0 right-0 z-[2100] bg-white border-t border-border-warm p-4 flex flex-col gap-3"
+            style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' }}>
+            <div className="flex items-center justify-between">
+              <span className="text-base font-bold text-[#1A1A1A]">Rediger topp</span>
+              <button onClick={() => setEditingPeak(null)} className="text-text-warm hover:text-[#1A1A1A]">✕</button>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-text-warm uppercase mb-1">Navn</label>
+              <input
+                type="text"
+                value={editName}
+                onChange={e => setEditName(e.target.value)}
+                className="w-full bg-parchment border border-border-warm rounded-md px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-xs font-semibold text-text-warm uppercase mb-1">Lat</label>
+                <input
+                  type="number"
+                  step="0.000001"
+                  value={editLat}
+                  onChange={e => setEditLat(Number(e.target.value))}
+                  className="w-full bg-parchment border border-border-warm rounded-md px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-text-warm uppercase mb-1">Lng</label>
+                <input
+                  type="number"
+                  step="0.000001"
+                  value={editLng}
+                  onChange={e => setEditLng(Number(e.target.value))}
+                  className="w-full bg-parchment border border-border-warm rounded-md px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-text-warm uppercase mb-1">Nærmeste høyere fjell</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={editNhp}
+                  onChange={e => setEditNhp(e.target.value)}
+                  className="flex-1 bg-parchment border border-border-warm rounded-md px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest"
+                  placeholder="Velg fra kart…"
+                />
+                <button
+                  onClick={() => setSelectingNhp(true)}
+                  className="text-sm bg-amber-100 text-amber-800 border border-amber-300 rounded-md px-3 py-2 hover:bg-amber-200 shrink-0"
+                >
+                  Velg
+                </button>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setEditingPeak(null)}
+                className="flex-1 text-sm py-2 border border-border-warm rounded-md hover:bg-parchment transition-colors"
+              >
+                Avbryt
+              </button>
+              <button
+                onClick={handleSavePeak}
+                disabled={saving}
+                className="flex-1 text-sm py-2 bg-forest text-white rounded-md hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                {saving ? 'Lagrer…' : 'Lagre'}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Venstre kolonne: filter + tegnforklaring + detaljpanel */}
       <div

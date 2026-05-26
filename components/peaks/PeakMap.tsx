@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { MapContainer, TileLayer, Marker, Polyline, Circle, ZoomControl, ScaleControl, Tooltip, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
-import { Layers, Route } from 'lucide-react'
+import { Layers, Route, ShieldCheck } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
 import { nearestPeak, haversineKm } from '@/lib/nearestPeaks'
 import { formatDist } from '@/lib/utils'
@@ -161,6 +161,10 @@ interface PeakMapProps {
   resetToken?: number
   collectionBounds?: [[number, number], [number, number]] | null
   fitToken?: number
+  isAdmin?: boolean
+  adminMode?: boolean
+  onToggleAdmin?: () => void
+  onMarkerDragEnd?: (peak: EnrichedPeak, lat: number, lng: number) => void
 }
 
 export function PeakMap({
@@ -179,6 +183,10 @@ export function PeakMap({
   resetToken,
   collectionBounds,
   fitToken = 0,
+  isAdmin = false,
+  adminMode = false,
+  onToggleAdmin,
+  onMarkerDragEnd,
 }: PeakMapProps) {
   const [activeLayerId, setActiveLayerId] = useState('topo')
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -292,7 +300,16 @@ export function PeakMap({
             key={peak.id}
             position={[peak.lat!, peak.lng!]}
             icon={getPeakIcon(peak, selectedPeakId, higherPeakId, nearest2000Id, nearbyIds, ascendedIds, compareFrom?.id ?? null)}
-            eventHandlers={{ click: () => handleMarkerClick(peak) }}
+            draggable={adminMode}
+            eventHandlers={{
+              click: () => handleMarkerClick(peak),
+              ...(adminMode && onMarkerDragEnd ? {
+                dragend: (e: any) => {
+                  const pos = e.target.getLatLng()
+                  onMarkerDragEnd(peak, pos.lat, pos.lng)
+                },
+              } : {}),
+            }}
           />
         ))}
 
@@ -404,6 +421,21 @@ export function PeakMap({
       {/* Kartlag-velger + profilknapp — øverst til høyre */}
       <div ref={selectorRef} style={{ position: 'absolute', top: 12, right: 12, zIndex: 1000 }}>
         <div className="flex items-start gap-1.5">
+          {isAdmin && (
+            <button
+              onClick={onToggleAdmin}
+              title={adminMode ? 'Avslutt admin-modus' : 'Admin-modus'}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium shadow-md transition-colors"
+              style={{
+                background: adminMode ? '#2D5016' : 'white',
+                color: adminMode ? 'white' : '#6B6560',
+                border: '1px solid #E8E2D9',
+              }}
+            >
+              <ShieldCheck size={13} />
+              <span className="hidden sm:inline">Admin</span>
+            </button>
+          )}
           <button
             onClick={toggleCompareMode}
             title={compareMode ? 'Avslutt profilmodus' : 'Høydeprofil mellom to topper'}
