@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Search, ChevronDown, ChevronUp, CheckCircle2, SlidersHorizontal, Users, ShieldCheck } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
-import { createClient } from '@/lib/supabase/client'
+import { adminUpdatePeak } from '@/app/peaks/adminActions'
 import { nearestPeak, distanceToNearestHigher } from '@/lib/nearestPeaks'
 import { usePeakFilters } from '@/lib/hooks/usePeakFilters'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
@@ -320,25 +320,21 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
   async function handleSavePeak() {
     if (!editingPeak) return
     setSaving(true)
-    const supabase = createClient()
-    const updates = {
+    const { error } = await adminUpdatePeak({
+      id: editingPeak.id,
       name: editName,
       height: editHeight,
       lat: editLat,
       lng: editLng,
       nearest_higher_peak: editNhp || null,
-    }
-    const { data, error } = await supabase
-      .from('peaks')
-      .update(updates)
-      .eq('id', editingPeak.id)
-      .select()
-      .single()
+    })
     setSaving(false)
-    if (!error && data) {
-      onPeakUpdated?.({ ...editingPeak, ...updates })
-      setEditingPeak(null)
+    if (error) {
+      alert('Feil ved lagring: ' + error)
+      return
     }
+    onPeakUpdated?.({ ...editingPeak, name: editName, height: editHeight, lat: editLat, lng: editLng, nearest_higher_peak: editNhp || null })
+    setEditingPeak(null)
   }
 
   return (
