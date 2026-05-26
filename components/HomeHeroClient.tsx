@@ -18,6 +18,7 @@ export function HomeHeroClient() {
 
   useEffect(() => {
     if (!activeCollection) return
+    let cancelled = false
     setLoading(true)
 
     const supabase = createClient()
@@ -27,6 +28,8 @@ export function HomeHeroClient() {
         .from('collection_peaks')
         .select('peaks(*)')
         .eq('collection_id', activeCollection!.id)
+
+      if (cancelled) return
 
       const peaks = (data ?? [])
         .map((row: any) => row.peaks as Peak)
@@ -47,6 +50,7 @@ export function HomeHeroClient() {
     }
 
     fetchData()
+    return () => { cancelled = true }
   }, [activeCollection?.id])
 
   const isSenja = activeCollection?.slug === 'senja'

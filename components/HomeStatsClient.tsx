@@ -17,12 +17,14 @@ export function HomeStatsClient() {
 
   useEffect(() => {
     if (!activeCollection) return
+    let cancelled = false
     const supabase = createClient()
     supabase
       .from('collection_peaks')
       .select('peaks(primary_factor)')
       .eq('collection_id', activeCollection.id)
       .then(({ data }) => {
+        if (cancelled) return
         const peaks = (data ?? [])
           .map((row: any) => row.peaks)
           .filter(Boolean) as { primary_factor: number | null }[]
@@ -34,6 +36,7 @@ export function HomeStatsClient() {
           pf100: peaks.filter(p => pf(p) >= 100).length,
         })
       })
+    return () => { cancelled = true }
   }, [activeCollection?.id])
 
   const items = stats

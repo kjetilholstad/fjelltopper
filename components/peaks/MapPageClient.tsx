@@ -27,6 +27,7 @@ export function MapPageClient({ isLoggedIn, userId, isAdmin }: Props) {
 
   useEffect(() => {
     if (!activeCollection) return
+    let cancelled = false
     setLoading(true)
     const supabase = createClient()
 
@@ -37,6 +38,7 @@ export function MapPageClient({ isLoggedIn, userId, isAdmin }: Props) {
         : Promise.resolve({ data: [] as AscentEntry[] }),
       supabase.rpc('get_peak_ascent_counts'),
     ]).then(([{ data: peaksData }, { data: ascentsData }, { data: rpcData }]) => {
+      if (cancelled) return
       const raw = (peaksData ?? []).map((row: any) => row.peaks).filter(Boolean) as Peak[]
       setPeaks(enrichPeaks(raw))
 
@@ -56,6 +58,7 @@ export function MapPageClient({ isLoggedIn, userId, isAdmin }: Props) {
       isFirstLoad.current = false
       setLoading(false)
     })
+    return () => { cancelled = true }
   }, [activeCollection?.id, userId])
 
   if (loading || !activeCollection) {

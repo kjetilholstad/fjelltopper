@@ -19,6 +19,7 @@ export function PeaksPageClient({ ascendedMap, userId, countMap }: Props) {
 
   useEffect(() => {
     if (!activeCollection) return
+    let cancelled = false
     setLoading(true)
     const supabase = createClient()
     supabase
@@ -26,6 +27,7 @@ export function PeaksPageClient({ ascendedMap, userId, countMap }: Props) {
       .select('peaks(*)')
       .eq('collection_id', activeCollection.id)
       .then(({ data }) => {
+        if (cancelled) return
         const raw = (data ?? [])
           .map((row: any) => row.peaks)
           .filter(Boolean) as Peak[]
@@ -33,6 +35,7 @@ export function PeaksPageClient({ ascendedMap, userId, countMap }: Props) {
         setPeaks(raw)
         setLoading(false)
       })
+    return () => { cancelled = true }
   }, [activeCollection?.id])
 
   if (loading) {
