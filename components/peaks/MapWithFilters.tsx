@@ -401,7 +401,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
           {/* Desktop */}
           <div
             className="hidden sm:block absolute bg-white rounded-xl shadow-lg border border-border-warm p-4"
-            style={{ left: 12, top: 60, zIndex: 1100, width: 280 }}
+            style={{ right: 12, top: 52, zIndex: 1100, width: 280 }}
           >
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm font-bold text-[#1A1A1A]">Rediger topp</span>
