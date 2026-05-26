@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Maximize2, X } from 'lucide-react'
 import { haversineKm } from '@/lib/nearestPeaks'
 import type { LegStats } from '@/types/planner'
@@ -76,42 +76,46 @@ export function PlannerProfile({ legs, waypointLabels, peaks, expanded, onExpand
 
   // Build geometry-based points for peak proximity detection
   type GeoPoint = { lat: number; lng: number; dist: number; elevation: number }
-  const geoPoints: GeoPoint[] = []
-  let geoCumDist = 0
-
-  for (let i = 0; i < legs.length; i++) {
-    const leg = legs[i]
-    if (!leg || leg.geometry.length < 2) continue
-    const pts = leg.elevationPoints
-    leg.geometry.forEach(([lat, lng], gi) => {
-      if (gi > 0) {
-        const [prevLat, prevLng] = leg.geometry[gi - 1]
-        geoCumDist += haversineKm(prevLat, prevLng, lat, lng)
-      }
-      const elev = pts[gi]?.elevation ?? pts[pts.length - 1]?.elevation ?? 0
-      geoPoints.push({ lat, lng, dist: geoCumDist, elevation: elev })
-    })
-  }
+  const geoPoints = useMemo<GeoPoint[]>(() => {
+    const pts: GeoPoint[] = []
+    let geoCumDist = 0
+    for (let i = 0; i < legs.length; i++) {
+      const leg = legs[i]
+      if (!leg || leg.geometry.length < 2) continue
+      const elevPts = leg.elevationPoints
+      leg.geometry.forEach(([lat, lng], gi) => {
+        if (gi > 0) {
+          const [prevLat, prevLng] = leg.geometry[gi - 1]
+          geoCumDist += haversineKm(prevLat, prevLng, lat, lng)
+        }
+        const elev = elevPts[gi]?.elevation ?? elevPts[elevPts.length - 1]?.elevation ?? 0
+        pts.push({ lat, lng, dist: geoCumDist, elevation: elev })
+      })
+    }
+    return pts
+  }, [legs])
 
   // Find peaks within 300 m of the route
   const PEAK_SNAP_KM = 0.3
-  const peaksOnRoute: Array<{ name: string; height: number; dist: number; elevation: number }> = []
-
-  for (const peak of peaks) {
-    if (!peak.lat || !peak.lng) continue
-    let minDist = Infinity
-    let closest: GeoPoint | null = null
-    for (const gp of geoPoints) {
-      const d = haversineKm(peak.lat, peak.lng, gp.lat, gp.lng)
-      if (d < minDist) { minDist = d; closest = gp }
-    }
-    if (closest && minDist < PEAK_SNAP_KM) {
-      const alreadyAdded = peaksOnRoute.some(p => Math.abs(p.dist - closest!.dist) < 0.1)
-      if (!alreadyAdded) {
-        peaksOnRoute.push({ name: peak.name, height: peak.height, dist: closest.dist, elevation: peak.height })
+  const peaksOnRoute = useMemo(() => {
+    const result: Array<{ name: string; height: number; dist: number; elevation: number }> = []
+    for (const peak of peaks) {
+      if (!peak.lat || !peak.lng) continue
+      let minDist = Infinity
+      let closest: GeoPoint | null = null
+      for (const gp of geoPoints) {
+        const d = haversineKm(peak.lat, peak.lng, gp.lat, gp.lng)
+        if (d < minDist) { minDist = d; closest = gp }
+      }
+      if (closest && minDist < PEAK_SNAP_KM) {
+        const alreadyAdded = result.some(p => Math.abs(p.dist - closest!.dist) < 0.1)
+        if (!alreadyAdded) {
+          result.push({ name: peak.name, height: peak.height, dist: closest.dist, elevation: peak.height })
+        }
       }
     }
-  }
+    return result
+  }, [geoPoints, peaks])
 
   // SVG dimension helpers
   function mkH(W: number, H: number, PL: number, PR: number, PT: number, PB: number) {
