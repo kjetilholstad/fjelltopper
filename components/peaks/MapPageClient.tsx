@@ -23,11 +23,13 @@ export function MapPageClient({ isLoggedIn, userId, isAdmin }: Props) {
   const [countMap, setCountMap] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
   const [fitToken, setFitToken] = useState(0)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!activeCollection) return
     let cancelled = false
     setLoading(true)
+    setError(null)
     const supabase = createClient()
 
     Promise.all([
@@ -55,9 +57,21 @@ export function MapPageClient({ isLoggedIn, userId, isAdmin }: Props) {
 
       setFitToken(t => t + 1)
       setLoading(false)
+    }).catch(() => {
+      if (cancelled) return
+      setError('Kunne ikke laste kartet.')
+      setLoading(false)
     })
     return () => { cancelled = true }
   }, [activeCollection?.id, userId])
+
+  if (error) {
+    return (
+      <div style={{ height: 'calc(100vh - 64px)' }} className="flex items-center justify-center text-text-warm">
+        {error}
+      </div>
+    )
+  }
 
   if (loading || !activeCollection) {
     return <div style={{ height: 'calc(100vh - 64px)' }} className="bg-parchment animate-pulse" />

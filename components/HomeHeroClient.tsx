@@ -24,29 +24,34 @@ export function HomeHeroClient() {
     const supabase = createClient()
 
     async function fetchData() {
-      const { data } = await supabase
-        .from('collection_peaks')
-        .select('peaks(*)')
-        .eq('collection_id', activeCollection!.id)
+      try {
+        const { data } = await supabase
+          .from('collection_peaks')
+          .select('peaks(*)')
+          .eq('collection_id', activeCollection!.id)
 
-      if (cancelled) return
+        if (cancelled) return
 
-      const peaks = (data ?? [])
-        .map((row: any) => row.peaks as Peak)
-        .filter(Boolean)
-        .sort((a: Peak, b: Peak) => (b.height ?? 0) - (a.height ?? 0))
+        const peaks = (data ?? [])
+          .map((row: any) => row.peaks as Peak)
+          .filter(Boolean)
+          .sort((a: Peak, b: Peak) => (b.height ?? 0) - (a.height ?? 0))
 
-      setCollectionPeaks(peaks)
+        setCollectionPeaks(peaks)
 
-      if (peaks.length === 0) {
+        if (peaks.length === 0) {
+          setLoading(false)
+          return
+        }
+
+        const randomIndex = Math.floor(Math.random() * peaks.length)
+        setFeatured(peaks[randomIndex])
+        setFeaturedRank(randomIndex + 1)
         setLoading(false)
-        return
+      } catch {
+        if (cancelled) return
+        setLoading(false)
       }
-
-      const randomIndex = Math.floor(Math.random() * peaks.length)
-      setFeatured(peaks[randomIndex])
-      setFeaturedRank(randomIndex + 1)
-      setLoading(false)
     }
 
     fetchData()

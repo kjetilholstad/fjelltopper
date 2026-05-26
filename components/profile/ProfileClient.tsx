@@ -38,18 +38,21 @@ export function ProfileClient({ ascents, userEmail }: Props) {
   const { activeCollection } = useCollection()
   const [collectionPeaks, setCollectionPeaks] = useState<CollectionPeak[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!activeCollection) return
     let cancelled = false
     setLoading(true)
+    setError(null)
     const supabase = createClient()
     supabase
       .from('collection_peaks')
       .select('peaks(id, primary_factor)')
       .eq('collection_id', activeCollection.id)
-      .then(({ data }) => {
+      .then(({ data, error: err }) => {
         if (cancelled) return
+        if (err) { setError('Kunne ikke laste profil.'); setLoading(false); return }
         const raw = (data ?? [])
           .map((row: any) => row.peaks)
           .filter(Boolean) as CollectionPeak[]
@@ -58,6 +61,14 @@ export function ProfileClient({ ascents, userEmail }: Props) {
       })
     return () => { cancelled = true }
   }, [activeCollection?.id])
+
+  if (error) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-16 text-center text-text-warm">
+        {error}
+      </div>
+    )
+  }
 
   if (loading || !activeCollection) {
     return <div className="max-w-3xl mx-auto px-4 py-10 text-text-warm">Laster…</div>

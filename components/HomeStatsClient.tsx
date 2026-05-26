@@ -14,17 +14,20 @@ interface Stats {
 export function HomeStatsClient() {
   const { activeCollection } = useCollection()
   const [stats, setStats] = useState<Stats | null>(null)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     if (!activeCollection) return
     let cancelled = false
+    setError(false)
     const supabase = createClient()
     supabase
       .from('collection_peaks')
       .select('peaks(primary_factor)')
       .eq('collection_id', activeCollection.id)
-      .then(({ data }) => {
+      .then(({ data, error: err }) => {
         if (cancelled) return
+        if (err) { setError(true); return }
         const peaks = (data ?? [])
           .map((row: any) => row.peaks)
           .filter(Boolean) as { primary_factor: number | null }[]
@@ -39,12 +42,14 @@ export function HomeStatsClient() {
     return () => { cancelled = true }
   }, [activeCollection?.id])
 
+  const STAT_LABELS = ['Topper registrert', 'PF over 30 m', 'PF over 50 m', 'PF over 100 m']
+
   const items = stats
     ? [
-        { value: stats.total.toLocaleString('no'),  label: 'Topper registrert' },
-        { value: stats.pf30.toLocaleString('no'),   label: 'PF over 30 m' },
-        { value: stats.pf50.toLocaleString('no'),   label: 'PF over 50 m' },
-        { value: stats.pf100.toLocaleString('no'),  label: 'PF over 100 m' },
+        { value: stats.total.toLocaleString('no'),  label: STAT_LABELS[0] },
+        { value: stats.pf30.toLocaleString('no'),   label: STAT_LABELS[1] },
+        { value: stats.pf50.toLocaleString('no'),   label: STAT_LABELS[2] },
+        { value: stats.pf100.toLocaleString('no'),  label: STAT_LABELS[3] },
       ]
     : Array(4).fill(null)
 
@@ -63,6 +68,8 @@ export function HomeStatsClient() {
                   <p className="text-2xl sm:text-3xl font-bold text-[#1A1A1A]">{item.value}</p>
                   <p className="text-xs mt-1" style={{ color: '#6B6560' }}>{item.label}</p>
                 </>
+              ) : error ? (
+                <p className="text-xs" style={{ color: '#6B6560' }}>Statistikk utilgjengelig</p>
               ) : (
                 <>
                   <div className="h-8 bg-[#F7F4EF] rounded animate-pulse mx-auto w-16 mb-1" />
