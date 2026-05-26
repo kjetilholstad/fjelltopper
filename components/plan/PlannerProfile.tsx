@@ -34,11 +34,15 @@ export function PlannerProfile({ legs, waypointLabels, peaks, expanded, onExpand
   // Build combined elevation points with cumulative distances
   const combined: Array<{ dist: number; elevation: number }> = []
   const legBreakDists: number[] = []
+  const waypointCumDists: number[] = [0]
   let cumDist = 0
 
   for (let i = 0; i < legs.length; i++) {
     const leg = legs[i]
-    if (!leg || leg.elevationPoints.length < 2) continue
+    if (!leg || leg.elevationPoints.length < 2) {
+      waypointCumDists.push(cumDist)
+      continue
+    }
     const pts = leg.elevationPoints
     const legDist = leg.distanceKm
     const lastDist = pts[pts.length - 1].dist
@@ -48,6 +52,7 @@ export function PlannerProfile({ legs, waypointLabels, peaks, expanded, onExpand
       combined.push({ dist: cumDist + pt.dist * scale, elevation: pt.elevation })
     }
     cumDist += legDist
+    waypointCumDists.push(cumDist)
   }
 
   if (combined.length < 2) return null
@@ -149,11 +154,7 @@ export function PlannerProfile({ legs, waypointLabels, peaks, expanded, onExpand
   }
 
   // ── Waypoint elevations (start + breaks + end) ──
-  const waypointElevs: number[] = [
-    Math.round(elevs[0]),
-    ...legBreakDists.map(d => Math.round(elevAtDist(d))),
-    Math.round(elevs[elevs.length - 1]),
-  ]
+  const waypointElevs: number[] = waypointCumDists.map(d => Math.round(elevAtDist(d)))
 
   // ── Legend label per waypoint ──
   function legendLabel(wpLabel: string, idx: number): string {
