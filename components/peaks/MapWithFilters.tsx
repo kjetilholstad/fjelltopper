@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect, useTransition } from 'react'
+import { useState, useMemo, useEffect, useTransition, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -13,6 +13,7 @@ import { getNearbyPeaks } from '@/lib/nearbyPeaks'
 import { haversineKm } from '@/lib/nearestPeaks'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { formatDist } from '@/lib/utils'
+import { useCollection } from '@/context/CollectionContext'
 
 const PeakMap = dynamic(
   () => import('./PeakMap').then((m) => m.PeakMap),
@@ -93,13 +94,24 @@ interface MapWithFiltersProps {
   isLoggedIn?: boolean
   userId?: string | null
   countMap?: Record<string, number>
+  fitToken?: number
 }
 
-export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, userId = null, countMap }: MapWithFiltersProps) {
+export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, userId = null, countMap, fitToken = 0 }: MapWithFiltersProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
+  const { activeCollection } = useCollection()
+  const nearestHigherLabel = activeCollection?.nearestHigherLabel ?? 'Nærmeste over 2000 m (PF ≥ 30 m)'
 
   const ascendedSet = useMemo(() => new Set(Object.keys(ascendedMap)), [ascendedMap])
+
+  const collectionBounds = useMemo<[[number, number], [number, number]] | null>(() => {
+    const valid = peaks.filter(p => p.lat != null && p.lng != null)
+    if (valid.length === 0) return null
+    const lats = valid.map(p => p.lat!)
+    const lngs = valid.map(p => p.lng!)
+    return [[Math.min(...lats), Math.min(...lngs)], [Math.max(...lats), Math.max(...lngs)]]
+  }, [peaks])
 
   const {
     query, setQuery,
@@ -300,6 +312,8 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
         flyBottomOffsetPx={flyBottomOffsetPx}
         activeProfileBounds={activeProfileBounds}
         resetToken={resetToken}
+        collectionBounds={collectionBounds}
+        fitToken={fitToken}
       />
 
       {/* Venstre kolonne: filter + tegnforklaring + detaljpanel */}
@@ -385,6 +399,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             const isToggleable = lineType !== null
             const available = isToggleable ? lineAvailable(lineType) : true
             const isActive = isToggleable && activeLines.has(lineType)
+            const displayLabel = lineType === 'nearest2000' ? nearestHigherLabel : label
 
             if (isToggleable) {
               return (
@@ -411,7 +426,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                       strokeDasharray={dash ? '4 3' : undefined}
                     />
                   </svg>
-                  <span className="text-xs text-[#1A1A1A]">{label}</span>
+                  <span className="text-xs text-[#1A1A1A]">{displayLabel}</span>
                   {isActive && (
                     <span className="ml-auto text-[10px] font-semibold" style={{ color }}>PÅ</span>
                   )}
@@ -496,7 +511,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             {/* Nærmeste fjell over 2000 m */}
             {nearest && (
               <p className="text-[11px] text-text-warm mb-1">
-                Nærmeste over 2000 m (PF ≥ 30 m):<br />
+                {nearestHigherLabel}:<br />
                 <span className="font-medium text-[#1A1A1A]">
                   <button onClick={() => setSelectedPeak(nearest.peak)} className="underline decoration-dotted hover:text-forest transition-colors">
                     {nearest.peak.name}
@@ -756,6 +771,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
               const isToggleable = lineType !== null
               const available = isToggleable ? lineAvailable(lineType) : true
               const isActive = isToggleable && activeLines.has(lineType)
+              const displayLabel = lineType === 'nearest2000' ? nearestHigherLabel : label
               if (isToggleable) {
                 return (
                   <button
@@ -775,7 +791,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                       <line x1="0" y1="5" x2="20" y2="5" stroke={color} strokeWidth="2"
                         strokeDasharray={dash ? '4 3' : undefined} />
                     </svg>
-                    <span className="text-sm text-[#1A1A1A]">{label}</span>
+                    <span className="text-sm text-[#1A1A1A]">{displayLabel}</span>
                     {isActive && (
                       <span className="ml-auto text-xs font-semibold" style={{ color }}>PÅ</span>
                     )}
@@ -847,7 +863,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
 
               {nearest && (
                 <div>
-                  <p className="text-xs text-text-warm">Nærmeste over 2000 m (PF ≥ 30 m)</p>
+                  <p className="text-xs text-text-warm">{nearestHigherLabel}</p>
                   <p className="text-sm font-medium text-[#1A1A1A]">
                     <button onClick={() => setSelectedPeak(nearest.peak)} className="underline decoration-dotted hover:text-forest transition-colors">
                       {nearest.peak.name}

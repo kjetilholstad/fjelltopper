@@ -41,3 +41,14 @@ export interface Profile {
 export interface AscentWithPeak extends Ascent {
   peak: Peak
 }
+
+export interface Collection {
+  id: string
+  slug: string
+  name: string
+  description: string | null
+  minHeight: number
+  minPrimaryFactor: number
+  nearestHigherMinHeight: number
+  nearestHigherLabel: string
+}

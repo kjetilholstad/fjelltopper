@@ -279,6 +279,7 @@ function InfoTOC() {
     { n: 5, kort: 'Bestigning',    full: 'Registrere bestigning' },
     { n: 6, kort: 'Kartvisning',   full: 'Kart og tegnforklaring' },
     { n: 7, kort: 'Planlegger',    full: 'Turplanlegger' },
+    { n: 8, kort: 'Samlinger',     full: 'Samlinger' },
   ]
 
   return (
@@ -794,6 +795,94 @@ export default function InfoPage() {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* ── 8. Samlinger ── */}
+        <section id="seksjon-8" className="bg-white rounded-xl border border-[#E8E2D9] shadow-sm p-6 mb-5">
+          <h2 className="text-base font-semibold text-[#1A1A1A] mb-3 flex items-center gap-2">
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f0f5e8] text-[#2D5016] text-xs font-bold">8</span>
+            Samlinger
+          </h2>
+          <p className="text-sm text-[#6B6560] leading-relaxed mb-4">
+            En <strong className="text-[#1A1A1A] font-medium">samling</strong> er et kuratert sett med topper med egne kriterier.
+            Alt i appen — topplisten, kartet, planleggeren, topplisten og profilstatistikk — filtreres automatisk til den aktive samlingen.
+          </p>
+
+          {/* Samlingskort */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+            <div className="bg-[#F7F4EF] rounded-lg p-4 border border-[#E8E2D9]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-2 h-2 rounded-full bg-[#2D5016] shrink-0" />
+                <span className="text-sm font-semibold text-[#1A1A1A]">Norske 2000-meterstopper</span>
+              </div>
+              <div className="flex flex-col gap-1 mb-2">
+                <span className="text-xs text-[#6B6560]">389 topper · ≥ 2&nbsp;000&nbsp;moh · PF ≥ 30&nbsp;m</span>
+                <span className="text-xs text-[#6B6560]">Høyeste: Galdhøpiggen (2&nbsp;469&nbsp;m)</span>
+              </div>
+              <p className="text-xs text-[#6B6560] leading-relaxed">
+                Alle norske fjelltopper over 2&nbsp;000 meter med en primærfaktor på minst 30&nbsp;m.
+                Klassikerlisten for alpinister — inkluderer alt fra Rondane til Jotunheimen og Breheimen.
+              </p>
+            </div>
+
+            <div className="bg-[#F7F4EF] rounded-lg p-4 border border-[#E8E2D9]">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-2 h-2 rounded-full bg-[#2D5016] shrink-0" />
+                <span className="text-sm font-semibold text-[#1A1A1A]">Senja</span>
+              </div>
+              <div className="flex flex-col gap-1 mb-2">
+                <span className="text-xs text-[#6B6560]">398 topper · ≥ 300&nbsp;moh · PF ≥ 30&nbsp;m</span>
+                <span className="text-xs text-[#6B6560]">Høyeste: Breitind (1&nbsp;005&nbsp;m)</span>
+              </div>
+              <p className="text-xs text-[#6B6560] leading-relaxed">
+                Alle selvstendige topper på Senja-øya over 300&nbsp;m. Øya er kjent for spektakulær
+                kystalpinisme med bratte fjell rett fra fjorden.
+              </p>
+            </div>
+          </div>
+
+          {/* Slik bytter du */}
+          <div className="mb-5">
+            <p className="text-sm font-semibold text-[#1A1A1A] mb-2">Slik bytter du samling</p>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-start gap-3 bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
+                <Layers size={14} className="text-[#2D5016] shrink-0 mt-0.5" strokeWidth={1.75} />
+                <p className="text-sm text-[#6B6560] leading-relaxed">
+                  <strong className="text-[#1A1A1A] font-medium">Desktop:</strong> Klikk på bruker-ikonet øverst til høyre i navigasjonslinjen for å åpne profil-menyen.
+                  Samlings­valgene vises som knapper øverst i menyen.
+                </p>
+              </div>
+              <div className="flex items-start gap-3 bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
+                <Layers size={14} className="text-[#2D5016] shrink-0 mt-0.5" strokeWidth={1.75} />
+                <p className="text-sm text-[#6B6560] leading-relaxed">
+                  <strong className="text-[#1A1A1A] font-medium">Mobil:</strong> Åpne hamburger-menyen og bla ned til <em>Samling</em>-seksjonen nederst.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Hva endres */}
+          <div className="mb-4">
+            <p className="text-sm font-semibold text-[#1A1A1A] mb-2">Hva endres når du bytter samling</p>
+            <div className="flex flex-col gap-1.5">
+              {[
+                { label: 'Topper',     desc: 'Listen viser kun topper i den aktive samlingen.' },
+                { label: 'Kart',       desc: 'Kartet viser kun samlingens topper og zoomer automatisk inn til dem.' },
+                { label: 'Planlegg',   desc: 'Bare samlingens topper er tilgjengelige som vegpunkter.' },
+                { label: 'Toppliste',  desc: 'Rangeringen beregnes kun ut fra bestigninger i samlingen.' },
+                { label: 'Profil',     desc: 'Statistikk og fremdrift beregnes mot samlingens totale toppantall.' },
+              ].map(({ label, desc }) => (
+                <div key={label} className="flex items-start gap-3 bg-[#F7F4EF] rounded-lg px-4 py-2.5 border border-[#E8E2D9]">
+                  <span className="text-xs font-semibold text-[#2D5016] bg-[#f0f5e8] border border-[#2D5016]/20 rounded px-1.5 py-0.5 shrink-0 mt-0.5">{label}</span>
+                  <p className="text-sm text-[#6B6560] leading-relaxed">{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p className="text-xs text-[#6B6560] bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9] leading-relaxed">
+            Valgt samling lagres i nettleseren og huskes til neste gang du åpner appen.
+          </p>
         </section>
 
       </div>

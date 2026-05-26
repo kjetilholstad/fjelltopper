@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { Navbar } from '@/components/Navbar'
+import { CollectionProvider } from '@/components/CollectionProvider'
 
 export const metadata: Metadata = {
   title: 'Fjelltopper — Norske fjelltopper',
@@ -29,8 +30,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
       </head>
       <body>
-        <Navbar />
-        <main>{children}</main>
+        <CollectionProvider>
+          <Navbar />
+          <main>{children}</main>
+        </CollectionProvider>
       </body>
     </html>
   )

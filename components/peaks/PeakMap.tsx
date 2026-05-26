@@ -101,6 +101,20 @@ function FlyToSelected({
   return null
 }
 
+function FitBoundsToCollection({ bounds, fitToken }: {
+  bounds: [[number, number], [number, number]] | null
+  fitToken: number
+}) {
+  const map = useMap()
+  const prevToken = useRef(0)
+  useEffect(() => {
+    if (!bounds || fitToken === 0 || fitToken === prevToken.current) return
+    prevToken.current = fitToken
+    map.fitBounds(bounds, { padding: [40, 40] })
+  }, [fitToken, bounds, map])
+  return null
+}
+
 function FitBoundsToProfile({ bounds }: {
   bounds: [[number, number], [number, number]] | null
 }) {
@@ -145,6 +159,8 @@ interface PeakMapProps {
   flyBottomOffsetPx?: number
   activeProfileBounds?: [[number, number], [number, number]] | null
   resetToken?: number
+  collectionBounds?: [[number, number], [number, number]] | null
+  fitToken?: number
 }
 
 export function PeakMap({
@@ -161,6 +177,8 @@ export function PeakMap({
   flyBottomOffsetPx = 0,
   activeProfileBounds,
   resetToken,
+  collectionBounds,
+  fitToken = 0,
 }: PeakMapProps) {
   const [activeLayerId, setActiveLayerId] = useState('topo')
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -267,6 +285,7 @@ export function PeakMap({
         <MapClickHandler onMapClick={handleMapClick} />
         <FlyToSelected peaks={peaks} selectedPeakId={selectedPeakId} bottomOffsetPx={flyBottomOffsetPx} />
         <FitBoundsToProfile bounds={activeProfileBounds ?? null} />
+        <FitBoundsToCollection bounds={collectionBounds ?? null} fitToken={fitToken} />
 
         {peaks.map(peak => (
           <Marker

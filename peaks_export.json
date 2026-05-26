@@ -1,0 +1,3494 @@
+[
+  {
+    "id": "2c34a724-90ca-4a32-9c5f-3f5826362af2",
+    "name": "Galdhøpiggen",
+    "height": 2469,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 2379,
+    "nearest_higher_peak": "Kriváň"
+  },
+  {
+    "id": "01c379cf-47cc-486a-bc01-35d06f7baff2",
+    "name": "Glittertinden",
+    "height": 2452,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 986,
+    "nearest_higher_peak": "Galdhøpiggen"
+  },
+  {
+    "id": "cc3d9b89-4947-477f-ad75-cd1db1dd93d1",
+    "name": "Store Skagastølstinden",
+    "height": 2404,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 1021,
+    "nearest_higher_peak": "Galdhøpiggen"
+  },
+  {
+    "id": "ee05c8d6-631e-4cc4-b03b-f13b49c31380",
+    "name": "Store Styggedalstinden Østtoppen",
+    "height": 2387,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 145,
+    "nearest_higher_peak": "Store Skagastølstinden"
+  },
+  {
+    "id": "c65c8654-7d72-4798-8da1-e22c0ac8b6c0",
+    "name": "Store Styggedalstinden Vesttoppen",
+    "height": 2382,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 25,
+    "nearest_higher_peak": "Store Styggedalstinden Østtoppen"
+  },
+  {
+    "id": "281a7072-5add-4ea0-ad08-59ecef5ed2f7",
+    "name": "Skardstinden",
+    "height": 2373,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 287,
+    "nearest_higher_peak": "Galdhøpiggen"
+  },
+  {
+    "id": "9c56bd44-6eca-42ea-aa05-2a28d7e3ad55",
+    "name": "Vesle Galdhøpiggen",
+    "height": 2369,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 144,
+    "nearest_higher_peak": "Galdhøpiggen"
+  },
+  {
+    "id": "98985239-d3cb-426c-9143-d54508ab7f83",
+    "name": "Surtningssue",
+    "height": 2368,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 720,
+    "nearest_higher_peak": "Glittertinden"
+  },
+  {
+    "id": "51e3a168-2048-4aeb-91fb-f993b51c1b22",
+    "name": "Store Memurutinden Vesttoppen",
+    "height": 2365,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 19,
+    "nearest_higher_peak": "Surtningssue"
+  },
+  {
+    "id": "ae46133d-7350-431a-a63a-553f658b9408",
+    "name": "Store Memurutinden Østtoppen",
+    "height": 2365,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 331,
+    "nearest_higher_peak": "Surtningssue"
+  },
+  {
+    "id": "473046c4-fd2e-40fb-98e9-d7dd291fc9c7",
+    "name": "Store Memurutinden Midttoppen",
+    "height": 2364,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 18,
+    "nearest_higher_peak": "Store Memurutinden Vesttoppen"
+  },
+  {
+    "id": "0d3396ab-3afc-4885-94a2-4fd3952f3489",
+    "name": "Keilhaus Topp",
+    "height": 2354,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 33,
+    "nearest_higher_peak": "Galdhøpiggen"
+  },
+  {
+    "id": "ee0594ba-4927-4833-be58-202a5efbc31f",
+    "name": "Gjertvasstinden",
+    "height": 2351,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 125,
+    "nearest_higher_peak": "Store Styggedalstinden Østtoppen"
+  },
+  {
+    "id": "12b52a7e-d9e7-4d67-a22d-f85038d6d650",
+    "name": "Sentraltinden",
+    "height": 2348,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 94,
+    "nearest_higher_peak": "Store Skagastølstinden"
+  },
+  {
+    "id": "052de0aa-5be6-45d1-a27f-ea49528fadfb",
+    "name": "Store Hellstugutinden",
+    "height": 2346,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 408,
+    "nearest_higher_peak": "Store Memurutinden Vesttoppen"
+  },
+  {
+    "id": "1b1a5268-6548-44e8-bf7e-6ec972162455",
+    "name": "Storjuvtinden",
+    "height": 2344,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 117,
+    "nearest_higher_peak": "Galdhøpiggen"
+  },
+  {
+    "id": "5587d46e-656b-4240-af94-8c09ce358df5",
+    "name": "Vetle Skagastølstinden",
+    "height": 2340,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 70,
+    "nearest_higher_peak": "Store Skagastølstinden"
+  },
+  {
+    "id": "f0f80a31-dde8-4fa6-b450-f14d05067675",
+    "name": "Store Knutsholstinden",
+    "height": 2339,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 970,
+    "nearest_higher_peak": "Surtningssue"
+  },
+  {
+    "id": "96c405cb-9322-430d-8f5a-ba1de5975acb",
+    "name": "Midtre Hellstugutinden",
+    "height": 2338,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 153,
+    "nearest_higher_peak": "Store Hellstugutinden"
+  },
+  {
+    "id": "9b807105-0199-4891-95bd-21790bae6e74",
+    "name": "Leirhøe",
+    "height": 2329,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 291,
+    "nearest_higher_peak": "Store Memurutinden Vesttoppen"
+  },
+  {
+    "id": "b3fb72f0-ba36-40b9-9724-f861fe233d0d",
+    "name": "Austre Storjuvtinden",
+    "height": 2327,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Storjuvtinden"
+  },
+  {
+    "id": "6c550a6d-6ae7-4f7a-8439-9b1ec4ece0de",
+    "name": "Tjønnholstinden",
+    "height": 2323,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 338,
+    "nearest_higher_peak": "Store Knutsholstinden"
+  },
+  {
+    "id": "8d176179-5bc3-42f1-8c1d-f0ab7d93d6a8",
+    "name": "Bukkehøe",
+    "height": 2314,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 346,
+    "nearest_higher_peak": "Skardstinden"
+  },
+  {
+    "id": "866ebd55-896a-4126-991a-cc825d3a350d",
+    "name": "Nåle",
+    "height": 2310,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Skardstinden"
+  },
+  {
+    "id": "8d2f6787-4457-4e44-9fe2-0fa26e841900",
+    "name": "Steinflytinden",
+    "height": 2310,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 25,
+    "nearest_higher_peak": "Tjønnholstinden"
+  },
+  {
+    "id": "324d830f-c76b-48c8-80d5-d134a1a3edf8",
+    "name": "Store Tverråtinden",
+    "height": 2308,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 187,
+    "nearest_higher_peak": "Austre Storjuvtinden"
+  },
+  {
+    "id": "5fe434f4-69b4-46c3-bc61-4b87d3e3cdc0",
+    "name": "Ymelstinden",
+    "height": 2304,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 40,
+    "nearest_higher_peak": "Storjuvtinden"
+  },
+  {
+    "id": "ca988864-2122-4fff-8d31-953bb51488f5",
+    "name": "Surtningssue Sørtoppen",
+    "height": 2304,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 36,
+    "nearest_higher_peak": "Surtningssue"
+  },
+  {
+    "id": "7dc3fc47-7d86-4ed9-951b-e168e1869dce",
+    "name": "Midtre Tverråtinden",
+    "height": 2303,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 99,
+    "nearest_higher_peak": "Store Tverråtinden"
+  },
+  {
+    "id": "94fcb360-2e3a-40b3-be34-e21eed98b70c",
+    "name": "Austre Memurutinden",
+    "height": 2298,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 171,
+    "nearest_higher_peak": "Store Memurutinden Østtoppen"
+  },
+  {
+    "id": "e4df4990-8d7b-4daa-b762-414d599b8fb3",
+    "name": "Trollsteineggje",
+    "height": 2296,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 103,
+    "nearest_higher_peak": "Glittertinden"
+  },
+  {
+    "id": "1e2ab667-cfe6-491a-9e2a-246c98986364",
+    "name": "Snøhetta",
+    "height": 2287,
+    "county": "Innlandet",
+    "municipality": "Dovre",
+    "primary_factor": 1675,
+    "nearest_higher_peak": "Trollsteineggje"
+  },
+  {
+    "id": "7ece7744-1922-4fd8-8f48-5a7a935c2fd3",
+    "name": "Austre Leirungstinden",
+    "height": 2287,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 289,
+    "nearest_higher_peak": "Store Knutsholstinden"
+  },
+  {
+    "id": "5ea24ea2-0422-4d27-9d5f-06e65e67c346",
+    "name": "Midtre Skagastølstinden",
+    "height": 2284,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 32,
+    "nearest_higher_peak": "Vetle Skagastølstinden"
+  },
+  {
+    "id": "4a82c7d7-36a4-4c77-8c0c-96e41fb90892",
+    "name": "Galdhøe",
+    "height": 2283,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 98,
+    "nearest_higher_peak": "Vesle Galdhøpiggen"
+  },
+  {
+    "id": "2fce3dc6-0cab-4786-b6e9-e2669427ae7f",
+    "name": "Memurutinden V1",
+    "height": 2280,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 73,
+    "nearest_higher_peak": "Store Memurutinden Vesttoppen"
+  },
+  {
+    "id": "70e9cbd2-4063-40c2-a4f8-e0e3f680af85",
+    "name": "Snøhetta Midttoppen",
+    "height": 2278,
+    "county": "Innlandet",
+    "municipality": "Dovre",
+    "primary_factor": 35,
+    "nearest_higher_peak": "Snøhetta"
+  },
+  {
+    "id": "32c7cb49-75e3-481b-98b7-bc82e34f2049",
+    "name": "Haakon VII Topp",
+    "height": 2277,
+    "county": "Svalbard og Jan Mayen",
+    "municipality": "Jan Mayen",
+    "primary_factor": 2277,
+    "nearest_higher_peak": "Snøhetta Midttoppen"
+  },
+  {
+    "id": "a83cac1c-83ab-4736-a1fd-314738773bc8",
+    "name": "Svellnose",
+    "height": 2273,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 29,
+    "nearest_higher_peak": "Keilhaus Topp"
+  },
+  {
+    "id": "bc332761-c8c8-4180-8d23-f93994de1cab",
+    "name": "Mesmogtinden",
+    "height": 2266,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 776,
+    "nearest_higher_peak": "Store Knutsholstinden"
+  },
+  {
+    "id": "21ad557b-4376-4974-b908-e71961279c29",
+    "name": "Søre Veotinden",
+    "height": 2265,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 135,
+    "nearest_higher_peak": "Austre Memurutinden"
+  },
+  {
+    "id": "a269ef6e-a181-4b9f-a0c7-fe36df5f1032",
+    "name": "Nord for Store Memurutinden Vesttoppen",
+    "height": 2264,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Store Memurutinden Vesttoppen"
+  },
+  {
+    "id": "9b67306a-82a8-4985-9baa-9b51dd21d50e",
+    "name": "Hettpiggen",
+    "height": 2261,
+    "county": "Innlandet",
+    "municipality": "Dovre",
+    "primary_factor": 50,
+    "nearest_higher_peak": "Snøhetta Midttoppen"
+  },
+  {
+    "id": "abfc3003-9d48-400b-8743-3c2228b0460b",
+    "name": "Portpiggen",
+    "height": 2261,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 13,
+    "nearest_higher_peak": "Vesle Galdhøpiggen"
+  },
+  {
+    "id": "316bb9f2-2f1a-4da4-a86e-811c1e161b54",
+    "name": "Nord for Austre Leirungstinden",
+    "height": 2260,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Austre Leirungstinden"
+  },
+  {
+    "id": "63374387-62cd-4996-8bc4-b90939943394",
+    "name": "Austre Glittertindoksle",
+    "height": 2260,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 42,
+    "nearest_higher_peak": "Trollsteineggje"
+  },
+  {
+    "id": "291a1f55-93cc-4dfa-9844-8620e000ec3d",
+    "name": "Bakarste Storgrovhøe",
+    "height": 2259,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 181,
+    "nearest_higher_peak": "Skardstinden"
+  },
+  {
+    "id": "2288f929-3407-498e-b928-27cd4b60efe8",
+    "name": "Besshøe",
+    "height": 2258,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 850,
+    "nearest_higher_peak": "Surtningssue Sørtoppen"
+  },
+  {
+    "id": "4e44ffc4-1bee-4ca6-bb97-227443536edc",
+    "name": "Nautgardstinden",
+    "height": 2257,
+    "county": "Innlandet",
+    "municipality": "Lom, Vågå",
+    "primary_factor": 574,
+    "nearest_higher_peak": "Besshø"
+  },
+  {
+    "id": "46a1e647-4b68-4ff8-86a5-2080425890ce",
+    "name": "Fortoppen",
+    "height": 2255,
+    "county": "Svalbard og Jan Mayen",
+    "municipality": "Jan Mayen",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Haakon VII Topp"
+  },
+  {
+    "id": "39d0da63-e3a1-47b8-b4c0-1d9b3eedd7e9",
+    "name": "Memurutinden V0",
+    "height": 2255,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Memurutinden V1"
+  },
+  {
+    "id": "f89ec462-e7ea-45a1-9bff-40508dbbfd51",
+    "name": "Nestsøre Hellstugutinden",
+    "height": 2255,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 114,
+    "nearest_higher_peak": "Store Hellstugutinden"
+  },
+  {
+    "id": "952ba2b0-ce6a-4d91-8ae9-3090c3fc217f",
+    "name": "Fremste Storgrovhøe",
+    "height": 2253,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 60,
+    "nearest_higher_peak": "Bakarste Storgrovhøe"
+  },
+  {
+    "id": "c27c1f89-fcbf-442c-81d8-1380fc18f78d",
+    "name": "Snøhetta Vesttoppen",
+    "height": 2253,
+    "county": "Innlandet",
+    "municipality": "Dovre",
+    "primary_factor": 70,
+    "nearest_higher_peak": "Hettpiggen"
+  },
+  {
+    "id": "7820dfef-45b7-4270-819f-15541b1b8d95",
+    "name": "Sør for Vestre Glittertindoksle",
+    "height": 2253,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 18,
+    "nearest_higher_peak": "Trollsteineggje"
+  },
+  {
+    "id": "689ea84d-d39c-4774-945e-f5e0f7ccfe7b",
+    "name": "Vestre Glittertindoksle",
+    "height": 2251,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 18,
+    "nearest_higher_peak": "Sør for Vestre Glittertindoksle"
+  },
+  {
+    "id": "b8c5b2ce-d96d-4941-8cee-b903c27d276a",
+    "name": "Midtre Surtningssue",
+    "height": 2251,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Surtningssue Sørtoppen"
+  },
+  {
+    "id": "962f5335-84bb-48bc-a714-cbb534c7cdeb",
+    "name": "Skarvflyløyfttinden",
+    "height": 2250,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 35,
+    "nearest_higher_peak": "Nord for Austre Leirungstinden"
+  },
+  {
+    "id": "84d12d6c-86d3-4782-a027-0c7f768cd24a",
+    "name": "Vestre Leirungstinden",
+    "height": 2250,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 194,
+    "nearest_higher_peak": "Austre Leirungstinden"
+  },
+  {
+    "id": "c3091e78-d3fd-48f2-9262-b50c05b84ba6",
+    "name": "Trollsteineggje S1",
+    "height": 2250,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 17,
+    "nearest_higher_peak": "Trollsteineggje"
+  },
+  {
+    "id": "d4652293-3c5c-414d-9db9-590be93efc5a",
+    "name": "Memurutinden V3",
+    "height": 2243,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 80,
+    "nearest_higher_peak": "Memurutinden V1"
+  },
+  {
+    "id": "99da4416-85d1-4ac0-a956-29ef766b898d",
+    "name": "Store Veotinden",
+    "height": 2240,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 72,
+    "nearest_higher_peak": "Søre Veotinden"
+  },
+  {
+    "id": "57f8d7d0-7cae-4b16-8f48-7d1cb2696b22",
+    "name": "Memurutinden V2",
+    "height": 2238,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 25,
+    "nearest_higher_peak": "Memurutinden V3"
+  },
+  {
+    "id": "0ebac1c3-d0f0-4054-9af2-0abc0e6e33ac",
+    "name": "Semeltinden",
+    "height": 2236,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 439,
+    "nearest_higher_peak": "Nestsøre Hellstugutinden"
+  },
+  {
+    "id": "535a9561-5018-49b6-9159-8075dc4292cf",
+    "name": "Store Hellstugutinden N1",
+    "height": 2236,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 12,
+    "nearest_higher_peak": "Store Hellstugutinden"
+  },
+  {
+    "id": "a4dcf344-30c5-4245-937b-ea5190cd6f69",
+    "name": "Visbreatinden",
+    "height": 2235,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 575,
+    "nearest_higher_peak": "Semeltinden"
+  },
+  {
+    "id": "953f4e55-ef04-4aed-8fa5-2373c8cd5209",
+    "name": "Memurutinden V4",
+    "height": 2230,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 78,
+    "nearest_higher_peak": "Memurutinden V3"
+  },
+  {
+    "id": "8e6a3139-4a45-4a1b-be59-7a81e110a254",
+    "name": "Søraustre Styggehøbreatinden",
+    "height": 2229,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 93,
+    "nearest_higher_peak": "Søre Veotinden"
+  },
+  {
+    "id": "98d86dc3-c276-422a-96aa-db1a15a12df1",
+    "name": "Storgrovtinden",
+    "height": 2229,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 30,
+    "nearest_higher_peak": "Bakarste Storgrovhøe"
+  },
+  {
+    "id": "79c625c3-e2ba-4e51-8df3-c0779fe61692",
+    "name": "Høgdebrotet",
+    "height": 2225,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 84,
+    "nearest_higher_peak": "Steinflytinden"
+  },
+  {
+    "id": "ad459191-792f-4d9a-a486-e4351eab581e",
+    "name": "Kjelhøe",
+    "height": 2223,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 25,
+    "nearest_higher_peak": "Galdhøe"
+  },
+  {
+    "id": "80ba74fe-5e9e-4720-acd6-f6c992ecab98",
+    "name": "Storebjørn",
+    "height": 2222,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 809,
+    "nearest_higher_peak": "Bukkehøe"
+  },
+  {
+    "id": "f711f802-c62b-4586-93c6-ad3b2857609c",
+    "name": "Surtningssuoksle",
+    "height": 2222,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Surtningssue"
+  },
+  {
+    "id": "cca00198-78df-4eee-b968-1b4aef2d0d46",
+    "name": "Skagastølsnebbet",
+    "height": 2222,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 32,
+    "nearest_higher_peak": "Midtre Skagastølstinden"
+  },
+  {
+    "id": "849025a2-ed3f-4ce5-a5eb-b6021e569d51",
+    "name": "Vestre Skardstinden",
+    "height": 2221,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Skardstinden"
+  },
+  {
+    "id": "681a57de-259f-4bd5-b840-fd00d9c401e3",
+    "name": "Tjønnholstinden NV1",
+    "height": 2221,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Tjønnholstinden"
+  },
+  {
+    "id": "1e2526b8-56f4-465a-bbd9-9147479f2e0a",
+    "name": "Sørvestre Styggehøbreatinden",
+    "height": 2220,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 30,
+    "nearest_higher_peak": "Søraustre Styggehøbreatinden"
+  },
+  {
+    "id": "423941e5-8e3a-4401-88d3-22867f5c8d9b",
+    "name": "Nørdre Hellstugutinden",
+    "height": 2218,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 86,
+    "nearest_higher_peak": "Midtre Hellstugutinden"
+  },
+  {
+    "id": "5a6d2d18-4f66-43e0-8e9c-3ebb330df787",
+    "name": "Skarvflyløyfttinden SØ1",
+    "height": 2218,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Skarvflyløyfttinden"
+  },
+  {
+    "id": "4d85033c-5852-44a3-89c7-7cb9b2dfbc83",
+    "name": "Store Hellstugutinden N2",
+    "height": 2215,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 17,
+    "nearest_higher_peak": "Store Hellstugutinden N1"
+  },
+  {
+    "id": "06461d69-93ce-4413-b040-b1a699ea0c17",
+    "name": "Trollsteineggje S2",
+    "height": 2215,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 13,
+    "nearest_higher_peak": "Trollsteineggje S1"
+  },
+  {
+    "id": "0b8c531a-c09d-42a1-b18f-d9bd45b638dc",
+    "name": "Styggehøe",
+    "height": 2214,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 234,
+    "nearest_higher_peak": "Midtre Tverråtinden"
+  },
+  {
+    "id": "0106da8e-99b9-4ac6-89d4-2abdb8573ac3",
+    "name": "Sørøstre Humpekul",
+    "height": 2212,
+    "county": "Svalbard og Jan Mayen",
+    "municipality": "Jan Mayen",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Fortoppen"
+  },
+  {
+    "id": "a61d3beb-0813-4864-a23e-d3a838671511",
+    "name": "Store Bukkeholstinden",
+    "height": 2212,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 159,
+    "nearest_higher_peak": "Styggehøe"
+  },
+  {
+    "id": "92008ae2-558c-491d-982e-b176e46b603c",
+    "name": "Søre Skarvflytinden",
+    "height": 2210,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 60,
+    "nearest_higher_peak": "Skarvflyløyfttinden"
+  },
+  {
+    "id": "9faf6689-8d30-440d-99b8-96db095b2335",
+    "name": "Nordvestre Humpekul",
+    "height": 2210,
+    "county": "Svalbard og Jan Mayen",
+    "municipality": "Jan Mayen",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Sørøstre Humpekul"
+  },
+  {
+    "id": "dde291a1-fcf0-4570-a5d9-53da3d8bea55",
+    "name": "Nørdre Tverråtinden",
+    "height": 2210,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 24,
+    "nearest_higher_peak": "Store Tverråtinden"
+  },
+  {
+    "id": "c98e5c09-b5a3-4add-9dfe-16c0aa42b746",
+    "name": "Store Smørstabbtinden",
+    "height": 2208,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 198,
+    "nearest_higher_peak": "Storebjørn"
+  },
+  {
+    "id": "dc2be6bf-3815-4fc1-873e-145b9a837931",
+    "name": "Tjønnholstinden NV2",
+    "height": 2208,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Tjønnholstinden NV1"
+  },
+  {
+    "id": "efd2bf0b-2b09-4a7f-b8e1-7a48a5c20bfa",
+    "name": "Vestre Kalvehøgde",
+    "height": 2208,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 524,
+    "nearest_higher_peak": "Vestre Leirungstinden"
+  },
+  {
+    "id": "ca29d36a-7bd6-4a7e-9f1c-3dd0a12ed724",
+    "name": "Ymelstinden S2",
+    "height": 2207,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 19,
+    "nearest_higher_peak": "Ymelstinden"
+  },
+  {
+    "id": "caf95483-b813-4da6-82af-9b57cfb655c8",
+    "name": "Storstygge-Svånåtinden",
+    "height": 2206,
+    "county": "Innlandet",
+    "municipality": "Lesja",
+    "primary_factor": 536,
+    "nearest_higher_peak": "Snøhetta Vesttoppen"
+  },
+  {
+    "id": "4ccf7821-b395-4631-93ed-9fc328dff084",
+    "name": "Wordietoppen",
+    "height": 2205,
+    "county": "Svalbard og Jan Mayen",
+    "municipality": "Jan Mayen",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Sørøstre Humpekul"
+  },
+  {
+    "id": "c17d85f0-22d9-4c18-80dd-9eb147c77581",
+    "name": "Vesle Knutsholstinden",
+    "height": 2205,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 75,
+    "nearest_higher_peak": "Vestre Leirungstinden"
+  },
+  {
+    "id": "7772416f-e585-4ef3-b2da-b4d1e277cd6e",
+    "name": "Langedalstinden",
+    "height": 2205,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 104,
+    "nearest_higher_peak": "Mesmogtinden"
+  },
+  {
+    "id": "11c44597-7ae3-44a1-9c2e-a8b316f601a8",
+    "name": "Ymelstinden S1",
+    "height": 2205,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Ymelstinden S2"
+  },
+  {
+    "id": "6a6a46b7-59f9-4605-b74d-e3bdf458e006",
+    "name": "Store Austanbotntinden",
+    "height": 2202,
+    "county": "Vestland",
+    "municipality": "Årdal, Luster",
+    "primary_factor": 480,
+    "nearest_higher_peak": "Store Skagastølstinden"
+  },
+  {
+    "id": "e1a9e706-f74c-401c-9cc3-47d4255564ff",
+    "name": "Store Trollsteinhøe",
+    "height": 2201,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 347,
+    "nearest_higher_peak": "Trollsteineggje"
+  },
+  {
+    "id": "22ca314b-c1ba-4e88-95ac-789f49cfa24e",
+    "name": "Styggehøe Øst",
+    "height": 2200,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 16,
+    "nearest_higher_peak": "Styggehøe"
+  },
+  {
+    "id": "e37813f5-725c-4aff-b191-445ba15f0450",
+    "name": "Søre Blåbreahøe",
+    "height": 2196,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 63,
+    "nearest_higher_peak": "Surtningssue"
+  },
+  {
+    "id": "1a63adda-bad1-4148-ab73-416b78e22168",
+    "name": "Nestsøre Surtningssue",
+    "height": 2195,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Surtningssue Sørtoppen"
+  },
+  {
+    "id": "874f5d71-2a04-4c4d-b1ef-2b9bb7596696",
+    "name": "Austre Nautgardstinden",
+    "height": 2194,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 51,
+    "nearest_higher_peak": "Nautgardstinden"
+  },
+  {
+    "id": "f80d6bfc-0af0-4a43-8616-57709f8647de",
+    "name": "Kvitskardtinden",
+    "height": 2193,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 305,
+    "nearest_higher_peak": "Mesmogtinden"
+  },
+  {
+    "id": "1ecf7136-e357-4f6f-8fcf-0c779068e005",
+    "name": "Slettmarkhøe",
+    "height": 2191,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 453,
+    "nearest_higher_peak": "Langedalstinden"
+  },
+  {
+    "id": "54470f81-01c3-45a5-a7ed-99021e2a2061",
+    "name": "Søraustre Skardstinden",
+    "height": 2190,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 13,
+    "nearest_higher_peak": "Nåle"
+  },
+  {
+    "id": "e96f77de-8f43-40e8-96bb-a26809e63088",
+    "name": "Dronningje",
+    "height": 2189,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Trollsteineggje"
+  },
+  {
+    "id": "3edd3062-48de-406f-884f-03ac8359c2ff",
+    "name": "Sokse",
+    "height": 2188,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 166,
+    "nearest_higher_peak": "Store Smørstabbtinden"
+  },
+  {
+    "id": "46b6a5fd-388c-43f3-834d-7a9950dc05be",
+    "name": "Mercantontoppen",
+    "height": 2188,
+    "county": "Svalbard og Jan Mayen",
+    "municipality": "Jan Mayen",
+    "primary_factor": 40,
+    "nearest_higher_peak": "Wordietoppen"
+  },
+  {
+    "id": "5f579b5f-5cbc-4d5a-9598-7181f185720e",
+    "name": "Søre Hellstugutinden",
+    "height": 2188,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 146,
+    "nearest_higher_peak": "Nestsøre Hellstugutinden"
+  },
+  {
+    "id": "dd1ef1b9-a46d-4e95-a8cf-0b364cdd33a6",
+    "name": "Hakluyttoppen",
+    "height": 2185,
+    "county": "Svalbard og Jan Mayen",
+    "municipality": "Jan Mayen",
+    "primary_factor": 120,
+    "nearest_higher_peak": "Mercantontoppen"
+  },
+  {
+    "id": "f880de6c-99d5-4230-807b-9766af62724f",
+    "name": "Veobreahesten",
+    "height": 2185,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 40,
+    "nearest_higher_peak": "Leirhøe"
+  },
+  {
+    "id": "ebc936a7-e8be-4e4f-8bdd-a75cbbfed621",
+    "name": "Nestnørdre Knutsholstinden",
+    "height": 2184,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 82,
+    "nearest_higher_peak": "Store Knutsholstinden"
+  },
+  {
+    "id": "8340bd78-f5c6-4aba-9237-1388049e3597",
+    "name": "Veobreatinden",
+    "height": 2182,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 106,
+    "nearest_higher_peak": "Nord for Store Memurutinden Vesttoppen"
+  },
+  {
+    "id": "c1593745-bf4c-43d3-b5a0-1d52c54a17dc",
+    "name": "Sokse Nordklo",
+    "height": 2182,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 11,
+    "nearest_higher_peak": "Sokse"
+  },
+  {
+    "id": "8ec9e145-d2bc-4c1b-854c-4030ada91e22",
+    "name": "Dumhøe",
+    "height": 2181,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Vestre Skardstinden"
+  },
+  {
+    "id": "f570e617-f3b4-4091-9814-f9489d09678f",
+    "name": "Svellnosbreahesten",
+    "height": 2181,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 35,
+    "nearest_higher_peak": "Store Tverråtinden"
+  },
+  {
+    "id": "dc9ed12a-ea8e-4f8e-9248-d8e2862c6d13",
+    "name": "Tjønnholstinden NØ",
+    "height": 2180,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Steinflytinden"
+  },
+  {
+    "id": "8fdbd6bc-43f3-4ed3-935c-0cf56e6b22ec",
+    "name": "Midtre Hellstugutinden N1",
+    "height": 2178,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 27,
+    "nearest_higher_peak": "Nørdre Hellstugutinden"
+  },
+  {
+    "id": "adef9a7a-f60e-47ba-9d83-d7b2663a78c1",
+    "name": "Rondslottet",
+    "height": 2178,
+    "county": "Innlandet",
+    "municipality": "Folldal",
+    "primary_factor": 1233,
+    "nearest_higher_peak": "Storstygge-Svånåtinden"
+  },
+  {
+    "id": "bca16852-852d-4b11-9080-168cd74bd265",
+    "name": "Semeltinden Sørtoppen",
+    "height": 2178,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Semeltinden"
+  },
+  {
+    "id": "ff272f0c-9c9e-450e-be51-76813cc33906",
+    "name": "Austre Kalvehøgde",
+    "height": 2178,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 92,
+    "nearest_higher_peak": "Vestre Kalvehøgde"
+  },
+  {
+    "id": "7d02831a-484e-4685-9c40-5c73a8ae7814",
+    "name": "Austanbotntinden V0",
+    "height": 2175,
+    "county": "Vestland",
+    "municipality": "Årdal",
+    "primary_factor": 11,
+    "nearest_higher_peak": "Store Austanbotntinden"
+  },
+  {
+    "id": "7b155478-61c5-47aa-9215-ae0353193988",
+    "name": "Søre Heimre Illåbreatinden",
+    "height": 2175,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 25,
+    "nearest_higher_peak": "Skardstinden"
+  },
+  {
+    "id": "d96e6c5a-98c4-432f-990b-8ff1e84469aa",
+    "name": "Søre Dumhøe",
+    "height": 2174,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Dumhøe"
+  },
+  {
+    "id": "2c51c24c-9f9a-43c3-8485-fd324782e9b0",
+    "name": "Stornubben",
+    "height": 2173,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 172,
+    "nearest_higher_peak": "Austre Nautgardstinden"
+  },
+  {
+    "id": "3569752b-8cb3-40d3-bf0b-540ae8dbe7ca",
+    "name": "Store Hestbreapiggen",
+    "height": 2172,
+    "county": "Innlandet",
+    "municipality": "Skjåk",
+    "primary_factor": 873,
+    "nearest_higher_peak": "Fremste Storgrovhøe"
+  },
+  {
+    "id": "0c2f15a7-bdf8-4cde-87ca-b27cf6f8e050",
+    "name": "Midtre Knutsholstinden",
+    "height": 2170,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 40,
+    "nearest_higher_peak": "Nestnørdre Knutsholstinden"
+  },
+  {
+    "id": "7cb2b44a-6b88-44cb-90c1-6f1dda6849e0",
+    "name": "Loftet",
+    "height": 2170,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 341,
+    "nearest_higher_peak": "Store Smørstabbtinden"
+  },
+  {
+    "id": "88ce7865-d079-4015-a5f4-87e6639bc63b",
+    "name": "Trollstein-Rundhøe",
+    "height": 2170,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 139,
+    "nearest_higher_peak": "Dronningje"
+  },
+  {
+    "id": "f743280d-1508-4d17-993d-fc9f306021ce",
+    "name": "Mercantontoppens fortopp",
+    "height": 2170,
+    "county": "Svalbard og Jan Mayen",
+    "municipality": "Jan Mayen",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Mercantontoppen"
+  },
+  {
+    "id": "d9c6f2fc-aa63-446c-a282-c8b1cc5f1a7f",
+    "name": "Nørdre Heimre Illåbreatinden",
+    "height": 2170,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 25,
+    "nearest_higher_peak": "Storgrovtinden"
+  },
+  {
+    "id": "1d5a979f-6f92-43eb-b019-1b990c8526cb",
+    "name": "Store Svartdalspiggen",
+    "height": 2169,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 173,
+    "nearest_higher_peak": "Mesmogtinden"
+  },
+  {
+    "id": "c35e82a2-6373-4d3e-a50f-a01f0243820f",
+    "name": "Nørdre Styggehøbreatinden",
+    "height": 2168,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 60,
+    "nearest_higher_peak": "Store Veotinden"
+  },
+  {
+    "id": "fc2912a2-358e-4d90-988e-770c8e5e058c",
+    "name": "Hakluyt-Sørtoppen",
+    "height": 2168,
+    "county": "Svalbard og Jan Mayen",
+    "municipality": "Jan Mayen",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Hakluyttoppen"
+  },
+  {
+    "id": "39de7606-d017-4bbd-90ca-6fbe9e18aae9",
+    "name": "Nørdre Skagastølstinden",
+    "height": 2167,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 62,
+    "nearest_higher_peak": "Skagastølsnebbet"
+  },
+  {
+    "id": "08c83b09-a778-4698-9a22-6c3fe932a92a",
+    "name": "Bukkeholstinden V1",
+    "height": 2166,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Store Bukkeholstinden"
+  },
+  {
+    "id": "9359951b-1848-4202-ba13-24cc39794d15",
+    "name": "Bukkeholstinden V2",
+    "height": 2166,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 60,
+    "nearest_higher_peak": "Bukkehøe"
+  },
+  {
+    "id": "dc9eb0e3-c97c-477c-9802-27bc4264271c",
+    "name": "Bukkeholstinden V4",
+    "height": 2166,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 34,
+    "nearest_higher_peak": "Bukkehøe"
+  },
+  {
+    "id": "9c2ade2a-43e2-44f0-b942-94d244eabc55",
+    "name": "Nørdre Blåbreahøe",
+    "height": 2165,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 58,
+    "nearest_higher_peak": "Sørvestre Styggehøbreatinden"
+  },
+  {
+    "id": "16dca787-28f1-42fb-88a4-e6aaa723366c",
+    "name": "Søre Trollsteinhøe",
+    "height": 2161,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 30,
+    "nearest_higher_peak": "Store Nørdre Trollsteinhøe"
+  },
+  {
+    "id": "e9abbf43-a768-4341-a5c6-b37b86a43b66",
+    "name": "Bukkeholstinden V3",
+    "height": 2161,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 25,
+    "nearest_higher_peak": "Bukkeholstinden V2"
+  },
+  {
+    "id": "80b2c9b8-48ac-4660-ab4d-0af2d0f39071",
+    "name": "Store Rauddalseggje",
+    "height": 2161,
+    "county": "Innlandet",
+    "municipality": "Lom, Luster",
+    "primary_factor": 657,
+    "nearest_higher_peak": "Semeltinden Sørtoppen"
+  },
+  {
+    "id": "160ab862-2358-4c08-8b54-aebaffebec72",
+    "name": "Nørdre Maradalstinden",
+    "height": 2160,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 30,
+    "nearest_higher_peak": "Sentraltinden"
+  },
+  {
+    "id": "a8c68bf3-30d5-43bb-8bb2-aa177818594f",
+    "name": "Store Tverrbottinden",
+    "height": 2160,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 283,
+    "nearest_higher_peak": "Bukkeholstinden V2"
+  },
+  {
+    "id": "61d33fe7-feae-4da2-b740-7eb0f2cb840a",
+    "name": "Midtre Hestbreapiggen",
+    "height": 2158,
+    "county": "Innlandet",
+    "municipality": "Skjåk",
+    "primary_factor": 100,
+    "nearest_higher_peak": "Store Hestbreapiggen"
+  },
+  {
+    "id": "9b07b5f7-fb9c-4b4d-8d71-4ce111343f5f",
+    "name": "Mugna",
+    "height": 2158,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 26,
+    "nearest_higher_peak": "Austre Kalvehøgde"
+  },
+  {
+    "id": "39c04eca-b9f3-4246-b8e7-0ee9623927cb",
+    "name": "Store Rauddalstinden",
+    "height": 2157,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 594,
+    "nearest_higher_peak": "Storebjørn"
+  },
+  {
+    "id": "9923bd73-9d75-4f53-944d-703992ab8ffa",
+    "name": "Uranostinden",
+    "height": 2157,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 707,
+    "nearest_higher_peak": "Store Rauddalseggje"
+  },
+  {
+    "id": "d40b0027-b252-4bfe-b2c9-6ff04888fc27",
+    "name": "Veslfjelltinden",
+    "height": 2157,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 188,
+    "nearest_higher_peak": "Loftet"
+  },
+  {
+    "id": "c2a3a4b1-a0dc-498f-aa04-4760883304ae",
+    "name": "Slettmarkpiggen",
+    "height": 2155,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 132,
+    "nearest_higher_peak": "Slettmarkhøe"
+  },
+  {
+    "id": "1ea71bc9-4de4-46d8-84a4-606cf4c53046",
+    "name": "Midtre Bukkeholstinden Øst",
+    "height": 2154,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 41,
+    "nearest_higher_peak": "Store Bukkeholstinden"
+  },
+  {
+    "id": "3a3b6267-3414-42a4-8e4b-1a979d7f6a0c",
+    "name": "Midtre Skarvflytinden",
+    "height": 2154,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 60,
+    "nearest_higher_peak": "Søre Skarvflytinden"
+  },
+  {
+    "id": "3c5e51b4-de50-474e-aee5-d668c90b55cc",
+    "name": "Sør for Nørdre Blåbreahøe",
+    "height": 2154,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Nørdre Blåbreahøe"
+  },
+  {
+    "id": "dce0b577-f15b-49a1-ad26-f249347ee25d",
+    "name": "Midtre Hellstugutinden N2",
+    "height": 2154,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 17,
+    "nearest_higher_peak": "Nørdre Hellstugutinden"
+  },
+  {
+    "id": "a6ea79a6-13dc-45a8-966c-51b259a2c221",
+    "name": "Bjørnelabben",
+    "height": 2153,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 12,
+    "nearest_higher_peak": "Storebjørn"
+  },
+  {
+    "id": "e6ace046-9620-4930-92e0-ca6e93d40350",
+    "name": "Skarddalseggje",
+    "height": 2152,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 464,
+    "nearest_higher_peak": "Store Rauddalseggje"
+  },
+  {
+    "id": "8d525d56-e5db-47f9-8b73-643765499665",
+    "name": "Memurutinden Ø2",
+    "height": 2151,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Austre Memurutinden"
+  },
+  {
+    "id": "5e8dc2ee-e604-415a-9fa1-56b437be53a2",
+    "name": "Vestraste Kalvehøgde",
+    "height": 2150,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 18,
+    "nearest_higher_peak": "Vestre Kalvehøgde"
+  },
+  {
+    "id": "76f09a67-94a7-4d67-83e8-e00e176acf45",
+    "name": "Midtre Tverrbottinden Nord",
+    "height": 2150,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 87,
+    "nearest_higher_peak": "Store Tverrbottinden"
+  },
+  {
+    "id": "853047dd-e2b2-42f3-9138-2ad7ec01fc70",
+    "name": "Veslebjørn",
+    "height": 2150,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 94,
+    "nearest_higher_peak": "Bjørnelabben"
+  },
+  {
+    "id": "fe097341-2ce7-473d-b3c6-70ac0fc72d9e",
+    "name": "Nørdre Bukkeholstinden",
+    "height": 2149,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 94,
+    "nearest_higher_peak": "Bukkeholstinden V1"
+  },
+  {
+    "id": "394c3f21-1428-474b-b99d-09030f0e024b",
+    "name": "Store Dyrhaugstinden",
+    "height": 2148,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 425,
+    "nearest_higher_peak": "Store Skagastølstinden"
+  },
+  {
+    "id": "d6e70cec-ee7c-43a8-ba47-7930a8dc82f0",
+    "name": "S1 for Nørdre Maradalstinden",
+    "height": 2148,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Nørdre Maradalstinden"
+  },
+  {
+    "id": "45e4fee8-e8aa-4d58-8d85-7f6bc5d64b6a",
+    "name": "Veobreahesten Østtoppen",
+    "height": 2148,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Veobreahesten"
+  },
+  {
+    "id": "620ce0fd-6552-4c0b-8fef-a045ecdb23da",
+    "name": "Semelholstinden",
+    "height": 2147,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 160,
+    "nearest_higher_peak": "Visbreatinden"
+  },
+  {
+    "id": "3048090f-6932-4715-8399-4c7a0f5087c6",
+    "name": "Tjønnholsoksle",
+    "height": 2145,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 137,
+    "nearest_higher_peak": "Skarvflyløyfttinden SØ1"
+  },
+  {
+    "id": "e580403b-d1d9-4527-897f-ee561aa001dc",
+    "name": "Søre Knutsholstinden",
+    "height": 2145,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Vesle Knutsholstinden"
+  },
+  {
+    "id": "19d4a613-fe13-4436-926e-98c86b34d20b",
+    "name": "Vest for Midtre Hestbreapiggen",
+    "height": 2143,
+    "county": "Innlandet",
+    "municipality": "Skjåk",
+    "primary_factor": 48,
+    "nearest_higher_peak": "Midtre Hestbreapiggen"
+  },
+  {
+    "id": "3918301b-d71b-4a73-a2d6-50c73bd8fc41",
+    "name": "Ryggjehøe",
+    "height": 2142,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 308,
+    "nearest_higher_peak": "Glittertinden"
+  },
+  {
+    "id": "d8c21679-3259-463e-be1c-fd22d5ee4e6d",
+    "name": "Snøholstinden",
+    "height": 2141,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 682,
+    "nearest_higher_peak": "Store Rauddalseggje"
+  },
+  {
+    "id": "59720709-66e7-4135-9bdb-e4769278ee0a",
+    "name": "Sørvest for Mugna",
+    "height": 2140,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 11,
+    "nearest_higher_peak": "Mugna"
+  },
+  {
+    "id": "721c3223-f8ce-4d1a-99fe-31e617ea79ee",
+    "name": "Memurutinden V5",
+    "height": 2140,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 76,
+    "nearest_higher_peak": "Memurutinden V4"
+  },
+  {
+    "id": "a13a8d94-7a10-45b7-8496-207419f11939",
+    "name": "Nord for Nørdre Blåebreahøe",
+    "height": 2140,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Sørvestre Styggehøbreatinden"
+  },
+  {
+    "id": "c33f5fa3-ded8-4ad8-91ba-3b0bcf7a3d4d",
+    "name": "Arnes Pinakkel",
+    "height": 2140,
+    "county": "Svalbard og Jan Mayen",
+    "municipality": "Jan Mayen",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Hakluyttoppen"
+  },
+  {
+    "id": "3694bdbc-96ae-40d0-9ea7-d680ef1519a0",
+    "name": "Nørdre Hellstugubreahesten",
+    "height": 2139,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 40,
+    "nearest_higher_peak": "Midtre Hellstugutinden"
+  },
+  {
+    "id": "d9defd9c-70d3-42ff-9978-4aa315851273",
+    "name": "Storronden",
+    "height": 2139,
+    "county": "Innlandet",
+    "municipality": "Sel",
+    "primary_factor": 384,
+    "nearest_higher_peak": "Rondslottet"
+  },
+  {
+    "id": "43e8eb95-9ab5-49ff-b802-dbc8e3ffb260",
+    "name": "Vestre Hestbreapiggen",
+    "height": 2138,
+    "county": "Innlandet",
+    "municipality": "Skjåk, Lom",
+    "primary_factor": 158,
+    "nearest_higher_peak": "Vest for Midtre Hestbreapiggen"
+  },
+  {
+    "id": "b82e1748-37b8-43ee-ac16-eae582414951",
+    "name": "Midtre Dyrhaugstinden Nord",
+    "height": 2138,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 22,
+    "nearest_higher_peak": "Store Dyrhaugstinden"
+  },
+  {
+    "id": "84504dd8-f55f-4fec-8aef-49642eba60ca",
+    "name": "Midtre Bukkeholstinden Vest",
+    "height": 2135,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 33,
+    "nearest_higher_peak": "Midtre Bukkeholstinden Øst"
+  },
+  {
+    "id": "2d49748f-a4d7-4ac6-a2e0-b492b34e6932",
+    "name": "Midtre Dyrhaugstinden Sør",
+    "height": 2134,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Midtre Dyrhaugstinden Nord"
+  },
+  {
+    "id": "e4069803-da4a-4351-9f2c-f7e83444fc70",
+    "name": "Semelholstinden Vesttoppen",
+    "height": 2133,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Semelholstinden"
+  },
+  {
+    "id": "33f0f1a5-7beb-4a40-aac8-b874cde657d0",
+    "name": "Austre Hestbreapiggen",
+    "height": 2132,
+    "county": "Innlandet",
+    "municipality": "Skjåk",
+    "primary_factor": 60,
+    "nearest_higher_peak": "Midtre Hestbreapiggen"
+  },
+  {
+    "id": "0c5cc053-572e-4f8a-a6a1-a4dc7f994a69",
+    "name": "Nørdre Svartdalspiggen",
+    "height": 2132,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 48,
+    "nearest_higher_peak": "Store Svartdalspiggen"
+  },
+  {
+    "id": "a1dee430-5abd-48bd-823e-9668babca449",
+    "name": "Kniven",
+    "height": 2132,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 94,
+    "nearest_higher_peak": "Store Smørstabbtinden"
+  },
+  {
+    "id": "66f6cb82-457b-4e9d-9021-8a11de6fb187",
+    "name": "Nord for Midtre Hestbreapiggen",
+    "height": 2131,
+    "county": "Innlandet",
+    "municipality": "Skjåk",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Midtre Hestbreapiggen"
+  },
+  {
+    "id": "04b91f8d-4f88-4d69-a424-ae0e23732773",
+    "name": "Midtre Skarvflytinden Søre",
+    "height": 2130,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Midtre Skarvflytinden"
+  },
+  {
+    "id": "4c76b09c-6a08-4bb1-8850-3c9c2dd43a53",
+    "name": "Midtre Leirungstinden",
+    "height": 2130,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Vestre Leirungstinden"
+  },
+  {
+    "id": "e1483262-7440-4e0b-8217-ee13e0bb1d50",
+    "name": "Sør for Sentraltinden",
+    "height": 2130,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Nørdre Maradalstinden"
+  },
+  {
+    "id": "df9cb171-9d6d-4f71-9261-c10b45df3bb4",
+    "name": "Søre Surtningssue",
+    "height": 2130,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 25,
+    "nearest_higher_peak": "Nestsøre Surtningssue"
+  },
+  {
+    "id": "ac5da513-5048-4099-948c-0ee124bebd0c",
+    "name": "Sørøst for Sørtoppen på Semeltinden",
+    "height": 2130,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Semeltinden Sørtoppen"
+  },
+  {
+    "id": "20b45ced-205e-4e89-9d10-074672d06a15",
+    "name": "Nørdre Knutsholstinden",
+    "height": 2129,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 24,
+    "nearest_higher_peak": "Nestnørdre Knutsholstinden"
+  },
+  {
+    "id": "cdf0a1a4-9b88-4e36-8192-0c41e2612cc1",
+    "name": "Mjølkedalstinden",
+    "height": 2129,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 545,
+    "nearest_higher_peak": "Store Rauddalseggje"
+  },
+  {
+    "id": "c264b429-38de-4f57-af28-1ae85365fe05",
+    "name": "Store Ringstinden",
+    "height": 2124,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 271,
+    "nearest_higher_peak": "Store Austanbotntinden"
+  },
+  {
+    "id": "d4996c43-fdd7-4709-9418-1f6cfa5f908a",
+    "name": "Midtre Kalvehøgde",
+    "height": 2122,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 25,
+    "nearest_higher_peak": "Austre Kalvehøgde"
+  },
+  {
+    "id": "36e5f00f-de9e-4a2c-b935-93952d63c9d1",
+    "name": "Slettmarkpiggen Fortoppen",
+    "height": 2120,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Slettmarkpiggen"
+  },
+  {
+    "id": "ae636ae9-18a1-48c5-88fd-97ee6a307429",
+    "name": "Lindbergtinden",
+    "height": 2120,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 52,
+    "nearest_higher_peak": "Bukkehøe"
+  },
+  {
+    "id": "c55d0a80-bde9-4226-99cc-4ca1d008efe1",
+    "name": "Nørdre Veotinden",
+    "height": 2120,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 47,
+    "nearest_higher_peak": "Store Veotinden"
+  },
+  {
+    "id": "466b9f0a-099f-4131-a04f-e5291b15fd31",
+    "name": "Skeie",
+    "height": 2118,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 55,
+    "nearest_higher_peak": "Veslebjørn"
+  },
+  {
+    "id": "9d4af4f4-c05e-46eb-a1fe-9ff971d675d3",
+    "name": "Øystre Torfinnstinden",
+    "height": 2116,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 195,
+    "nearest_higher_peak": "Kvitskardtinden"
+  },
+  {
+    "id": "f6c88e7d-af6c-4299-ad99-94322bfbbbb0",
+    "name": "Store Urdadalstinden",
+    "height": 2116,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 263,
+    "nearest_higher_peak": "Semelholstinden"
+  },
+  {
+    "id": "1432ec5d-e091-47d3-a51a-0b38fcc8176d",
+    "name": "Høgronden",
+    "height": 2115,
+    "county": "Innlandet",
+    "municipality": "Folldal",
+    "primary_factor": 696,
+    "nearest_higher_peak": "Rondslottet"
+  },
+  {
+    "id": "4d81540f-75d6-42e0-8f22-b2862ec19446",
+    "name": "Nestnørdre Veotinden",
+    "height": 2115,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 22,
+    "nearest_higher_peak": "Nørdre Veotinden"
+  },
+  {
+    "id": "79a8d324-6872-4f79-9eec-d70da5caf80c",
+    "name": "Vest for Midtre Kalvehøgde",
+    "height": 2114,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 14,
+    "nearest_higher_peak": "Midtre Kalvehøgde"
+  },
+  {
+    "id": "2048290d-b74b-4fe3-959f-ebb9a47e3e0c",
+    "name": "Vestre Skeie",
+    "height": 2113,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 11,
+    "nearest_higher_peak": "Skeie"
+  },
+  {
+    "id": "d62a30a0-794a-48cb-9767-8c7c66eec509",
+    "name": "Hinnåtefjellet",
+    "height": 2113,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 207,
+    "nearest_higher_peak": "Søre Hellstugutinden"
+  },
+  {
+    "id": "dbd47825-75e6-4fd6-a369-4996a523405d",
+    "name": "Gravdalstinden",
+    "height": 2113,
+    "county": "Innlandet",
+    "municipality": "Lom, Luster",
+    "primary_factor": 255,
+    "nearest_higher_peak": "Storebjørn"
+  },
+  {
+    "id": "8cf3eec8-2c42-4e96-b14a-00f544e28613",
+    "name": "Tverrbottinden V1",
+    "height": 2112,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 127,
+    "nearest_higher_peak": "Store Tverrbottinden"
+  },
+  {
+    "id": "0942702f-d7f5-48dc-a27c-c5b3a849c4d2",
+    "name": "Vest for Tverrbottinden V1",
+    "height": 2111,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 16,
+    "nearest_higher_peak": "Tverrbottinden V1"
+  },
+  {
+    "id": "992be46b-089c-4101-9240-2cf5f0316f1a",
+    "name": "Søre Hellstugubreahesten",
+    "height": 2111,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 26,
+    "nearest_higher_peak": "Nørdre Hellstugubreahesten"
+  },
+  {
+    "id": "005754b6-5a42-48b7-91ce-b7215ee25ea7",
+    "name": "Vest for Austre Hestbreapiggen",
+    "height": 2111,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 11,
+    "nearest_higher_peak": "Austre Hestbreapiggen"
+  },
+  {
+    "id": "5e1e48c2-3c42-45fb-b489-273834151e26",
+    "name": "Veslebjørn Nord",
+    "height": 2110,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Veslebjørn"
+  },
+  {
+    "id": "c155b8e1-db78-42db-82ab-c7d8223b5ef9",
+    "name": "Leirhøe Sør",
+    "height": 2110,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 13,
+    "nearest_higher_peak": "Leirhøe"
+  },
+  {
+    "id": "d7170553-c8b6-4118-aa9f-d43a54eb0bc1",
+    "name": "Midtre Torfinnstinden",
+    "height": 2108,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 71,
+    "nearest_higher_peak": "Øystre Torfinnstinden"
+  },
+  {
+    "id": "15900544-4b5e-4ae6-ab73-1f867fcc30be",
+    "name": "Larstinden",
+    "height": 2107,
+    "county": "Innlandet",
+    "municipality": "Lesja",
+    "primary_factor": 265,
+    "nearest_higher_peak": "Snøhetta"
+  },
+  {
+    "id": "f8bde352-ce9f-49d0-b4c4-7a94d246a581",
+    "name": "Midtre Tverrbottinden Sør",
+    "height": 2106,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 50,
+    "nearest_higher_peak": "Midtre Tverrbottinden Nord"
+  },
+  {
+    "id": "9b40cf9f-02b9-4511-aa67-e2d8d249cef4",
+    "name": "Munken",
+    "height": 2105,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Mugna"
+  },
+  {
+    "id": "04c8a95d-77e8-4595-b76b-1281f51684c4",
+    "name": "Rasletinden",
+    "height": 2104,
+    "county": "Innlandet",
+    "municipality": "Vågå, Vang",
+    "primary_factor": 106,
+    "nearest_higher_peak": "Munken"
+  },
+  {
+    "id": "8ad2cfed-62d5-45b5-8989-1daf8af4a8b6",
+    "name": "Søre Austanbotntinden",
+    "height": 2103,
+    "county": "Vestland",
+    "municipality": "Årdal",
+    "primary_factor": 30,
+    "nearest_higher_peak": "Austanbotntinden V0"
+  },
+  {
+    "id": "83e2d8f5-95e9-456e-8b7b-c2656fe994cb",
+    "name": "Tverrbytthornet",
+    "height": 2102,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 264,
+    "nearest_higher_peak": "Midtre Tverrbottinden Sør"
+  },
+  {
+    "id": "16323676-3e42-43e6-af32-ce9f16f82d34",
+    "name": "Vestre Austanbotntinden",
+    "height": 2101,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 35,
+    "nearest_higher_peak": "Austanbotntinden V0"
+  },
+  {
+    "id": "4c1869bc-a19b-4689-9f4f-63ec6bf116c7",
+    "name": "Nørdre Bukkehøe",
+    "height": 2100,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Bukkehøe"
+  },
+  {
+    "id": "74437f89-4f40-42c1-87d2-83328a751c19",
+    "name": "Skarvflyløyfttinden SØ2",
+    "height": 2100,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Skarvflyløyfttinden SØ1"
+  },
+  {
+    "id": "2070dc34-a7bd-4558-9844-66ccb4bbb9c7",
+    "name": "Skarddalstinden",
+    "height": 2097,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 150,
+    "nearest_higher_peak": "Skarddalseggje"
+  },
+  {
+    "id": "75706668-c05c-4b41-a19e-f39124b25090",
+    "name": "Austre Trollsteinhøe",
+    "height": 2095,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 42,
+    "nearest_higher_peak": "Store Nørdre Trollsteinhøe"
+  },
+  {
+    "id": "575cbd6a-b794-40cd-9a2e-b22511834a79",
+    "name": "Bakarste Skagsnebb",
+    "height": 2094,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 143,
+    "nearest_higher_peak": "Veslfjelltinden"
+  },
+  {
+    "id": "0e7acf83-f7de-4e7c-b9a9-424c8b85a5dd",
+    "name": "Veslbreatinden",
+    "height": 2093,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 120,
+    "nearest_higher_peak": "Bakarste Skagsnebb"
+  },
+  {
+    "id": "34a5e347-7fbb-4cd1-bbc8-531dbcb84213",
+    "name": "Sokse Ø1",
+    "height": 2092,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 11,
+    "nearest_higher_peak": "Sokse"
+  },
+  {
+    "id": "f6f9f394-18e7-41e7-8a7d-de5780f60862",
+    "name": "Nordøst for Bukkeholstinden V3",
+    "height": 2092,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Bukkeholstinden V3"
+  },
+  {
+    "id": "5c8bb315-8574-49b3-8217-b08c8c9868ba",
+    "name": "S2 for Nørdre Maradalstinden",
+    "height": 2091,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 20,
+    "nearest_higher_peak": "S1 for Nørdre Maradalstinden"
+  },
+  {
+    "id": "3d990206-f1fc-4ee9-ac02-dc43947cfff7",
+    "name": "Hestdalshøgde",
+    "height": 2091,
+    "county": "Innlandet",
+    "municipality": "Skjåk",
+    "primary_factor": 655,
+    "nearest_higher_peak": "Store Hestbreapiggen"
+  },
+  {
+    "id": "90e2aa4b-d819-4e22-ae30-2f0fb7af0270",
+    "name": "Nautgardsoksle",
+    "height": 2091,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 65,
+    "nearest_higher_peak": "Nautgardstinden"
+  },
+  {
+    "id": "57aefda8-9bc9-46c7-9648-90b41711d7b8",
+    "name": "Nørdre Bukkeholstinden Ø1",
+    "height": 2090,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Nørdre Bukkeholstinden"
+  },
+  {
+    "id": "6784c532-541c-4367-b9b9-09aca3c73618",
+    "name": "Nord for Memurutinden V5",
+    "height": 2090,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Memurutinden V5"
+  },
+  {
+    "id": "6cd6a681-596b-4a04-9af8-0c1f043b232b",
+    "name": "Veslebjørn Vest",
+    "height": 2090,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Veslebjørn"
+  },
+  {
+    "id": "b4638523-8abb-4302-ae8c-6983ffefd528",
+    "name": "Slettmarkhøe S3",
+    "height": 2090,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Slettmarkhøe"
+  },
+  {
+    "id": "dd5d9296-ee66-4836-bdda-6203a4d6b114",
+    "name": "Glitter-Rundhøe",
+    "height": 2089,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 35,
+    "nearest_higher_peak": "Glittertinden"
+  },
+  {
+    "id": "4c26b010-33df-45b4-b034-c71af60b9117",
+    "name": "Tverrådalskyrkja",
+    "height": 2088,
+    "county": "Innlandet",
+    "municipality": "Luster",
+    "primary_factor": 624,
+    "nearest_higher_peak": "Vestre Hestbreapiggen"
+  },
+  {
+    "id": "66e6c8ad-6c79-4447-adfe-3eb1b49300b0",
+    "name": "Vest for Lindbergtinden",
+    "height": 2087,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Lindbergtinden"
+  },
+  {
+    "id": "839a0fa4-06dc-47f0-bd4f-e6cc56395b43",
+    "name": "Kalvehøgde Ø2",
+    "height": 2087,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 14,
+    "nearest_higher_peak": "Mugna"
+  },
+  {
+    "id": "557eae71-a564-46ef-aaed-acb03c338df7",
+    "name": "Nestnørdre Slettmarkhøe",
+    "height": 2086,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Slettmarkhøe"
+  },
+  {
+    "id": "7595769e-73d6-4e85-8cfc-e4b859338b4d",
+    "name": "Austre Rauddalstinden",
+    "height": 2086,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 410,
+    "nearest_higher_peak": "Skarddalstinden"
+  },
+  {
+    "id": "0aaacd94-f5ef-4703-bfdf-f8e1a9ff1be8",
+    "name": "Nørdre Bukkeholstinden Ø2",
+    "height": 2085,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 12,
+    "nearest_higher_peak": "Nørdre Bukkeholstinden Ø1"
+  },
+  {
+    "id": "4d08eaf1-6571-4cd5-84b3-20ea051c7976",
+    "name": "Store Langvasstinden",
+    "height": 2084,
+    "county": "Innlandet",
+    "municipality": "Lesja",
+    "primary_factor": 160,
+    "nearest_higher_peak": "Snøhetta Vesttoppen"
+  },
+  {
+    "id": "319975bc-dab3-4d09-a89b-c50839c048ff",
+    "name": "Store Soleibotntinden",
+    "height": 2082,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 165,
+    "nearest_higher_peak": "Store Ringstinden"
+  },
+  {
+    "id": "8a401a04-afa8-434f-bf00-9f62e4f522aa",
+    "name": "Lodalskåpa",
+    "height": 2082,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 799,
+    "nearest_higher_peak": "Tverrådalskyrkja"
+  },
+  {
+    "id": "e4fcad68-8b97-47e1-90de-342f65f9996f",
+    "name": "Vestre Torfinnstinden",
+    "height": 2081,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 34,
+    "nearest_higher_peak": "Midtre Torfinnstinden"
+  },
+  {
+    "id": "4cc4d8a0-12b1-463a-b055-02e0823cda96",
+    "name": "Hellstugupiggen",
+    "height": 2080,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 12,
+    "nearest_higher_peak": "Nørdre Hellstugutinden"
+  },
+  {
+    "id": "585246a3-780d-4f63-9f2a-a925228f909e",
+    "name": "S3 for Nørdre Maradalstinden",
+    "height": 2080,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 13,
+    "nearest_higher_peak": "S2 for Nørdre Maradalstinden"
+  },
+  {
+    "id": "9e28e845-5bc4-44ae-83ef-e19bb194aaaa",
+    "name": "Memurutinden V4.5",
+    "height": 2080,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 12,
+    "nearest_higher_peak": "Memurutinden V5"
+  },
+  {
+    "id": "d4b266cb-c160-462c-bf1c-e2c8f8dc682f",
+    "name": "Juvtinden",
+    "height": 2080,
+    "county": "Svalbard og Jan Mayen",
+    "municipality": "Jan Mayen",
+    "primary_factor": 40,
+    "nearest_higher_peak": "Arnes Pinakkel"
+  },
+  {
+    "id": "78b5affc-9251-4808-a79a-b8ef09e56ad8",
+    "name": "Sørvestre Urdadalstinden",
+    "height": 2080,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 48,
+    "nearest_higher_peak": "Semelholstinden"
+  },
+  {
+    "id": "d8a412c4-c2ba-4e4a-b7b7-b87e0ab4ff77",
+    "name": "Leirungskampen",
+    "height": 2079,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 70,
+    "nearest_higher_peak": "Vestraste Kalvehøgde"
+  },
+  {
+    "id": "03a251d9-8e58-49b8-b147-f1ba458c5f11",
+    "name": "Austre Surtningssue",
+    "height": 2078,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 28,
+    "nearest_higher_peak": "Surtningssuoksle"
+  },
+  {
+    "id": "70841b26-1f75-4bfb-9fe0-299d080193bf",
+    "name": "Bukkehøe N2",
+    "height": 2078,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 12,
+    "nearest_higher_peak": "Nørdre Bukkehøe"
+  },
+  {
+    "id": "4c137d51-7cd4-4159-b668-f939725964b6",
+    "name": "Sauen",
+    "height": 2077,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 32,
+    "nearest_higher_peak": "Kniven"
+  },
+  {
+    "id": "468b0170-6d84-4cca-8d47-152b6bda1385",
+    "name": "Skarvflytinden N1",
+    "height": 2077,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 14,
+    "nearest_higher_peak": "Midtre Skarvflytinden"
+  },
+  {
+    "id": "7846028a-b10a-4ad5-b518-98595ef9c8b6",
+    "name": "Vestraste Hestbreapiggen",
+    "height": 2077,
+    "county": "Innlandet",
+    "municipality": "Skjåk",
+    "primary_factor": 102,
+    "nearest_higher_peak": "Vestre Hestbreapiggen"
+  },
+  {
+    "id": "a6fd1b2d-a70a-4934-ab75-3512187fc81a",
+    "name": "Nørdre Larstinden",
+    "height": 2077,
+    "county": "Innlandet",
+    "municipality": "Dovre",
+    "primary_factor": 25,
+    "nearest_higher_peak": "Store Langvasstinden"
+  },
+  {
+    "id": "95e70080-a49b-4060-bcee-f956890293e6",
+    "name": "Veslebjørn Sørøst",
+    "height": 2075,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Veslebjørn"
+  },
+  {
+    "id": "f4ba3cee-d5dc-44dd-a7e5-7116457bcea9",
+    "name": "Leirhøe Nord",
+    "height": 2073,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Leirhøe"
+  },
+  {
+    "id": "57ad1c48-d9ea-434a-b2e1-4ca13888b29b",
+    "name": "Nørdre Skarvflytinden",
+    "height": 2073,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 25,
+    "nearest_higher_peak": "Skarvflytinden N1"
+  },
+  {
+    "id": "96e1568f-87e5-4c92-864f-dbb04c76c775",
+    "name": "Galdebergtinden",
+    "height": 2072,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 414,
+    "nearest_higher_peak": "Slettmarkpiggen Fortoppen"
+  },
+  {
+    "id": "04a17d79-366c-4ba5-a9cb-cbbea0ef1038",
+    "name": "Søre Nål på Knutseggen",
+    "height": 2072,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 25,
+    "nearest_higher_peak": "Nørdre Knutsholstinden"
+  },
+  {
+    "id": "f4bc9a3e-6dfb-46ff-b31b-b46a287e4bc0",
+    "name": "Skarvflytinden N2",
+    "height": 2072,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Nørdre Skarvflytinden"
+  },
+  {
+    "id": "fc36b190-5510-42f7-9f4b-c6bcfa613444",
+    "name": "Søre Dyrhaugstinden",
+    "height": 2072,
+    "county": "Vestland",
+    "municipality": "Årdal",
+    "primary_factor": 58,
+    "nearest_higher_peak": "Midtre Dyrhaugstinden Sør"
+  },
+  {
+    "id": "511a7ba9-3fd1-4913-b89b-48b768cc60a7",
+    "name": "Nørdre Slettmarkhøe",
+    "height": 2071,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 11,
+    "nearest_higher_peak": "Nestnørdre Slettmarkhøe"
+  },
+  {
+    "id": "70ced9e3-72f3-4dd7-ad74-04737088cc54",
+    "name": "Kvassryggen",
+    "height": 2071,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 27,
+    "nearest_higher_peak": "Høgdebrotet"
+  },
+  {
+    "id": "296aa612-d9cb-4baa-8ef3-d4cfe491e540",
+    "name": "Hellstuguhøe",
+    "height": 2071,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 23,
+    "nearest_higher_peak": "Nørdre Hellstugutinden"
+  },
+  {
+    "id": "de53b1ac-e21f-43f3-9c6b-c2efe6aa9cdb",
+    "name": "Sør for Leirhøe Nord",
+    "height": 2070,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 11,
+    "nearest_higher_peak": "Leirhøe Nord"
+  },
+  {
+    "id": "041a341b-f984-46cd-980b-b261b2dd441b",
+    "name": "Vest for Austre Surtningssue",
+    "height": 2070,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 12,
+    "nearest_higher_peak": "Austre Surtningssue"
+  },
+  {
+    "id": "b9dbcda3-cbb7-414a-abf7-1e56c5ee884a",
+    "name": "Stølsnostinden",
+    "height": 2070,
+    "county": "Vestland",
+    "municipality": "Årdal",
+    "primary_factor": 665,
+    "nearest_higher_peak": "Uranostinden"
+  },
+  {
+    "id": "f693c35b-2d6a-46d5-a187-18ac88709fcd",
+    "name": "Storivilen",
+    "height": 2068,
+    "county": "Innlandet",
+    "municipality": "Skjåk",
+    "primary_factor": 298,
+    "nearest_higher_peak": "Austre Hestbreapiggen"
+  },
+  {
+    "id": "312d892f-3ded-4369-958b-bf482aeda76e",
+    "name": "Fannaråki",
+    "height": 2067,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 599,
+    "nearest_higher_peak": "Nørdre Skagastølstinden"
+  },
+  {
+    "id": "6f7ce65b-1def-45b0-8521-1d61d95c53d1",
+    "name": "Svartholshøe",
+    "height": 2067,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 60,
+    "nearest_higher_peak": "Trollstein-Rundhøe"
+  },
+  {
+    "id": "d4b42668-bda6-4c7d-9aa8-e240a53d778f",
+    "name": "Midtre Høgvagltinden",
+    "height": 2066,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 468,
+    "nearest_higher_peak": "Austre Rauddalstinden"
+  },
+  {
+    "id": "8eaa8075-d4f2-449e-910f-f2a316eb3a64",
+    "name": "Midtre Svartdalspiggen",
+    "height": 2065,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 40,
+    "nearest_higher_peak": "Store Svartdalspiggen"
+  },
+  {
+    "id": "61ce5e2a-3639-43a9-9723-78b6eb995b16",
+    "name": "Kvitskardoksle",
+    "height": 2065,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Kvitskardtinden"
+  },
+  {
+    "id": "d7a18c44-bba7-4e6e-b8a8-f370512480af",
+    "name": "Søre Svartdalspiggen",
+    "height": 2065,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 55,
+    "nearest_higher_peak": "Langedalstinden"
+  },
+  {
+    "id": "d3cca54e-1d2e-445f-a7af-cd0a5913a553",
+    "name": "Store Kvitingskjølen",
+    "height": 2065,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 781,
+    "nearest_higher_peak": "Austre Trollsteinhøe"
+  },
+  {
+    "id": "1acddd3f-a9ec-459a-9ec1-f7b86844bae5",
+    "name": "Sokse Ø2",
+    "height": 2063,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 12,
+    "nearest_higher_peak": "Sokse Ø1"
+  },
+  {
+    "id": "345710e7-0a2c-4854-86ae-6ffc4efec9b1",
+    "name": "Nestnørdre Midtmaradalstinden",
+    "height": 2062,
+    "county": "Vestland",
+    "municipality": "Årdal",
+    "primary_factor": 139,
+    "nearest_higher_peak": "Søre Dyrhaugstinden"
+  },
+  {
+    "id": "d563d74f-cdb4-46cf-b5da-c9c64417c7fe",
+    "name": "Hurrbreatinden",
+    "height": 2062,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 34,
+    "nearest_higher_peak": "Veslbreatinden"
+  },
+  {
+    "id": "d8b0e541-5cb3-4865-9bec-d5777fa3f08a",
+    "name": "Midtronden Vest",
+    "height": 2062,
+    "county": "Innlandet",
+    "municipality": "Dovre",
+    "primary_factor": 294,
+    "nearest_higher_peak": "Høgronden"
+  },
+  {
+    "id": "f328e77d-0a9b-4d67-9f51-ed861fd1624c",
+    "name": "Falketind",
+    "height": 2061,
+    "county": "Vestland",
+    "municipality": "Årdal",
+    "primary_factor": 192,
+    "nearest_higher_peak": "Stølsnostinden"
+  },
+  {
+    "id": "f2665907-4cbb-460a-a6b1-6751f372798e",
+    "name": "Skarvflyløyfttinden SØ3",
+    "height": 2060,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 14,
+    "nearest_higher_peak": "Skarvflyløyfttinden SØ2"
+  },
+  {
+    "id": "b54cd5d2-ad3b-4013-bf64-d3e131d0aec3",
+    "name": "Midtre Urdadalstinden",
+    "height": 2060,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 112,
+    "nearest_higher_peak": "Store Urdadalstinden"
+  },
+  {
+    "id": "ceb6ca06-289a-4210-be70-469bea7874e7",
+    "name": "Vestre Rauddalstinden",
+    "height": 2059,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 148,
+    "nearest_higher_peak": "Store Rauddalstinden"
+  },
+  {
+    "id": "1090b275-06dd-444c-9132-675467cb3871",
+    "name": "Søre Bukkeholstinden",
+    "height": 2058,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 60,
+    "nearest_higher_peak": "Store Bukkeholstinden"
+  },
+  {
+    "id": "ae6b2096-30ad-48e0-80db-85a2c1858fa2",
+    "name": "Vestre Kvitingskjølen",
+    "height": 2058,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 110,
+    "nearest_higher_peak": "Store Kvitingskjølen"
+  },
+  {
+    "id": "06f1c696-8047-46d6-bebb-1f92fc4d7f2c",
+    "name": "Øst for Midtronden Vest",
+    "height": 2057,
+    "county": "Innlandet",
+    "municipality": "Dovre",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Høgronden"
+  },
+  {
+    "id": "c9b84ac3-9dfc-4864-80e0-7f2c0b42ec57",
+    "name": "Store Midtmaradalstinden",
+    "height": 2056,
+    "county": "Vestland",
+    "municipality": "Årdal",
+    "primary_factor": 291,
+    "nearest_higher_peak": "Nestnørdre Midtmaradalstinden"
+  },
+  {
+    "id": "46833bf7-4a7b-4cfe-92fe-dc98ec9ee0e1",
+    "name": "Veslnubben",
+    "height": 2055,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 18,
+    "nearest_higher_peak": "Stornubben"
+  },
+  {
+    "id": "2316756d-494e-4596-a2d8-256c13e0e007",
+    "name": "Vesle Hestbreapiggen",
+    "height": 2051,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 28,
+    "nearest_higher_peak": "Vestre Hestbreapiggen"
+  },
+  {
+    "id": "e3f06964-43c5-4791-8a5c-f697f049e5a8",
+    "name": "Leirungskampen N2",
+    "height": 2050,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Leirungskampen"
+  },
+  {
+    "id": "dc9aed9c-a530-4589-8b9d-b9bcbe0f4572",
+    "name": "Austnubben",
+    "height": 2050,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 93,
+    "nearest_higher_peak": "Veslnubben"
+  },
+  {
+    "id": "b5f87eb3-693f-44c2-89e5-c79f1d94bd32",
+    "name": "Memurutinden V6",
+    "height": 2049,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 30,
+    "nearest_higher_peak": "Memurutinden V5"
+  },
+  {
+    "id": "c613b6f2-cf03-470c-826b-c2b77c7672c1",
+    "name": "Uranostinden S2",
+    "height": 2049,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 59,
+    "nearest_higher_peak": "Uranostinden"
+  },
+  {
+    "id": "7d9ae9f7-3265-49c4-8727-279cc99d9e03",
+    "name": "Søre Soleibotntinden",
+    "height": 2047,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 57,
+    "nearest_higher_peak": "Store Ringstinden"
+  },
+  {
+    "id": "e4daca16-acb3-46d7-8fe4-7cba6f0fd8c9",
+    "name": "Vestre Langvasstinden",
+    "height": 2046,
+    "county": "Innlandet",
+    "municipality": "Lesja",
+    "primary_factor": 35,
+    "nearest_higher_peak": "Store Langvasstinden"
+  },
+  {
+    "id": "3360ac1e-a645-48ce-b3aa-77babd93b1e1",
+    "name": "Midtre Holåtinden",
+    "height": 2046,
+    "county": "Innlandet",
+    "municipality": "Skjåk",
+    "primary_factor": 290,
+    "nearest_higher_peak": "Vestraste Hestbreapiggen"
+  },
+  {
+    "id": "be71b041-3bcc-4613-b5e2-2552106437c5",
+    "name": "Vinjeronden",
+    "height": 2046,
+    "county": "Innlandet",
+    "municipality": "Sel",
+    "primary_factor": 107,
+    "nearest_higher_peak": "Rondslottet"
+  },
+  {
+    "id": "14234bd0-240b-4570-ab32-b37887c34d42",
+    "name": "Midtre Nål på Knutseggen",
+    "height": 2045,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Søre Nål på Knutseggen"
+  },
+  {
+    "id": "22a96cb7-56fa-4082-9e0c-414e0650d7cc",
+    "name": "Midtre Langedalstinden",
+    "height": 2045,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Langedalstinden"
+  },
+  {
+    "id": "a109c30c-3dcb-4325-b547-1935bb2f4835",
+    "name": "Sørvestre Smørstabbtinden",
+    "height": 2045,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 87,
+    "nearest_higher_peak": "Gravdalstinden"
+  },
+  {
+    "id": "a1d23783-fd8a-4af2-ac62-6f43a7b21b6f",
+    "name": "Leirungskampen N1",
+    "height": 2045,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 13,
+    "nearest_higher_peak": "Leirungskampen"
+  },
+  {
+    "id": "9f469c5d-329f-43d4-95de-fc779409aeaf",
+    "name": "Midtronden Aust",
+    "height": 2044,
+    "county": "Innlandet",
+    "municipality": "Folldal",
+    "primary_factor": 97,
+    "nearest_higher_peak": "Øst for Midtronden Vest"
+  },
+  {
+    "id": "e0979067-dbca-4ec7-9527-8c1edc9fb345",
+    "name": "Store Bukkeholstinden Sørøsteggen",
+    "height": 2044,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Store Bukkeholstinden"
+  },
+  {
+    "id": "c7dafd97-ab0d-42ef-8611-a68d037e009e",
+    "name": "Moldulhøe",
+    "height": 2044,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 144,
+    "nearest_higher_peak": "Storivilen"
+  },
+  {
+    "id": "05e2c811-c0bd-4ace-a285-838786cce33f",
+    "name": "Austanbotntinden S2",
+    "height": 2042,
+    "county": "Vestland",
+    "municipality": "Årdal",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Søre Austanbotntinden"
+  },
+  {
+    "id": "b610d243-9354-4e73-9825-e388d73e354b",
+    "name": "Austre Holåtinden",
+    "height": 2042,
+    "county": "Innlandet",
+    "municipality": "Skjåk",
+    "primary_factor": 192,
+    "nearest_higher_peak": "Midtre Holåtinden"
+  },
+  {
+    "id": "de76d27d-5e3f-426e-ba11-737a24680cd8",
+    "name": "Eggen Nordtoppen",
+    "height": 2041,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 12,
+    "nearest_higher_peak": "Høgdebrotet"
+  },
+  {
+    "id": "337e1694-5352-4af7-9040-3289d6fc6ed4",
+    "name": "Mjølkedalspiggen",
+    "height": 2040,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 245,
+    "nearest_higher_peak": "Uranostinden"
+  },
+  {
+    "id": "1bf24032-bdd4-4eed-b304-f90be6379868",
+    "name": "Leirungskalven",
+    "height": 2040,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 11,
+    "nearest_higher_peak": "Leirungskampen"
+  },
+  {
+    "id": "10b77d79-c209-44f6-a797-c88f7b14dbe5",
+    "name": "Søre Sagi",
+    "height": 2040,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 250,
+    "nearest_higher_peak": "Uranostinden"
+  },
+  {
+    "id": "b50c650c-492d-4c06-80ef-5aef9e3e1a25",
+    "name": "Nørdre Sagi",
+    "height": 2040,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 138,
+    "nearest_higher_peak": "Uranostinden"
+  },
+  {
+    "id": "8131ae2e-967f-4153-9d74-f23ac70656aa",
+    "name": "Eggen Sørtoppen",
+    "height": 2039,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 74,
+    "nearest_higher_peak": "Eggen Nordtoppen"
+  },
+  {
+    "id": "2f7ac2c4-0363-470d-af1b-2574f92fe1fe",
+    "name": "Visbreatinden N1",
+    "height": 2039,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 11,
+    "nearest_higher_peak": "Visbreatinden"
+  },
+  {
+    "id": "6673227b-0b4d-4fe4-b742-b7c1d6452499",
+    "name": "Vestre Holåtinden",
+    "height": 2038,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 174,
+    "nearest_higher_peak": "Midtre Holåtinden"
+  },
+  {
+    "id": "1294b334-14d6-4669-a9c4-3a8f627c7397",
+    "name": "Uranostinden S1",
+    "height": 2038,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Uranostinden S2"
+  },
+  {
+    "id": "5ae0a175-1bd9-4c4b-99bc-7ed7f82214d2",
+    "name": "Vinjeronden Nord",
+    "height": 2035,
+    "county": "Innlandet",
+    "municipality": "Folldal",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Vinjeronden"
+  },
+  {
+    "id": "7638ce9e-c0f9-4c6a-a2e5-899a42556396",
+    "name": "Nestaustre Surtningssue",
+    "height": 2035,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Midtre Surtningssue"
+  },
+  {
+    "id": "03d82837-3631-4b79-be77-94998febb00d",
+    "name": "Vest for Midtronden Aust",
+    "height": 2035,
+    "county": "Innlandet",
+    "municipality": "Dovre",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Midtronden Aust"
+  },
+  {
+    "id": "e7c20e19-a65c-4781-88f4-386a81285e25",
+    "name": "Austre Kalven",
+    "height": 2034,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 41,
+    "nearest_higher_peak": "Vestre Skeie"
+  },
+  {
+    "id": "e1a4b873-f453-4fe0-b4fc-4f02848c6975",
+    "name": "Vestre Tverrbytthornet",
+    "height": 2034,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Tverrbytthornet"
+  },
+  {
+    "id": "b5e229ce-4da7-499f-9d5c-d02e84f51484",
+    "name": "Søre Smørstabbtinden",
+    "height": 2033,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 50,
+    "nearest_higher_peak": "Sørvestre Smørstabbtinden"
+  },
+  {
+    "id": "315573a3-c681-44da-808e-004f08145f50",
+    "name": "Slettmarkkampen",
+    "height": 2032,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 40,
+    "nearest_higher_peak": "Slettmarkpiggen Fortoppen"
+  },
+  {
+    "id": "8495451e-135c-41c4-ad4f-c3773be30062",
+    "name": "Kyrkja",
+    "height": 2032,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 279,
+    "nearest_higher_peak": "Vestre Tverrbytthornet"
+  },
+  {
+    "id": "a21ce9e6-dd5e-4640-bd74-918514b76b27",
+    "name": "Urdadalstinden S1",
+    "height": 2032,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Midtre Urdadalstinden"
+  },
+  {
+    "id": "c7f620d6-1dc9-4bc8-b765-b2e4182b231a",
+    "name": "Nørdre Nål på Knutseggen",
+    "height": 2031,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 13,
+    "nearest_higher_peak": "Midtre Nål på Knutseggen"
+  },
+  {
+    "id": "b46ba071-ff48-4bfa-bc31-958dfeb16646",
+    "name": "Søre Tverrådalskyrkja",
+    "height": 2031,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 49,
+    "nearest_higher_peak": "Tverrådalskyrkja"
+  },
+  {
+    "id": "c92151b3-833b-4999-bcf7-a116bbf7b733",
+    "name": "Spiterhøe",
+    "height": 2031,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 143,
+    "nearest_higher_peak": "Leirhøe Nord"
+  },
+  {
+    "id": "5807a842-2cf2-424a-a8a9-a6d247435dcf",
+    "name": "Søre Langedalstinden",
+    "height": 2030,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Midtre Langedalstinden"
+  },
+  {
+    "id": "5ffe6b1d-5ba2-4037-9dc0-e1ea62fd07d5",
+    "name": "Midtre Kalven",
+    "height": 2030,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Austre Kalven"
+  },
+  {
+    "id": "afc388aa-002c-4191-8aba-001d777d5080",
+    "name": "Nestnørdre Nål på Knutseggen",
+    "height": 2030,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Nørdre Nål på Knutseggen"
+  },
+  {
+    "id": "fd0d5ec1-536a-4e64-a121-019bb02e5753",
+    "name": "Søraustre Smørstabbtinden",
+    "height": 2030,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 42,
+    "nearest_higher_peak": "Søre Smørstabbtinden"
+  },
+  {
+    "id": "9282fc8f-2d26-43ca-a157-8e656fa86289",
+    "name": "Store Steindalsnosi",
+    "height": 2029,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 192,
+    "nearest_higher_peak": "Fannaråki"
+  },
+  {
+    "id": "2d51d5cb-895c-4e96-98c5-9096ac6b020a",
+    "name": "Nørdre Soleibotntinden",
+    "height": 2029,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 41,
+    "nearest_higher_peak": "Store Soleibotntinden"
+  },
+  {
+    "id": "4b4fa2d4-157e-44d6-b5e6-b3f6e1bebbf0",
+    "name": "Slingsbytinden",
+    "height": 2028,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 90,
+    "nearest_higher_peak": "Uranostinden"
+  },
+  {
+    "id": "aff72455-6342-459c-b4e5-187ba8db5e14",
+    "name": "Langvasshøe",
+    "height": 2027,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 70,
+    "nearest_higher_peak": "Visbreatinden"
+  },
+  {
+    "id": "050c1d36-a877-42bc-9af5-2a9570178983",
+    "name": "Sagi N2",
+    "height": 2025,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 15,
+    "nearest_higher_peak": "Nørdre Sagi"
+  },
+  {
+    "id": "25551915-d1b1-4726-b178-597f8ff80abf",
+    "name": "Langvasstinden V2",
+    "height": 2025,
+    "county": "Innlandet",
+    "municipality": "Lesja",
+    "primary_factor": 30,
+    "nearest_higher_peak": "Vestre Langvasstinden"
+  },
+  {
+    "id": "401f99fd-81bf-4439-b7cc-1ca6728e83be",
+    "name": "Nørdre Midtmaradalstinden",
+    "height": 2025,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Nestnørdre Midtmaradalstinden"
+  },
+  {
+    "id": "8d131dde-bbad-4405-8d7f-5709a7ac8beb",
+    "name": "Steinhaugen",
+    "height": 2025,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Memurutinden Ø2"
+  },
+  {
+    "id": "649fa046-af66-425c-8279-36063fbbd9ee",
+    "name": "Sørøst for Store Soleibotntinden",
+    "height": 2025,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 30,
+    "nearest_higher_peak": "Store Soleibotntinden"
+  },
+  {
+    "id": "928ee5d8-4755-46f3-a7f4-4ecbc277f388",
+    "name": "Midtre Ringstinden",
+    "height": 2025,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 287,
+    "nearest_higher_peak": "Nestnørdre Midtmaradalstinden"
+  },
+  {
+    "id": "9d7019a8-ec53-4f23-8e21-084115610ea5",
+    "name": "Stølsmaradalstinden",
+    "height": 2025,
+    "county": "Vestland",
+    "municipality": "Årdal",
+    "primary_factor": 260,
+    "nearest_higher_peak": "Nestnørdre Midtmaradalstinden"
+  },
+  {
+    "id": "acafbcca-d78c-4616-808b-fb5e811928cf",
+    "name": "Nørdre Kvitingskjølen",
+    "height": 2025,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Store Kvitingskjølen"
+  },
+  {
+    "id": "eec7d545-fba9-47d8-8c21-20e3618f9f45",
+    "name": "Øst for Søre Smørstabbtinden",
+    "height": 2023,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Søre Smørstabbtinden"
+  },
+  {
+    "id": "05b7436e-b75d-4e28-b911-caba3cd6c9c6",
+    "name": "Vestraste Austanbotntinden",
+    "height": 2022,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 26,
+    "nearest_higher_peak": "Vestre Austanbotntinden"
+  },
+  {
+    "id": "16745d49-afcf-4540-afd2-4fe05efa20aa",
+    "name": "Hesthøe",
+    "height": 2021,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 218,
+    "nearest_higher_peak": "Moldulhøe"
+  },
+  {
+    "id": "b15d4d6b-0bf6-4f31-9b22-8fca33696ee6",
+    "name": "Sørvestre Rasletinden",
+    "height": 2021,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Rasletinden"
+  },
+  {
+    "id": "0eeb2cfa-ad85-466c-a77e-c52c4f15113c",
+    "name": "Aust for Austnubben",
+    "height": 2020,
+    "county": "Innlandet",
+    "municipality": "Vågå",
+    "primary_factor": 13,
+    "nearest_higher_peak": "Austnubben"
+  },
+  {
+    "id": "4d124f60-305e-4f8c-a984-7c15864ba739",
+    "name": "Nørdre Kalvehølotinden",
+    "height": 2020,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 112,
+    "nearest_higher_peak": "Midtre Kalvehøgde"
+  },
+  {
+    "id": "1c5a98fb-abd0-42b4-91df-3e78223d981f",
+    "name": "Steinkollen",
+    "height": 2019,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 96,
+    "nearest_higher_peak": "Søre Tverrådalskyrkja"
+  },
+  {
+    "id": "77ebbf9d-699d-424f-9bd6-3eb544ec80c7",
+    "name": "Trolltinden",
+    "height": 2018,
+    "county": "Innlandet",
+    "municipality": "Dovre",
+    "primary_factor": 785,
+    "nearest_higher_peak": "Rondslottet"
+  },
+  {
+    "id": "ad476757-3b8b-489e-8dfe-0c287d7c880c",
+    "name": "Stetinden",
+    "height": 2018,
+    "county": "Innlandet",
+    "municipality": "Luster",
+    "primary_factor": 455,
+    "nearest_higher_peak": "Sokse Ø2"
+  },
+  {
+    "id": "c25fe06c-b862-4a2e-a3a7-c0d4a8f6e6c0",
+    "name": "Storbreatinden",
+    "height": 2018,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 86,
+    "nearest_higher_peak": "Veslbreatinden"
+  },
+  {
+    "id": "466d7d75-f306-4e47-ba09-44628e668913",
+    "name": "Grotbreahesten",
+    "height": 2017,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 115,
+    "nearest_higher_peak": "Svartholshøe"
+  },
+  {
+    "id": "68b09bf6-5388-4f77-bac2-f212c492fd86",
+    "name": "Brenibba",
+    "height": 2017,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 318,
+    "nearest_higher_peak": "Lodalskåpa"
+  },
+  {
+    "id": "3dd5f5bf-a46a-418e-9161-681290ed929f",
+    "name": "Vetle Midtmaradalstinden",
+    "height": 2017,
+    "county": "Vestland",
+    "municipality": "Årdal",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Store Midtmaradalstinden"
+  },
+  {
+    "id": "763ee3d5-a7e2-4e8d-89aa-9ec8e92a8ece",
+    "name": "Veslesmeden",
+    "height": 2016,
+    "county": "Innlandet",
+    "municipality": "Dovre",
+    "primary_factor": 275,
+    "nearest_higher_peak": "Trolltinden"
+  },
+  {
+    "id": "bc94f6d5-7c99-422e-a660-a2b38fd80c89",
+    "name": "Digerronden",
+    "height": 2016,
+    "county": "Innlandet",
+    "municipality": "Dovre",
+    "primary_factor": 186,
+    "nearest_higher_peak": "Øst for Midtronden Vest"
+  },
+  {
+    "id": "1f3b2cbd-c843-41fa-a2ee-c0717706cfa1",
+    "name": "Urdadalstinden S2",
+    "height": 2015,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 14,
+    "nearest_higher_peak": "Urdadalstinden S1"
+  },
+  {
+    "id": "de087872-e5cd-4966-a4a2-277fd3bfbcdf",
+    "name": "Vesle Gravdalstinden",
+    "height": 2015,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 20,
+    "nearest_higher_peak": "Søre Smørstabbtinden"
+  },
+  {
+    "id": "746f11c7-10ab-42b0-bfb6-56d03403afb3",
+    "name": "Vest for Søre Bukkeholstinden",
+    "height": 2015,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 16,
+    "nearest_higher_peak": "Søre Bukkeholstinden"
+  },
+  {
+    "id": "b55b7cb7-4eb1-4760-b025-eaab8ae8b136",
+    "name": "Langeskavltinden",
+    "height": 2015,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 214,
+    "nearest_higher_peak": "Uranostinden"
+  },
+  {
+    "id": "2185d42f-8ad7-48e6-866e-693afcb54f0b",
+    "name": "Søre Høgvagltinden",
+    "height": 2014,
+    "county": "Vestland",
+    "municipality": "Luster",
+    "primary_factor": 11,
+    "nearest_higher_peak": "Midtre Høgvagltinden"
+  },
+  {
+    "id": "79a3ea6d-b380-478c-aca2-d53576526458",
+    "name": "Killingen",
+    "height": 2014,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Sokse Ø2"
+  },
+  {
+    "id": "67b192ac-31ab-4f3c-953d-d3ac46cd335f",
+    "name": "Gråhøe",
+    "height": 2013,
+    "county": "Innlandet",
+    "municipality": "Lesja",
+    "primary_factor": 978,
+    "nearest_higher_peak": "Hestdalshøgde"
+  },
+  {
+    "id": "2f113316-2b41-4a54-b924-c6f1542c5abf",
+    "name": "Låven",
+    "height": 2012,
+    "county": "Innlandet",
+    "municipality": "Skjåk",
+    "primary_factor": 40,
+    "nearest_higher_peak": "Vest for Midtre Hestbreapiggen"
+  },
+  {
+    "id": "8a8b2b5f-5cc8-48d8-ad44-f783db1b6a11",
+    "name": "Midtre Rauddalseggje",
+    "height": 2012,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 122,
+    "nearest_higher_peak": "Store Rauddalseggje"
+  },
+  {
+    "id": "589c1431-447f-4002-a373-ff3cf7cf8ca4",
+    "name": "Øystre Rasletinden",
+    "height": 2011,
+    "county": "Innlandet",
+    "municipality": "Vang",
+    "primary_factor": 31,
+    "nearest_higher_peak": "Rasletinden"
+  },
+  {
+    "id": "9bdcaecd-dc4b-4520-b658-7616ec22dcff",
+    "name": "Styggehøe V1",
+    "height": 2011,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 10,
+    "nearest_higher_peak": "Nørdre Bukkeholstinden Ø2"
+  },
+  {
+    "id": "c95c7b8c-7d50-4ebb-aff4-39b7e33b6043",
+    "name": "Vesle Urdadalstinden",
+    "height": 2010,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 13,
+    "nearest_higher_peak": "Midtre Urdadalstinden"
+  },
+  {
+    "id": "adc30628-4ed2-4655-9c80-ddcf958eb9e1",
+    "name": "Storsmeden",
+    "height": 2008,
+    "county": "Innlandet",
+    "municipality": "Sel",
+    "primary_factor": 196,
+    "nearest_higher_peak": "Veslesmeden"
+  },
+  {
+    "id": "ca31a5a3-9488-4f67-89e9-0fcf9dfaaf1e",
+    "name": "Skagsnebb",
+    "height": 2007,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 68,
+    "nearest_higher_peak": "Bakarste Skagsnebb"
+  },
+  {
+    "id": "252df1a2-3c8e-430b-9938-a35d77544744",
+    "name": "Nordøst for Spiterhøe",
+    "height": 2006,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 18,
+    "nearest_higher_peak": "Spiterhøe"
+  },
+  {
+    "id": "d05c0c99-d642-4ad4-8de5-8910a27515df",
+    "name": "Urdadalstinden SV2",
+    "height": 2005,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 27,
+    "nearest_higher_peak": "Sørvestre Urdadalstinden"
+  },
+  {
+    "id": "4c9173a5-e190-43e7-8b0e-9837263daedb",
+    "name": "Store Skredahøe",
+    "height": 2004,
+    "county": "Innlandet",
+    "municipality": "Lesja",
+    "primary_factor": 385,
+    "nearest_higher_peak": "Storstygge-Svånåtinden"
+  },
+  {
+    "id": "7d0a97fc-49c7-47d5-9368-1908d2674082",
+    "name": "Nørdre Svånåtinden",
+    "height": 2004,
+    "county": "Innlandet",
+    "municipality": "Lesja",
+    "primary_factor": 55,
+    "nearest_higher_peak": "Langvasstinden V2"
+  },
+  {
+    "id": "b4f7b9fd-a5d9-41e6-b981-80b40f5535b4",
+    "name": "Nørdre Semelholstinden",
+    "height": 2004,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 36,
+    "nearest_higher_peak": "Semelholstinden Vesttoppen"
+  },
+  {
+    "id": "49249f34-5f6b-4776-9d43-ef2ff706f94f",
+    "name": "Styggehøe V2",
+    "height": 2003,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 17,
+    "nearest_higher_peak": "Styggehøe V1"
+  },
+  {
+    "id": "75dd99ba-4c4d-4369-93ab-5f4659b9fb93",
+    "name": "Austre Ringstinden",
+    "height": 2002,
+    "county": "Vestland",
+    "municipality": "Årdal",
+    "primary_factor": 128,
+    "nearest_higher_peak": "Nestnørdre Midtmaradalstinden"
+  },
+  {
+    "id": "79cce3ef-7e5b-4211-8c09-3bdb40c3018d",
+    "name": "Geite",
+    "height": 2002,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 60,
+    "nearest_higher_peak": "Sokse Ø2"
+  },
+  {
+    "id": "1e740619-60a3-4319-9d26-5de3b2f39325",
+    "name": "Storsmeden Nord",
+    "height": 2001,
+    "county": "Innlandet",
+    "municipality": "Dovre",
+    "primary_factor": 12,
+    "nearest_higher_peak": "Storsmeden"
+  },
+  {
+    "id": "b7afb333-1c1e-44aa-b995-2b8e3f0a95c7",
+    "name": "Storbreahøe",
+    "height": 2001,
+    "county": "Innlandet",
+    "municipality": "Lom",
+    "primary_factor": 92,
+    "nearest_higher_peak": "Storbreatinden"
+  },
+  {
+    "id": "99aaed0d-c44b-4a94-9cb4-5ee6ca76c519",
+    "name": "Midtre Stølsnostinden",
+    "height": 2001,
+    "county": "Vestland",
+    "municipality": "Årdal",
+    "primary_factor": 116,
+    "nearest_higher_peak": "Stølsnostinden"
+  },
+  {
+    "id": "0174ca60-91a9-4e1f-8658-af90ef420fd4",
+    "name": "Bruri",
+    "height": 2000,
+    "county": "Innlandet",
+    "municipality": "Lesja",
+    "primary_factor": 153,
+    "nearest_higher_peak": "Nørdre Svånåtinden"
+  }
+]

@@ -10,6 +10,7 @@ import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { EditAscentButton } from '@/components/profile/EditAscentButton'
 import { formatDist } from '@/lib/utils'
+import { useCollection } from '@/context/CollectionContext'
 
 interface PeakCardProps {
   peak: EnrichedPeak
@@ -29,6 +30,8 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
   const [showForm, setShowForm] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const { activeCollection } = useCollection()
+  const nearestHigherLabel = activeCollection?.nearestHigherLabel ?? 'Nærmeste over 2000 m (PF ≥ 30 m)'
 
   const nearbyPeaks = useMemo(() => getNearbyPeaks(peak, allPeaks ?? []), [peak, allPeaks])
 
@@ -178,7 +181,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
           <div className="flex items-start gap-2 mb-1">
             <Navigation size={13} className="text-text-warm shrink-0 mt-0.5" strokeWidth={1.75} />
             <span className="text-xs text-text-warm">
-              Nærmeste over 2000 m (PF ≥ 30 m):<br />
+              {nearestHigherLabel}:<br />
               <span className="font-medium text-[#1A1A1A]">
                 {nearest.peak.name} ({nearest.peak.height.toLocaleString('no')} moh – {formatDist(nearest.distanceKm * 1000)})
               </span>

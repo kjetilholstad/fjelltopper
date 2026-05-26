@@ -1,9 +1,5 @@
-import Link from 'next/link'
-import { MapPin, Mountain } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { HomePeakCard } from '@/components/HomePeakCard'
-import { nearestPeak } from '@/lib/nearestPeaks'
-import type { Peak } from '@/types'
+import { HomeHeroClient } from '@/components/HomeHeroClient'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,82 +22,13 @@ export default async function Home() {
   const pf50   = pf50Count   ?? 0
   const pf100  = pf100Count  ?? 0
 
-  // Tilfeldig topp — rangert etter høyde slik at offset = rangering - 1
-  const randomOffset = total > 0 ? Math.floor(Math.random() * total) : 0
-  const [{ data: featuredData }, { data: allData }] = await Promise.all([
-    supabase.from('peaks').select('*').order('height', { ascending: false }).range(randomOffset, randomOffset),
-    supabase.from('peaks').select('*').not('lat', 'is', null).not('lng', 'is', null),
-  ])
-
-  const featured = (featuredData?.[0] ?? null) as Peak | null
-  const allPeaks = (allData ?? []) as Peak[]
-  const featuredRank = randomOffset + 1
-
-  const nearest = featured ? nearestPeak(featured, allPeaks) : null
-
   return (
     <div>
 
       {/* ── Hero ────────────────────────────────────────────────── */}
       <section className="bg-parchment px-4 sm:px-6 lg:px-12 pt-10 sm:pt-14 pb-0">
         <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-
-            {/* Left column */}
-            <div>
-              {/* Pill badge */}
-              <div
-                className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 mb-6"
-                style={{ background: '#EAF3DE', color: '#3B6D11', borderRadius: 20 }}
-              >
-                ▲ Norges fjelltopper
-              </div>
-
-              <h1 className="text-[#1A1A1A] leading-snug mb-4 text-[1.5rem] sm:text-[2rem] font-medium">
-                Utforsk Norges<br />høyeste topper
-              </h1>
-
-              <p className="leading-relaxed mb-8 max-w-md" style={{ color: '#6B6560' }}>
-                Søk, filtrer og utforsk alle {total} topper over 2000 moh. Kart med koordinater,
-                primærfaktor og mer.
-              </p>
-
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/map"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium text-white transition-opacity hover:opacity-90"
-                  style={{ background: '#2D5016' }}
-                >
-                  <MapPin size={15} />
-                  Åpne kart
-                </Link>
-                <Link
-                  href="/peaks"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium text-[#1A1A1A] transition-colors hover:bg-white"
-                  style={{ border: '1px solid #E8E2D9' }}
-                >
-                  <Mountain size={15} />
-                  Se alle topper
-                </Link>
-              </div>
-            </div>
-
-            {/* Right column — featured peak (skjult på mobil) */}
-            <div className="hidden sm:block">
-              {featured
-                ? <HomePeakCard peak={featured} rank={featuredRank} nearest={nearest ?? null} allPeaks={allPeaks} />
-                : (
-                  <div
-                    className="bg-white rounded-xl p-5 text-sm text-[#6B6560]"
-                    style={{ border: '1px solid #E8E2D9' }}
-                  >
-                    Kunne ikke laste toppdata.
-                  </div>
-                )
-              }
-            </div>
-
-          </div>
+          <HomeHeroClient />
         </div>
 
         {/* ── Fjellsilhuett ──────────────────────────────────────── */}

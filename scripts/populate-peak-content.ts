@@ -1,256 +1,319 @@
 /**
- * Populer description og image_url for fjelltopper via Claude Haiku + Wikimedia Commons.
+ * Populer description, image_url og image_credit for alle fjelltopper.
  *
- * Bruk:
- *   npx tsx scripts/populate-peak-content.ts --dry-run   # preview uten skriving
- *   npx tsx scripts/populate-peak-content.ts              # skriv til Supabase
+ * Kjør fra fjelltopper/-mappen:
+ *   npx tsx scripts/populate-peak-content.ts             # full kjøring
+ *   npx tsx scripts/populate-peak-content.ts --dry-run   # forhåndsvisning
+ *   npx tsx scripts/populate-peak-content.ts --limit 5   # test med 5 topper
+ *   npx tsx scripts/populate-peak-content.ts --skip-images # kun beskrivelser
  *
- * Env-variabler fra .env.local:
- *   NEXT_PUBLIC_SUPABASE_URL
- *   SUPABASE_SERVICE_ROLE_KEY
- *   ANTHROPIC_API_KEY
+ * Beskrivelser leses fra scripts/peak-descriptions.json (generert av Claude).
+ * Faller tilbake til mal-beskrivelse hvis ID ikke finnes i JSON.
  */
 
-import { createClient } from '@supabase/supabase-js'
-import Anthropic from '@anthropic-ai/sdk'
-import { readFileSync } from 'fs'
-import { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
+import fs from 'fs';
+import path from 'path';
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+// Les inn forhåndsgenererte beskrivelser
+const descriptionsPath = path.join(process.cwd(), 'scripts', 'peak-descriptions.json');
+const PEAK_DESCRIPTIONS: Record<string, string> = JSON.parse(
+  fs.readFileSync(descriptionsPath, 'utf-8')
+);
 
-// ── Load .env.local manually (tsx doesn't load it automatically) ──────────
-function loadEnv() {
-  const envPath = join(__dirname, '..', '.env.local')
-  try {
-    const lines = readFileSync(envPath, 'utf-8').split('\n')
-    for (const line of lines) {
-      const trimmed = line.trim()
-      if (!trimmed || trimmed.startsWith('#')) continue
-      const eqIdx = trimmed.indexOf('=')
-      if (eqIdx === -1) continue
-      const key = trimmed.slice(0, eqIdx).trim()
-      const val = trimmed.slice(eqIdx + 1).trim().replace(/^["']|["']$/g, '')
-      if (!(key in process.env)) process.env[key] = val
-    }
-  } catch {
-    console.warn('Kunne ikke lese .env.local — bruker eksisterende env-variabler')
+const SUPABASE_URL = "https://enrbraxvxnytyfeuewqq.supabase.co";
+const SERVICE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVucmJyYXh2eG55dHlmZXVld3FxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODg2ODY3MCwiZXhwIjoyMDk0NDQ0NjcwfQ.4vxGMgeIoBZEh9PoLcZdxq0-00jOMiIjyOUR7JHX-6s";
+
+const HEADERS: Record<string, string> = {
+  apikey: SERVICE_KEY,
+  Authorization: `Bearer ${SERVICE_KEY}`,
+  "Content-Type": "application/json",
+  Prefer: "return=minimal",
+};
+
+// Filtrerer på filnavn (siste del av URL) — ikke hele pathen
+// Holdes bevisst kort for å unngå å blokkere gyldige fjellbilder
+const SKIP_KEYWORDS = [
+  "map", "logo", "icon", "coat", "flag", "symbol",
+  "locator", "topographic", "outline",
+  "hytte", "hotel", "hytter", "lodge",
+];
+
+function isSkippable(url: string): boolean {
+  // Hent kun filnavnet, ikke hele URL-pathen
+  const filename = url.split("/").pop()?.toLowerCase() ?? "";
+  return SKIP_KEYWORDS.some((kw) => filename.includes(kw));
+}
+
+// ---------------------------------------------------------------------------
+// Args
+// ---------------------------------------------------------------------------
+
+const args = process.argv.slice(2);
+const DRY_RUN     = args.includes("--dry-run");
+const SKIP_IMAGES = args.includes("--skip-images");
+const FORCE       = args.includes("--force"); // overskriver eksisterende innhold
+const limitIdx    = args.indexOf("--limit");
+const LIMIT       = limitIdx !== -1 ? parseInt(args[limitIdx + 1]) : null;
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+interface Peak {
+  id: string;
+  name: string;
+  height: number;
+  county: string | null;
+  municipality: string | null;
+  primary_factor: number | null;
+  nearest_higher_peak: string | null;
+  description: string | null;
+  image_url: string | null;
+}
+
+// ---------------------------------------------------------------------------
+// Beskrivelse — henter fra JSON, faller tilbake til mal
+// ---------------------------------------------------------------------------
+
+function generateDescription(peak: Peak): string {
+  // Bruk forhåndsgenerert beskrivelse hvis tilgjengelig
+  if (PEAK_DESCRIPTIONS[peak.id]) {
+    return PEAK_DESCRIPTIONS[peak.id];
   }
-}
 
-loadEnv()
+  // Fallback: mal-beskrivelse
+  const { height, county, municipality, primary_factor: pf, nearest_higher_peak: nhp } = peak;
+  const sentences: string[] = [];
 
-const DRY_RUN = process.argv.includes('--dry-run')
+  if (municipality && county) {
+    sentences.push(
+      `Toppen ligger i ${municipality} kommune i ${county} og er ${height} meter over havet.`
+    );
+  } else if (county) {
+    sentences.push(`Toppen ligger i ${county} og er ${height} meter over havet.`);
+  } else {
+    sentences.push(`Toppen er ${height} meter over havet.`);
+  }
 
-const SUPABASE_URL        = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!
-const ANTHROPIC_API_KEY   = process.env.ANTHROPIC_API_KEY!
-
-if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !ANTHROPIC_API_KEY) {
-  console.error('Mangler env-variabler. Sjekk .env.local for:')
-  console.error('  NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, ANTHROPIC_API_KEY')
-  process.exit(1)
-}
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
-const anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY })
-
-const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
-
-// ── Strip HTML tags from Wikimedia metadata ───────────────────────────────
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()
-}
-
-// ── Generer beskrivelse via Claude Haiku ──────────────────────────────────
-async function generateDescription(peak: {
-  name: string
-  height: number
-  municipality: string
-  county: string | null
-  primary_factor: number | null
-  nearest_higher_peak: string | null
-}): Promise<string> {
-  const nearestLine = peak.nearest_higher_peak
-    ? `Nærmeste høyere topp er ${peak.nearest_higher_peak}.`
-    : ''
-
-  const prompt = `Skriv en kort, faktabasert beskrivelse av fjellet «${peak.name}» på norsk.
-Fjellet er ${peak.height} meter over havet, ligger i ${peak.municipality} kommune i ${peak.county ?? 'Norge'}, og har en primærfaktor på ${peak.primary_factor ?? 0} meter.
-${nearestLine}
-
-Skriv 2–3 setninger. Vær konkret og geografisk. Ikke bruk klisjeer som «majestetisk» eller «vakkert». Ikke start med fjellets navn.
-Svar kun med beskrivelsesteksten, ingen forklaring.`
-
-  const msg = await anthropic.messages.create({
-    model: 'claude-haiku-4-5-20251001',
-    max_tokens: 200,
-    messages: [{ role: 'user', content: prompt }],
-  })
-
-  const block = msg.content[0]
-  if (block.type !== 'text') throw new Error('Uventet respons-type fra Claude')
-  return block.text.trim()
-}
-
-// ── Hent bilde fra Wikimedia Commons ─────────────────────────────────────
-const EXCLUDED_TERMS = ['map', 'logo', 'icon', 'coat', 'flag', 'emblem', 'crest', 'heraldry']
-
-interface WikiImage {
-  image_url: string
-  image_credit: string
-}
-
-async function fetchWikimediaImage(peakName: string): Promise<WikiImage | null> {
-  const url = new URL('https://commons.wikimedia.org/w/api.php')
-  url.searchParams.set('action', 'query')
-  url.searchParams.set('generator', 'search')
-  url.searchParams.set('gsrnamespace', '6')
-  url.searchParams.set('gsrsearch', `${peakName} norway mountain`)
-  url.searchParams.set('gsrlimit', '8')
-  url.searchParams.set('prop', 'imageinfo')
-  url.searchParams.set('iiprop', 'url|extmetadata|mime')
-  url.searchParams.set('iiurlwidth', '800')
-  url.searchParams.set('format', 'json')
-  url.searchParams.set('origin', '*')
-
-  const res = await fetch(url.toString(), {
-    headers: { 'User-Agent': 'fjelltopper-content-bot/1.0 (kjetil.holstad@gmail.com)' },
-  })
-  if (!res.ok) return null
-
-  const data = await res.json() as {
-    query?: {
-      pages?: Record<string, {
-        imageinfo?: Array<{
-          mime?: string
-          thumburl?: string
-          url?: string
-          extmetadata?: {
-            Artist?: { value: string }
-            LicenseShortName?: { value: string }
-          }
-        }>
-      }>
+  if (pf != null) {
+    if (pf >= 500) {
+      sentences.push(
+        `Med en primærfaktor på ${pf} meter er den et markant og selvstendig fjell i terrenget.`
+      );
+    } else if (pf >= 100) {
+      sentences.push(
+        `Primærfaktoren på ${pf} meter gjør den til en tydelig selvstendig topp.`
+      );
+    } else if (pf >= 30) {
+      sentences.push(`Primærfaktoren er ${pf} meter.`);
     }
   }
 
-  const pages = Object.values(data.query?.pages ?? {})
-  if (!pages.length) return null
-
-  for (const page of pages) {
-    const info = page.imageinfo?.[0]
-    if (!info) continue
-
-    const mime = info.mime ?? ''
-    if (!mime.startsWith('image/jpeg') && !mime.startsWith('image/png')) continue
-
-    const thumbUrl = info.thumburl ?? info.url ?? ''
-    const urlLower = thumbUrl.toLowerCase()
-    if (EXCLUDED_TERMS.some(t => urlLower.includes(t))) continue
-
-    const artist      = info.extmetadata?.Artist?.value
-    const license     = info.extmetadata?.LicenseShortName?.value
-    const imageCredit = artist && license
-      ? `${stripHtml(artist)} / ${license}`
-      : (license ?? '')
-
-    return { image_url: thumbUrl, image_credit: imageCredit }
+  if (nhp) {
+    sentences.push(`Nærmeste høyere topp er ${nhp}.`);
   }
 
-  return null
+  return sentences.join(" ");
 }
 
-// ── Hoved-loop ────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------------------
+// Wikimedia Commons
+// ---------------------------------------------------------------------------
+
+function stripHtml(text: string): string {
+  return text.replace(/<[^>]+>/g, "").trim();
+}
+
+function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+// Fjern vanlige norske retningssufikser for å bedre søketreff
+// "Store Styggedalstinden Østtoppen" → "Store Styggedalstinden"
+function baseName(name: string): string {
+  return name
+    .replace(/\s+(Østtoppen|Vesttoppen|Nordtoppen|Sørtoppen|Midttoppen|Fortoppen|Sørøsttoppen|Nordøsttoppen|Sørvesttoppen|Nordvesttoppen|N\d+|S\d+|V\d+|Ø\d+|SØ\d+|NV\d+|NØ\d+|SV\d+)$/i, "")
+    .trim();
+}
+
+async function fetchWikimediaImage(
+  peakName: string
+): Promise<{ url: string; credit: string | null } | null> {
+  const base = baseName(peakName);
+  // Prøv norsk søk først — fungerer best for norske fjellnavn
+  const queries = [
+    base,
+    `${base} fjell`,
+    `${base} mountain`,
+  ];
+  // Ikke dupliser hvis basename == peakName
+  if (base !== peakName) queries.push(peakName);
+
+  for (const query of queries) {
+    const params = new URLSearchParams({
+      action: "query",
+      generator: "search",
+      gsrnamespace: "6",
+      gsrsearch: query,
+      gsrlimit: "20",          // økt fra 8 → 20
+      prop: "imageinfo",
+      iiprop: "url|extmetadata|mime",
+      iiurlwidth: "800",
+      format: "json",
+      origin: "*",
+    });
+
+    try {
+      const resp = await fetch(
+        `https://commons.wikimedia.org/w/api.php?${params}`
+      );
+      const text = await resp.text();
+      let data: any;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        await sleep(2000);
+        continue;
+      }
+      const pages: Record<string, any> = data?.query?.pages ?? {};
+
+      for (const page of Object.values(pages)) {
+        const ii = page?.imageinfo?.[0];
+        if (!ii) continue;
+
+        const mime: string = ii.mime ?? "";
+        const url: string  = ii.thumburl ?? ii.url ?? "";
+
+        if (!mime.startsWith("image/jpeg") && !mime.startsWith("image/png")) continue;
+        if (isSkippable(url)) continue;
+
+        const meta        = ii.extmetadata ?? {};
+        const artist      = stripHtml(meta?.Artist?.value ?? "");
+        const licenseName = meta?.LicenseShortName?.value ?? "";
+        const credit      = [artist, licenseName].filter(Boolean).join(" / ") || null;
+
+        return { url, credit };
+      }
+    } catch (e) {
+      console.error(`    ⚠ Wikimedia-feil for '${query}': ${e}`);
+    }
+
+    await sleep(200);
+  }
+
+  return null;
+}
+
+// ---------------------------------------------------------------------------
+// Supabase
+// ---------------------------------------------------------------------------
+
+async function fetchPeaks(): Promise<Peak[]> {
+  const params = new URLSearchParams({
+    select:
+      "id,name,height,county,municipality,primary_factor,nearest_higher_peak,description,image_url",
+    height: "gte.2000",
+    order:  "height.desc",
+    limit:  "500",
+  });
+
+  const resp = await fetch(`${SUPABASE_URL}/rest/v1/peaks?${params}`, {
+    headers: HEADERS,
+  });
+
+  if (!resp.ok) {
+    throw new Error(`Supabase feil: ${resp.status} ${await resp.text()}`);
+  }
+  return resp.json();
+}
+
+async function updatePeak(
+  id: string,
+  payload: Record<string, unknown>
+): Promise<boolean> {
+  const resp = await fetch(`${SUPABASE_URL}/rest/v1/peaks?id=eq.${id}`, {
+    method:  "PATCH",
+    headers: HEADERS,
+    body:    JSON.stringify(payload),
+  });
+  return resp.status === 200 || resp.status === 204;
+}
+
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
+
 async function main() {
-  if (DRY_RUN) console.log('🔍 DRY-RUN modus — ingen skriving til Supabase\n')
+  if (DRY_RUN)  console.log("🔍 DRY-RUN — ingenting skrives til Supabase\n");
 
-  const { data: peaks, error } = await supabase
-    .from('peaks')
-    .select('id, name, height, municipality, county, primary_factor, nearest_higher_peak, description, image_url')
-    .gte('height', 2000)
-    .or('description.is.null,image_url.is.null')
-    .order('height', { ascending: false })
+  console.log("Henter topper fra Supabase...");
+  const peaks = await fetchPeaks();
+  console.log(`Fant ${peaks.length} topper totalt`);
 
-  if (error) { console.error('Feil ved henting av topper:', error.message); process.exit(1) }
-  if (!peaks?.length) { console.log('Ingen topper å behandle.'); return }
+  let toProcess = FORCE
+    ? peaks
+    : peaks.filter((p) => !p.description || !p.image_url);
+  console.log(`Skal behandle: ${toProcess.length} topper${FORCE ? " (--force, inkl. eksisterende)" : " (mangler innhold)"}\n`);
 
-  const total = peaks.length
-  console.log(`Behandler ${total} topper...\n`)
+  if (LIMIT) {
+    toProcess = toProcess.slice(0, LIMIT);
+    console.log(`Begrenset til ${toProcess.length} topper (--limit)\n`);
+  }
 
-  let descCount = 0, imgCount = 0, errCount = 0
+  let okDesc = 0, okImg = 0, errors = 0;
 
-  for (let i = 0; i < total; i++) {
-    const peak = peaks[i]
-    let descOk = false, imgOk = false
+  for (let i = 0; i < toProcess.length; i++) {
+    const peak = toProcess[i];
+    console.log(`[${i + 1}/${toProcess.length}] ${peak.name} (${peak.height} m)`);
 
-    // ── Beskrivelse ──
-    let description: string | null = peak.description
-    if (!description) {
-      try {
-        description = await generateDescription(peak)
-        descOk = true
-        await sleep(500)
-      } catch (e) {
-        console.error(`  [feil] ${peak.name} — beskrivelse: ${(e as Error).message}`)
-        errCount++
-      }
+    const payload: Record<string, unknown> = {};
+
+    // Beskrivelse
+    if (!peak.description || FORCE) {
+      const desc = generateDescription(peak);
+      payload.description = desc;
+      okDesc++;
+      console.log(`    📝 ${desc.slice(0, 90)}`);
     }
 
-    // ── Bilde ──
-    let image_url: string | null = peak.image_url
-    let image_credit: string | null = null
-    if (!peak.image_url) {
-      try {
-        const img = await fetchWikimediaImage(peak.name)
-        if (img) {
-          image_url = img.image_url
-          image_credit = img.image_credit
-          imgOk = true
+    // Bilde
+    if ((!peak.image_url || FORCE) && !SKIP_IMAGES) {
+      const img = await fetchWikimediaImage(peak.name);
+      if (img) {
+        payload.image_url    = img.url;
+        payload.image_credit = img.credit;
+        okImg++;
+        console.log(`    🖼  ${img.url.slice(0, 70)}`);
+        if (img.credit) console.log(`    ©  ${img.credit}`);
+      } else {
+        console.log(`    – Ingen Wikimedia-bilde funnet`);
+      }
+      await sleep(300);
+    }
+
+    // Skriv til Supabase
+    if (Object.keys(payload).length > 0) {
+      if (!DRY_RUN) {
+        const ok = await updatePeak(peak.id, payload);
+        if (!ok) {
+          console.error(`    ❌ Feil ved oppdatering av ${peak.name}`);
+          errors++;
         }
-        await sleep(200)
-      } catch (e) {
-        console.error(`  [feil] ${peak.name} — bilde: ${(e as Error).message}`)
-        errCount++
-      }
-    }
-
-    if (descOk) descCount++
-    if (imgOk) imgCount++
-
-    const descMark = descOk ? '✓desc' : (peak.description ? '–desc' : '✗desc')
-    const imgMark  = imgOk  ? '✓img'  : (peak.image_url  ? '–img'  : '✗img')
-    console.log(`[${i + 1}/${total}] ${peak.name} — ${descMark} ${imgMark}`)
-
-    if (DRY_RUN) {
-      if (descOk) console.log(`  BESKRIVELSE: ${description}`)
-      if (imgOk)  console.log(`  BILDE: ${image_url}`)
-      if (imgOk)  console.log(`  CREDIT: ${image_credit}`)
-      continue
-    }
-
-    // Bare skriv hvis minst én felt er oppdatert
-    if (descOk || imgOk) {
-      const update: Record<string, string | null> = {}
-      if (descOk) update.description = description
-      if (imgOk)  { update.image_url = image_url; update.image_credit = image_credit }
-
-      const { error: updErr } = await supabase
-        .from('peaks')
-        .update(update)
-        .eq('id', peak.id)
-
-      if (updErr) {
-        console.error(`  [feil] Supabase-oppdatering for ${peak.name}: ${updErr.message}`)
-        errCount++
+      } else {
+        console.log(`    [DRY-RUN] ville skrevet: ${Object.keys(payload).join(", ")}`);
       }
     }
   }
 
-  console.log(`\n=== Ferdig${DRY_RUN ? ' (dry-run)' : ''} ===`)
-  console.log(`Beskrivelser: ${descCount}`)
-  console.log(`Bilder:       ${imgCount}`)
-  console.log(`Feil:         ${errCount}`)
+  console.log(`\n✅ Ferdig!`);
+  console.log(`   Beskrivelser skrevet: ${okDesc}`);
+  console.log(`   Bilder hentet:        ${okImg}`);
+  if (errors) console.log(`   Feil:                 ${errors}`);
+  if (DRY_RUN) console.log(`\n   (DRY-RUN — ingenting ble skrevet til Supabase)`);
 }
 
-main().catch(err => { console.error('\nKrasj:', err.message); process.exit(1) })
+main().catch((e) => {
+  console.error("Uventet feil:", e);
+  process.exit(1);
+});

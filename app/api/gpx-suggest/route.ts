@@ -9,9 +9,11 @@ const MAX_TRACKPOINTS = 50_000
 
 export async function POST(request: NextRequest) {
   let trackpoints: Trackpoint[]
+  let collectionId: string | null = null
   try {
     const body = await request.json()
     trackpoints = body.trackpoints
+    collectionId = body.collectionId ?? null
     if (!Array.isArray(trackpoints) || trackpoints.length === 0) {
       return NextResponse.json({ error: 'No trackpoints' }, { status: 400 })
     }
@@ -24,14 +26,26 @@ export async function POST(request: NextRequest) {
   }
 
   const supabase = await createClient()
-  const { data } = await supabase
-    .from('peaks')
-    .select('id, name, height, lat, lng')
-    .gte('height', 2000)
-    .not('lat', 'is', null)
-    .not('lng', 'is', null)
 
-  const peaks = (data ?? []) as { id: string; name: string; height: number; lat: number; lng: number }[]
+  let peaks: { id: string; name: string; height: number; lat: number; lng: number }[] = []
+
+  if (collectionId) {
+    const { data } = await supabase
+      .from('collection_peaks')
+      .select('peaks(id, name, height, lat, lng)')
+      .eq('collection_id', collectionId)
+    peaks = (data ?? [])
+      .map((row: any) => row.peaks)
+      .filter((p: any) => p && p.lat != null && p.lng != null)
+  } else {
+    const { data } = await supabase
+      .from('peaks')
+      .select('id, name, height, lat, lng')
+      .gte('height', 2000)
+      .not('lat', 'is', null)
+      .not('lng', 'is', null)
+    peaks = (data ?? []) as typeof peaks
+  }
 
   const suggestions = peaks
     .map(peak => {

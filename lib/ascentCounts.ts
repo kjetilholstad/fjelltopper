@@ -42,3 +42,19 @@ export async function getAvailableAscentYears(): Promise<number[]> {
   }
   return Object.keys(yearsMap).map(Number).sort((a, b) => b - a)
 }
+
+export async function getRawAscents(): Promise<{ peak_id: string; date: string }[]> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('ascents').select('peak_id, date')
+  return (data ?? []) as { peak_id: string; date: string }[]
+}
+
+export async function getRawAscentsByYear(year: number): Promise<{ peak_id: string; date: string }[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('ascents')
+    .select('peak_id, date')
+    .gte('date', `${year}-01-01`)
+    .lte('date', `${year}-12-31`)
+  return (data ?? []) as { peak_id: string; date: string }[]
+}

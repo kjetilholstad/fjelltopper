@@ -4,6 +4,7 @@ import { useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { Upload, CheckCircle2, Mountain, Lock } from 'lucide-react'
 import { logAscent } from '@/app/ascents/actions'
+import { useCollection } from '@/context/CollectionContext'
 
 interface SuggestedPeak {
   id: string
@@ -20,6 +21,7 @@ type Status = 'idle' | 'parsing' | 'loading' | 'done' | 'error'
 
 export function GpxUploader({ ascendedIds }: GpxUploaderProps) {
   const router = useRouter()
+  const { activeCollection } = useCollection()
   const fileRef = useRef<HTMLInputElement>(null)
   const [status, setStatus] = useState<Status>('idle')
   const [suggestions, setSuggestions] = useState<SuggestedPeak[]>([])
@@ -69,7 +71,7 @@ export function GpxUploader({ ascendedIds }: GpxUploaderProps) {
       const res = await fetch('/api/gpx-suggest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ trackpoints }),
+        body: JSON.stringify({ trackpoints, collectionId: activeCollection?.id ?? null }),
       })
       if (!res.ok) throw new Error('Serverfeil')
       const json = await res.json()
@@ -139,7 +141,7 @@ export function GpxUploader({ ascendedIds }: GpxUploaderProps) {
 
       {status === 'done' && suggestions.length === 0 && (
         <p className="text-xs text-text-warm mt-3">
-          Ingen topper over 2000 moh funnet innenfor 300 m fra sporet.
+          Ingen topper fra <span className="font-medium">{activeCollection?.name ?? 'aktiv samling'}</span> funnet innenfor 300 m fra sporet.
         </p>
       )}
 
