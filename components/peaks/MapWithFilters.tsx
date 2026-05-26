@@ -396,7 +396,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
       )}
 
       {/* Admin redigeringspanel */}
-      {adminMode && editingPeak && (
+      {adminMode && (
         <>
           {/* Desktop */}
           <div
@@ -404,9 +404,16 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             style={{ right: 12, top: 116, zIndex: 5000, width: 280 }}
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-bold text-[#1A1A1A]">Rediger topp</span>
-              <button onClick={() => setEditingPeak(null)} className="text-text-warm hover:text-[#1A1A1A] text-sm">✕</button>
+              <span className="text-sm font-bold text-[#1A1A1A]">
+                {editingPeak ? 'Rediger topp' : 'Admin-modus'}
+              </span>
+              {editingPeak && (
+                <button onClick={() => setEditingPeak(null)} className="text-text-warm hover:text-[#1A1A1A] text-sm">✕</button>
+              )}
             </div>
+            {!editingPeak ? (
+              <p className="text-xs text-text-warm">Klikk på en topp på kartet for å redigere, eller dra markøren for å flytte den.</p>
+            ) : (
             <div className="flex flex-col gap-2">
               <div>
                 <label className="block text-[10px] font-semibold text-text-warm uppercase mb-1">Navn</label>
@@ -458,7 +465,8 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                 </div>
               </div>
             </div>
-            <div className="flex gap-2 mt-3">
+            )}
+            {editingPeak && <div className="flex gap-2 mt-3">
               <button
                 onClick={() => setEditingPeak(null)}
                 className="flex-1 text-xs py-1.5 border border-border-warm rounded-md hover:bg-parchment transition-colors"
@@ -472,16 +480,23 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
               >
                 {saving ? 'Lagrer…' : 'Lagre'}
               </button>
-            </div>
+            </div>}
           </div>
 
           {/* Mobil */}
           <div className="sm:hidden fixed bottom-0 left-0 right-0 z-[2100] bg-white border-t border-border-warm p-4 flex flex-col gap-3"
             style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' }}>
             <div className="flex items-center justify-between">
-              <span className="text-base font-bold text-[#1A1A1A]">Rediger topp</span>
-              <button onClick={() => setEditingPeak(null)} className="text-text-warm hover:text-[#1A1A1A]">✕</button>
+              <span className="text-base font-bold text-[#1A1A1A]">
+                {editingPeak ? 'Rediger topp' : 'Admin-modus'}
+              </span>
+              {editingPeak && (
+                <button onClick={() => setEditingPeak(null)} className="text-text-warm hover:text-[#1A1A1A]">✕</button>
+              )}
             </div>
+            {!editingPeak ? (
+              <p className="text-sm text-text-warm">Klikk på en topp på kartet for å redigere, eller dra markøren for å flytte den.</p>
+            ) : (<>
             <div>
               <label className="block text-xs font-semibold text-text-warm uppercase mb-1">Navn</label>
               <input
@@ -530,8 +545,8 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                   Velg
                 </button>
               </div>
-            </div>
-            <div className="flex gap-2">
+            </div></>)}
+            {editingPeak && <div className="flex gap-2">
               <button
                 onClick={() => setEditingPeak(null)}
                 className="flex-1 text-sm py-2 border border-border-warm rounded-md hover:bg-parchment transition-colors"
@@ -545,7 +560,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
               >
                 {saving ? 'Lagrer…' : 'Lagre'}
               </button>
-            </div>
+            </div>}
           </div>
         </>
       )}
