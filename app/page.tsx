@@ -1,27 +1,11 @@
-import { createClient } from '@/lib/supabase/server'
 import { HomeHeroClient } from '@/components/HomeHeroClient'
-
-export const dynamic = 'force-dynamic'
+import { HomeStatsClient } from '@/components/HomeStatsClient'
 
 export const metadata = {
   title: 'Fjelltopper — Norges høyeste topper',
 }
 
-export default async function Home() {
-  const supabase = await createClient()
-
-  const [{ count: totalCount }, { count: pf30Count }, { count: pf50Count }, { count: pf100Count }] = await Promise.all([
-    supabase.from('peaks').select('*', { count: 'exact', head: true }),
-    supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 30),
-    supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 50),
-    supabase.from('peaks').select('*', { count: 'exact', head: true }).gte('primary_factor', 100),
-  ])
-
-  const total  = totalCount  ?? 0
-  const pf30   = pf30Count   ?? 0
-  const pf50   = pf50Count   ?? 0
-  const pf100  = pf100Count  ?? 0
-
+export default function Home() {
   return (
     <div>
 
@@ -63,27 +47,7 @@ export default async function Home() {
       </section>
 
       {/* ── Stats-bar ───────────────────────────────────────────── */}
-      <section className="bg-white" style={{ borderTop: '1px solid #E8E2D9' }}>
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-4" style={{ borderColor: '#E8E2D9' }}>
-            {[
-              { value: total.toLocaleString('no'),  label: 'Topper registrert' },
-              { value: pf30.toLocaleString('no'),   label: 'PF over 30 m' },
-              { value: pf50.toLocaleString('no'),   label: 'PF over 50 m' },
-              { value: pf100.toLocaleString('no'),  label: 'PF over 100 m' },
-            ].map(({ value, label }, i) => (
-              <div
-                key={label}
-                className="py-6 px-4 text-center"
-                style={i > 0 ? { borderLeft: '1px solid #E8E2D9' } : undefined}
-              >
-                <p className="text-2xl sm:text-3xl font-bold text-[#1A1A1A]">{value}</p>
-                <p className="text-xs mt-1" style={{ color: '#6B6560' }}>{label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HomeStatsClient />
 
     </div>
   )
