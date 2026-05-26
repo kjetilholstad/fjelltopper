@@ -80,6 +80,7 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
     setLegs(Array(waypoints.length - 1).fill(null))
     setLoading(true)
     setSnapFailed(false)
+    setCreditExhausted(false)
 
     Promise.all(
       waypoints.slice(1).map(async (to, i) => {
