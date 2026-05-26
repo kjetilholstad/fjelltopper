@@ -41,11 +41,17 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
   }, [peak, allPeaks])
 
   return (
-    <Link href={`/peaks/${peak.id}`} className="group block">
+    <div className="group block">
       <div className="bg-white rounded-xl border border-border-warm p-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 h-full relative">
+        <Link
+          href={`/peaks/${peak.id}`}
+          className="absolute inset-0 rounded-xl z-0"
+          aria-label={`Vis detaljer for ${peak.name}`}
+        />
+
         {/* Rank badge */}
         {rank != null && (
-          <span className="absolute top-3 right-3 text-[11px] font-semibold text-text-warm bg-parchment border border-border-warm rounded-full px-2 py-0.5">
+          <span className="absolute top-3 right-3 z-10 text-[11px] font-semibold text-text-warm bg-parchment border border-border-warm rounded-full px-2 py-0.5">
             #{rank}
           </span>
         )}
@@ -65,7 +71,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
           </div>
 
           {userId !== null && isAscended && ascentDate ? (
-            <div className="flex items-center gap-1">
+            <div className="relative z-10 flex items-center gap-1">
               {ascentId && (
                 <EditAscentButton
                   ascentId={ascentId}
@@ -78,7 +84,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
               )}
               <button
                 disabled={isPending}
-                onClick={e => { e.preventDefault(); e.stopPropagation(); setConfirmOpen(true) }}
+                onClick={e => { e.stopPropagation(); setConfirmOpen(true) }}
                 title="Fjern bestigning"
                 className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-forest-50 text-forest border border-forest/20 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors disabled:opacity-50"
               >
@@ -101,8 +107,8 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
             </div>
           ) : userId !== null && !isAscended ? (
             <button
-              onClick={e => { e.preventDefault(); e.stopPropagation(); setShowForm(v => !v) }}
-              className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-parchment text-text-warm border border-border-warm hover:bg-forest-50 hover:text-forest hover:border-forest/20 transition-colors"
+              onClick={e => { e.stopPropagation(); setShowForm(v => !v) }}
+              className="relative z-10 flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-parchment text-text-warm border border-border-warm hover:bg-forest-50 hover:text-forest hover:border-forest/20 transition-colors"
             >
               <CheckCircle2 size={11} strokeWidth={1.5} />
               + Bestigning
@@ -121,7 +127,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
               setShowForm(false)
             }}
             onClick={e => e.stopPropagation()}
-            className="mt-2 p-2.5 rounded-lg bg-parchment border border-border-warm flex flex-col gap-2"
+            className="relative z-10 mt-2 p-2.5 rounded-lg bg-parchment border border-border-warm flex flex-col gap-2"
           >
             <input type="hidden" name="peak_id" value={peak.id} />
             <div className="flex gap-2 items-end">
@@ -201,15 +207,15 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
         {nearbyPeaks.length > 0 && (
           <div className="mt-3">
             <button
-              onClick={e => { e.preventDefault(); e.stopPropagation(); setOpen(o => !o) }}
-              className="flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full transition-opacity hover:opacity-80"
+              onClick={e => { e.stopPropagation(); setOpen(o => !o) }}
+              className="relative z-10 flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full transition-opacity hover:opacity-80"
               style={{ color: '#8B6914', background: '#FDF8EE', border: '1px solid #E8D5A3' }}
             >
               {open ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
               {nearbyPeaks.length} nærliggende topper
             </button>
             {open && (
-              <div className="mt-1.5 rounded-lg bg-[#F7F4EF] px-2.5 py-2 flex flex-col gap-1">
+              <div className="relative z-10 mt-1.5 rounded-lg bg-[#F7F4EF] px-2.5 py-2 flex flex-col gap-1">
                 {nearbyPeaks.map(p => (
                   <div key={p.id} className="flex items-baseline justify-between gap-2">
                     <span className="text-[11px] text-[#1A1A1A] truncate">{p.name}</span>
@@ -226,15 +232,11 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
 
         {/* Eksterne lenker */}
         {(peak.peakbagger_id != null || peak.peakbook_id != null) && (
-          <div
-            className="flex items-center gap-3 mt-2"
-            onClick={e => e.stopPropagation()}
-          >
+          <div className="relative z-10 flex items-center gap-3 mt-2">
             {peak.peakbagger_id != null && (
               <button
                 type="button"
                 onClick={e => {
-                  e.preventDefault()
                   e.stopPropagation()
                   window.open(`https://www.peakbagger.com/peak.aspx?pid=${peak.peakbagger_id}`, '_blank', 'noopener,noreferrer')
                 }}
@@ -248,7 +250,6 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
               <button
                 type="button"
                 onClick={e => {
-                  e.preventDefault()
                   e.stopPropagation()
                   window.open(`https://peakbook.org/peakbook-element/${peak.peakbook_id}/${encodeURIComponent(peak.name).replace(/%20/g, '+')}.html`, '_blank', 'noopener,noreferrer')
                 }}
@@ -273,6 +274,6 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
         </div>
 
       </div>
-    </Link>
+    </div>
   )
 }
