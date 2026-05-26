@@ -164,6 +164,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
   const [adminMode, setAdminMode] = useState(false)
   const [editingPeak, setEditingPeak] = useState<EnrichedPeak | null>(null)
   const [editName, setEditName] = useState('')
+  const [editHeight, setEditHeight] = useState(0)
   const [editLat, setEditLat] = useState(0)
   const [editLng, setEditLng] = useState(0)
   const [editNhp, setEditNhp] = useState('')
@@ -322,6 +323,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
     const supabase = createClient()
     const updates = {
       name: editName,
+      height: editHeight,
       lat: editLat,
       lng: editLng,
       nearest_higher_peak: editNhp || null,
@@ -353,6 +355,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
           if (adminMode && peak) {
             setEditingPeak(peak)
             setEditName(peak.name)
+            setEditHeight(peak.height)
             setEditLat(peak.lat ?? 0)
             setEditLng(peak.lng ?? 0)
             setEditNhp(peak.nearest_higher_peak ?? '')
@@ -378,6 +381,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
         onMarkerDragEnd={(peak, lat, lng) => {
           setEditingPeak(peak)
           setEditName(peak.name)
+          setEditHeight(peak.height)
           setEditLat(lat)
           setEditLng(lng)
           setEditNhp(peak.nearest_higher_peak ?? '')
@@ -421,6 +425,15 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                   type="text"
                   value={editName}
                   onChange={e => setEditName(e.target.value)}
+                  className="w-full bg-parchment border border-border-warm rounded-md px-2 py-1.5 text-xs text-[#1A1A1A] focus:outline-none focus:border-forest"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-semibold text-text-warm uppercase mb-1">Høyde (moh)</label>
+                <input
+                  type="number"
+                  value={editHeight}
+                  onChange={e => setEditHeight(Number(e.target.value))}
                   className="w-full bg-parchment border border-border-warm rounded-md px-2 py-1.5 text-xs text-[#1A1A1A] focus:outline-none focus:border-forest"
                 />
               </div>
@@ -503,6 +516,15 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                 type="text"
                 value={editName}
                 onChange={e => setEditName(e.target.value)}
+                className="w-full bg-parchment border border-border-warm rounded-md px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-text-warm uppercase mb-1">Høyde (moh)</label>
+              <input
+                type="number"
+                value={editHeight}
+                onChange={e => setEditHeight(Number(e.target.value))}
                 className="w-full bg-parchment border border-border-warm rounded-md px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest"
               />
             </div>
