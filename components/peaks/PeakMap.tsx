@@ -75,11 +75,12 @@ function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
 }
 
 function FlyToSelected({
-  peaks, selectedPeakId, bottomOffsetPx = 0,
+  peaks, selectedPeakId, bottomOffsetPx = 0, adminMode = false,
 }: {
   peaks: EnrichedPeak[]
   selectedPeakId: string | null
   bottomOffsetPx?: number
+  adminMode?: boolean
 }) {
   const map = useMap()
   const prevId = useRef<string | null>(null)
@@ -88,7 +89,7 @@ function FlyToSelected({
     prevId.current = selectedPeakId
     const peak = peaks.find(p => p.id === selectedPeakId)
     if (peak?.lat != null && peak?.lng != null) {
-      const zoom = 12
+      const zoom = adminMode ? 18 : 12
       if (bottomOffsetPx > 0) {
         const targetPx = map.project([peak.lat, peak.lng], zoom)
         targetPx.y += bottomOffsetPx
@@ -97,7 +98,7 @@ function FlyToSelected({
         map.flyTo([peak.lat, peak.lng], zoom, { duration: 0.8 })
       }
     }
-  }, [selectedPeakId, peaks, map, bottomOffsetPx])
+  }, [selectedPeakId, peaks, map, bottomOffsetPx, adminMode])
   return null
 }
 
@@ -295,7 +296,7 @@ export function PeakMap({
         />
 
         <MapClickHandler onMapClick={handleMapClick} />
-        <FlyToSelected peaks={peaks} selectedPeakId={selectedPeakId} bottomOffsetPx={flyBottomOffsetPx} />
+        <FlyToSelected peaks={peaks} selectedPeakId={selectedPeakId} bottomOffsetPx={flyBottomOffsetPx} adminMode={adminMode} />
         <FitBoundsToProfile bounds={activeProfileBounds ?? null} />
         <FitBoundsToCollection bounds={collectionBounds ?? null} fitToken={fitToken} />
 
