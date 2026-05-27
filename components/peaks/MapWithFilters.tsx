@@ -167,22 +167,12 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
   const [editHeight, setEditHeight] = useState(0)
   const [editLat, setEditLat] = useState(0)
   const [editLng, setEditLng] = useState(0)
-  const [editNhp, setEditNhp] = useState('')
-  const [selectingNhp, setSelectingNhp] = useState(false)
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     setAscentDate(new Date().toISOString().split('T')[0])
     setConfirmOpen(false)
   }, [selectedPeak?.id])
-
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape' && selectingNhp) setSelectingNhp(false)
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [selectingNhp])
 
   function toggleLine(type: LineType) {
     setActiveLines(prev => {
@@ -326,14 +316,13 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
       height: editHeight,
       lat: editLat,
       lng: editLng,
-      nearest_higher_peak: editNhp || null,
     })
     setSaving(false)
     if (error) {
       alert('Feil ved lagring: ' + error)
       return
     }
-    onPeakUpdated?.({ ...editingPeak, name: editName, height: editHeight, lat: editLat, lng: editLng, nearest_higher_peak: editNhp || null })
+    onPeakUpdated?.({ ...editingPeak, name: editName, height: editHeight, lat: editLat, lng: editLng })
     setEditingPeak(null)
   }
 
@@ -343,18 +332,12 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
         peaks={filteredWithAscended}
         selectedPeakId={selectedPeak?.id ?? null}
         onSelectPeak={peak => {
-          if (selectingNhp && peak) {
-            setEditNhp(peak.name)
-            setSelectingNhp(false)
-            return
-          }
           if (adminMode && peak) {
             setEditingPeak(peak)
             setEditName(peak.name)
             setEditHeight(peak.height)
             setEditLat(peak.lat ?? 0)
             setEditLng(peak.lng ?? 0)
-            setEditNhp(peak.nearest_higher_peak ?? '')
           }
           setSelectedPeak(peak)
           if (peak) { setPanelOpen(true); setSheetExpanded(true) }
@@ -380,20 +363,8 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
           setEditHeight(peak.height)
           setEditLat(lat)
           setEditLng(lng)
-          setEditNhp(peak.nearest_higher_peak ?? '')
         }}
       />
-
-      {/* NHP-velger banner */}
-      {selectingNhp && (
-        <div
-          style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1200 }}
-          className="bg-amber-500 text-white text-sm font-medium px-4 py-2.5 flex items-center justify-between"
-        >
-          <span>Klikk på en topp for å velge nærmeste høyere fjell (Esc for å avbryte)</span>
-          <button onClick={() => setSelectingNhp(false)} className="ml-4 font-bold shrink-0">✕</button>
-        </div>
-      )}
 
       {/* Admin redigeringspanel */}
       {adminMode && (
@@ -453,24 +424,6 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                     onChange={e => setEditLng(Number(e.target.value))}
                     className="w-full bg-parchment border border-border-warm rounded-md px-2 py-1.5 text-xs text-[#1A1A1A] focus:outline-none focus:border-forest"
                   />
-                </div>
-              </div>
-              <div>
-                <label className="block text-[10px] font-semibold text-text-warm uppercase mb-1">Nærmeste høyere fjell</label>
-                <div className="flex gap-1">
-                  <input
-                    type="text"
-                    value={editNhp}
-                    onChange={e => setEditNhp(e.target.value)}
-                    className="flex-1 bg-parchment border border-border-warm rounded-md px-2 py-1.5 text-xs text-[#1A1A1A] focus:outline-none focus:border-forest"
-                    placeholder="Velg fra kart…"
-                  />
-                  <button
-                    onClick={() => setSelectingNhp(true)}
-                    className="text-[10px] bg-amber-100 text-amber-800 border border-amber-300 rounded-md px-2 py-1.5 hover:bg-amber-200 shrink-0"
-                  >
-                    Velg
-                  </button>
                 </div>
               </div>
             </div>
@@ -546,24 +499,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                 />
               </div>
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-text-warm uppercase mb-1">Nærmeste høyere fjell</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={editNhp}
-                  onChange={e => setEditNhp(e.target.value)}
-                  className="flex-1 bg-parchment border border-border-warm rounded-md px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest"
-                  placeholder="Velg fra kart…"
-                />
-                <button
-                  onClick={() => setSelectingNhp(true)}
-                  className="text-sm bg-amber-100 text-amber-800 border border-amber-300 rounded-md px-3 py-2 hover:bg-amber-200 shrink-0"
-                >
-                  Velg
-                </button>
-              </div>
-            </div></>)}
+            </>)}
             {editingPeak && <div className="flex gap-2">
               <button
                 onClick={() => setEditingPeak(null)}
@@ -754,7 +690,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             </p>
 
             {/* Nærmeste høyere fjell */}
-            {selectedPeak.nearest_higher_peak && distToHigher != null ? (() => {
+            {selectedPeak.nearest_higher_peak_id && distToHigher != null ? (() => {
               const hp = peaks.find(p => p.id === selectedPeak.nearest_higher_peak_id)
               const parts: string[] = []
               if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
@@ -766,9 +702,9 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                   <span className="font-medium text-[#1A1A1A]">
                     {hp ? (
                       <button onClick={() => setSelectedPeak(hp)} className="underline decoration-dotted hover:text-forest transition-colors">
-                        {selectedPeak.nearest_higher_peak}
+                        {hp.name}
                       </button>
-                    ) : selectedPeak.nearest_higher_peak}
+                    ) : '–'}
                     {suffix}
                   </span>
                 </p>
@@ -1107,7 +1043,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                 Primærfaktor <strong className="text-[#1A1A1A]">{(selectedPeak.primary_factor ?? 0).toLocaleString('no')} m</strong>
               </p>
 
-              {selectedPeak.nearest_higher_peak && distToHigher != null && (() => {
+              {selectedPeak.nearest_higher_peak_id && distToHigher != null && (() => {
                 const hp = peaks.find(p => p.id === selectedPeak.nearest_higher_peak_id)
                 const parts: string[] = []
                 if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
@@ -1119,9 +1055,9 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                     <p className="text-sm font-medium text-[#1A1A1A]">
                       {hp ? (
                         <button onClick={() => setSelectedPeak(hp)} className="underline decoration-dotted hover:text-forest transition-colors">
-                          {selectedPeak.nearest_higher_peak}
+                          {hp.name}
                         </button>
-                      ) : selectedPeak.nearest_higher_peak}
+                      ) : '–'}
                       {suffix}
                     </p>
                   </div>

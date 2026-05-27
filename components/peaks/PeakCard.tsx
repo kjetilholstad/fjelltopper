@@ -162,25 +162,25 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
         </div>
 
         {/* Nærmeste høyere fjell */}
-        {peak.nearest_higher_peak && (
-          <div className="flex items-start gap-2 mb-1">
-            <ArrowUpToLine size={13} className="text-[#8B6914] shrink-0 mt-0.5" strokeWidth={1.75} />
-            <span className="text-xs text-text-warm">
-              Nærmeste høyere:<br />
-              <span className="font-medium text-[#1A1A1A]">
-                {peak.nearest_higher_peak}
-                {(() => {
-                  const hp = allPeaks?.find(p => p.id === peak.nearest_higher_peak_id)
-                  const dist = distanceToNearestHigher(peak, allPeaks ?? [])
-                  const parts: string[] = []
-                  if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
-                  if (dist != null) parts.push(formatDist(dist * 1000))
-                  return parts.length ? ` (${parts.join(' – ')})` : ''
-                })()}
+        {peak.nearest_higher_peak_id && (() => {
+          const hp = allPeaks?.find(p => p.id === peak.nearest_higher_peak_id)
+          const dist = distanceToNearestHigher(peak, allPeaks ?? [])
+          const parts: string[] = []
+          if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
+          if (dist != null) parts.push(formatDist(dist * 1000))
+          return (
+            <div className="flex items-start gap-2 mb-1">
+              <ArrowUpToLine size={13} className="text-[#8B6914] shrink-0 mt-0.5" strokeWidth={1.75} />
+              <span className="text-xs text-text-warm">
+                Nærmeste høyere:<br />
+                <span className="font-medium text-[#1A1A1A]">
+                  {hp?.name ?? '–'}
+                  {parts.length ? ` (${parts.join(' – ')})` : ''}
+                </span>
               </span>
-            </span>
-          </div>
-        )}
+            </div>
+          )
+        })()}
 
         {/* Nærmeste over 2000 m */}
         {nearest && (

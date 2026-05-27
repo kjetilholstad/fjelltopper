@@ -34,7 +34,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
 
   const [{ data: peakData }, { data: allData }, { data: ascentData }, countMap] = await Promise.all([
     supabase.from('peaks').select('*').eq('id', id).single(),
-    supabase.from('peaks').select('id, name, height, lat, lng, primary_factor, nearest_higher_peak, nearest_higher_peak_id'),
+    supabase.from('peaks').select('id, name, height, lat, lng, primary_factor, nearest_higher_peak_id'),
     user
       ? supabase.from('ascents').select('*').eq('peak_id', id).eq('user_id', user.id).maybeSingle()
       : Promise.resolve({ data: null as Ascent | null }),

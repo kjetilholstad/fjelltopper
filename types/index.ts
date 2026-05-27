@@ -3,7 +3,6 @@ export interface Peak {
   name: string
   height: number
   primary_factor: number | null
-  nearest_higher_peak: string | null
   nearest_higher_peak_id: string | null
   county: string | null
   municipality: string
@@ -11,7 +10,6 @@ export interface Peak {
   lng: number | null
   peakbagger_id: number | null
   peakbook_id?: number | null
-  topo_map: string | null
   description: string | null
   image_url: string | null
   image_credit: string | null

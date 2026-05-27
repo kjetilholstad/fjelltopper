@@ -67,7 +67,6 @@ interface Peak {
   county: string | null;
   municipality: string | null;
   primary_factor: number | null;
-  nearest_higher_peak: string | null;
   nearest_higher_peak_id: string | null;
   description: string | null;
   image_url: string | null;
@@ -84,7 +83,7 @@ function generateDescription(peak: Peak): string {
   }
 
   // Fallback: mal-beskrivelse
-  const { height, county, municipality, primary_factor: pf, nearest_higher_peak: nhp } = peak;
+  const { height, county, municipality, primary_factor: pf } = peak;
   const sentences: string[] = [];
 
   if (municipality && county) {
@@ -109,10 +108,6 @@ function generateDescription(peak: Peak): string {
     } else if (pf >= 30) {
       sentences.push(`Primærfaktoren er ${pf} meter.`);
     }
-  }
-
-  if (nhp) {
-    sentences.push(`Nærmeste høyere topp er ${nhp}.`);
   }
 
   return sentences.join(" ");
@@ -213,7 +208,7 @@ async function fetchWikimediaImage(
 async function fetchPeaks(): Promise<Peak[]> {
   const params = new URLSearchParams({
     select:
-      "id,name,height,county,municipality,primary_factor,nearest_higher_peak,nearest_higher_peak_id,description,image_url",
+      "id,name,height,county,municipality,primary_factor,nearest_higher_peak_id,description,image_url",
     height: "gte.2000",
     order:  "height.desc",
     limit:  "500",

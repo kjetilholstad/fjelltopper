@@ -9,7 +9,6 @@ interface PeakUpdate {
   height: number
   lat: number
   lng: number
-  nearest_higher_peak: string | null
 }
 
 export async function adminUpdatePeak(update: PeakUpdate): Promise<{ error: string | null }> {
@@ -33,7 +32,6 @@ export async function adminUpdatePeak(update: PeakUpdate): Promise<{ error: stri
       height: update.height,
       lat: update.lat,
       lng: update.lng,
-      nearest_higher_peak: update.nearest_higher_peak,
     })
     .eq('id', update.id)
 

@@ -36,7 +36,8 @@
       "Bash(python3 -m json.tool)",
       "Bash(Get-Content C:\\\\Users\\\\kjho\\\\fjelltopper\\\\package.json)",
       "Bash(Select-String -Pattern \"anthropic|supabase|tsx\")",
-      "Bash(npx tsx *)"
+      "Bash(npx tsx *)",
+      "Bash(Remove-Item *)"
     ]
   }
 }

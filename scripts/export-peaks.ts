@@ -9,7 +9,7 @@ const s = createClient(
 async function main() {
   const { data, error } = await s
     .from('peaks')
-    .select('id,name,height,county,municipality,primary_factor,nearest_higher_peak,nearest_higher_peak_id')
+    .select('id,name,height,county,municipality,primary_factor,nearest_higher_peak_id')
     .gte('height', 2000)
     .order('height', { ascending: false })
     .limit(500);
