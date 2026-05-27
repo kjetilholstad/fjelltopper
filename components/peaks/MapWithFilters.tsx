@@ -216,9 +216,9 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
   )
 
   const higherPeakId = useMemo(() => {
-    if (!selectedPeak?.nearest_higher_peak) return null
-    return peaks.find(p => p.name === selectedPeak.nearest_higher_peak)?.id ?? null
-  }, [selectedPeak, peaks])
+    if (!selectedPeak?.nearest_higher_peak_id) return null
+    return selectedPeak.nearest_higher_peak_id
+  }, [selectedPeak])
 
   const nearest2000Id = useMemo(() => nearest?.peak.id ?? null, [nearest])
 
@@ -236,7 +236,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
     if (!selectedPeak?.lat || !selectedPeak?.lng) return null
     const from: [number, number] = [selectedPeak.lat, selectedPeak.lng]
 
-    const higherPeakEntry = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
+    const higherPeakEntry = peaks.find(p => p.id === selectedPeak.nearest_higher_peak_id)
     const toHigher = higherPeakEntry?.lat != null && higherPeakEntry?.lng != null
       ? [[from, [higherPeakEntry.lat, higherPeakEntry.lng]]] as [number, number][][]
       : null
@@ -755,7 +755,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
 
             {/* Nærmeste høyere fjell */}
             {selectedPeak.nearest_higher_peak && distToHigher != null ? (() => {
-              const hp = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
+              const hp = peaks.find(p => p.id === selectedPeak.nearest_higher_peak_id)
               const parts: string[] = []
               if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
               parts.push(formatDist(distToHigher * 1000))
@@ -1108,7 +1108,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
               </p>
 
               {selectedPeak.nearest_higher_peak && distToHigher != null && (() => {
-                const hp = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
+                const hp = peaks.find(p => p.id === selectedPeak.nearest_higher_peak_id)
                 const parts: string[] = []
                 if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
                 parts.push(formatDist(distToHigher * 1000))

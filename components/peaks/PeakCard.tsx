@@ -170,7 +170,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
               <span className="font-medium text-[#1A1A1A]">
                 {peak.nearest_higher_peak}
                 {(() => {
-                  const hp = allPeaks?.find(p => p.name === peak.nearest_higher_peak)
+                  const hp = allPeaks?.find(p => p.id === peak.nearest_higher_peak_id)
                   const dist = distanceToNearestHigher(peak, allPeaks ?? [])
                   const parts: string[] = []
                   if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)

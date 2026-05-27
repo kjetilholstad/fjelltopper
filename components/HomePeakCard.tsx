@@ -16,8 +16,8 @@ export function HomePeakCard({ peak, rank, nearest, allPeaks, nearestHigherLabel
   const peakbaggerId = peak.peakbagger_id ?? 8916
 
   const distKm = distanceToNearestHigher(peak, allPeaks ?? [])
-  const nearestHigherPeak = peak.nearest_higher_peak
-    ? (allPeaks ?? []).find(p => p.name === peak.nearest_higher_peak) ?? null
+  const nearestHigherPeak = peak.nearest_higher_peak_id
+    ? (allPeaks ?? []).find(p => p.id === peak.nearest_higher_peak_id) ?? null
     : null
   const nearestHigherValue = nearestHigherPeak && distKm != null
     ? `${nearestHigherPeak.name} (${nearestHigherPeak.height.toLocaleString('no')} moh – ${formatDist(distKm * 1000)})`

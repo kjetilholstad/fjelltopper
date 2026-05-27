@@ -16,8 +16,8 @@ export function haversineKm(
 }
 
 export function distanceToNearestHigher(peak: Peak, allPeaks: Peak[]): number | null {
-  if (!peak.nearest_higher_peak || peak.lat == null || peak.lng == null) return null
-  const target = allPeaks.find(p => p.name === peak.nearest_higher_peak)
+  if (!peak.nearest_higher_peak_id || peak.lat == null || peak.lng == null) return null
+  const target = allPeaks.find(p => p.id === peak.nearest_higher_peak_id)
   if (!target || target.lat == null || target.lng == null) return null
   return haversineKm(peak.lat, peak.lng, target.lat, target.lng)
 }

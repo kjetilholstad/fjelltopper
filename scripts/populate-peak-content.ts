@@ -68,6 +68,7 @@ interface Peak {
   municipality: string | null;
   primary_factor: number | null;
   nearest_higher_peak: string | null;
+  nearest_higher_peak_id: string | null;
   description: string | null;
   image_url: string | null;
 }
@@ -212,7 +213,7 @@ async function fetchWikimediaImage(
 async function fetchPeaks(): Promise<Peak[]> {
   const params = new URLSearchParams({
     select:
-      "id,name,height,county,municipality,primary_factor,nearest_higher_peak,description,image_url",
+      "id,name,height,county,municipality,primary_factor,nearest_higher_peak,nearest_higher_peak_id,description,image_url",
     height: "gte.2000",
     order:  "height.desc",
     limit:  "500",

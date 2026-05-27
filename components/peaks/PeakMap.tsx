@@ -226,8 +226,8 @@ export function PeakMap({
   useEffect(() => {
     if (!selectedPeak?.lat || !selectedPeak?.lng) return
 
-    if (activeLines.has('higher') && selectedPeak.nearest_higher_peak) {
-      const target = peaks.find(p => p.name === selectedPeak.nearest_higher_peak)
+    if (activeLines.has('higher') && selectedPeak.nearest_higher_peak_id) {
+      const target = peaks.find(p => p.id === selectedPeak.nearest_higher_peak_id)
       if (target?.lat && target?.lng) {
         onProfileChange({ from: selectedPeak, to: target })
         return
