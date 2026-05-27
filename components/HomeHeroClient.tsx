@@ -67,7 +67,7 @@ export function HomeHeroClient() {
     ? `Søk, filtrer og utforsk alle ${collectionPeaks.length || ''} topper på Senja-øya. Kart med koordinater, primærfaktor og mer.`
     : `Søk, filtrer og utforsk alle ${collectionPeaks.length || ''} topper over 2000 moh. Kart med koordinater, primærfaktor og mer.`
 
-  const nearest = featured ? nearestPeak(featured, collectionPeaks) : null
+  const nearest = featured ? nearestPeak(featured, collectionPeaks, activeCollection?.nearestHigherMinHeight ?? 0) : null
 
   return (
     <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">

@@ -152,6 +152,7 @@ interface PeakMapProps {
     nearbyLabels: { pos: [number, number]; text: string }[]
   } | null
   higherPeakId: string | null
+  higherPeak?: EnrichedPeak | null
   nearest2000Id: string | null
   nearbyIds: Set<string>
   ascendedIds: Set<string>
@@ -165,6 +166,7 @@ interface PeakMapProps {
   adminMode?: boolean
   onToggleAdmin?: () => void
   onMarkerDragEnd?: (peak: EnrichedPeak, lat: number, lng: number) => void
+  nearestHigherMinHeight?: number
 }
 
 export function PeakMap({
@@ -174,6 +176,7 @@ export function PeakMap({
   activeLines,
   lineData,
   higherPeakId,
+  higherPeak,
   nearest2000Id,
   nearbyIds,
   ascendedIds,
@@ -187,6 +190,7 @@ export function PeakMap({
   adminMode = false,
   onToggleAdmin,
   onMarkerDragEnd,
+  nearestHigherMinHeight = 0,
 }: PeakMapProps) {
   const [activeLayerId, setActiveLayerId] = useState('topo')
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -227,14 +231,14 @@ export function PeakMap({
     if (!selectedPeak?.lat || !selectedPeak?.lng) return
 
     if (activeLines.has('higher') && selectedPeak.nearest_higher_peak_id) {
-      const target = peaks.find(p => p.id === selectedPeak.nearest_higher_peak_id)
+      const target = higherPeak ?? peaks.find(p => p.id === selectedPeak.nearest_higher_peak_id)
       if (target?.lat && target?.lng) {
-        onProfileChange({ from: selectedPeak, to: target })
+        onProfileChange({ from: selectedPeak, to: target as EnrichedPeak })
         return
       }
     }
     if (activeLines.has('nearest2000')) {
-      const nearest = nearestPeak(selectedPeak, peaks)
+      const nearest = nearestPeak(selectedPeak, peaks, nearestHigherMinHeight)
       if (nearest?.peak.lat && nearest?.peak.lng) {
         onProfileChange({ from: selectedPeak, to: nearest.peak })
       }

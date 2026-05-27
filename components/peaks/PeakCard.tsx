@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useMemo, useTransition } from 'react'
+import { useState, useMemo, useEffect, useTransition } from 'react'
 import Link from 'next/link'
 import { Mountain, TrendingUp, Navigation, ArrowUpToLine, MapPin, CheckCircle2, ChevronRight, ChevronDown, ChevronUp, ExternalLink, Users } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
-import { nearestPeak, distanceToNearestHigher } from '@/lib/nearestPeaks'
+import { nearestPeak, haversineKm } from '@/lib/nearestPeaks'
+import { createClient } from '@/lib/supabase/client'
 import { getNearbyPeaks } from '@/lib/nearbyPeaks'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
@@ -33,12 +34,28 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
   const { activeCollection } = useCollection()
   const nearestHigherLabel = activeCollection?.nearestHigherLabel ?? 'Nærmeste over 2000 m (PF ≥ 30 m)'
 
+  const [higherPeak, setHigherPeak] = useState<EnrichedPeak | null>(null)
+  useEffect(() => {
+    if (!peak.nearest_higher_peak_id) { setHigherPeak(null); return }
+    const found = allPeaks?.find(p => p.id === peak.nearest_higher_peak_id)
+    if (found) { setHigherPeak(found); return }
+    let cancelled = false
+    const supabase = createClient()
+    supabase
+      .from('peaks')
+      .select('*')
+      .eq('id', peak.nearest_higher_peak_id)
+      .single()
+      .then(({ data }) => { if (!cancelled) setHigherPeak((data as EnrichedPeak) ?? null) })
+    return () => { cancelled = true }
+  }, [peak.nearest_higher_peak_id, allPeaks])
+
   const nearbyPeaks = useMemo(() => getNearbyPeaks(peak, allPeaks ?? []), [peak, allPeaks])
 
   const nearest = useMemo(() => {
     if (!allPeaks) return null
-    return nearestPeak(peak, allPeaks)
-  }, [peak, allPeaks])
+    return nearestPeak(peak, allPeaks, activeCollection?.nearestHigherMinHeight ?? 0)
+  }, [peak, allPeaks, activeCollection?.nearestHigherMinHeight])
 
   return (
     <div className="group block">
@@ -163,10 +180,11 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
 
         {/* Nærmeste høyere fjell */}
         {peak.nearest_higher_peak_id && (() => {
-          const hp = allPeaks?.find(p => p.id === peak.nearest_higher_peak_id)
-          const dist = distanceToNearestHigher(peak, allPeaks ?? [])
+          const dist = higherPeak && peak.lat != null && peak.lng != null && higherPeak.lat != null && higherPeak.lng != null
+            ? haversineKm(peak.lat, peak.lng, higherPeak.lat, higherPeak.lng)
+            : null
           const parts: string[] = []
-          if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
+          if (higherPeak) parts.push(`${higherPeak.height.toLocaleString('no')} moh`)
           if (dist != null) parts.push(formatDist(dist * 1000))
           return (
             <div className="flex items-start gap-2 mb-1">
@@ -174,7 +192,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
               <span className="text-xs text-text-warm">
                 Nærmeste høyere:<br />
                 <span className="font-medium text-[#1A1A1A]">
-                  {hp?.name ?? '–'}
+                  {higherPeak?.name ?? '–'}
                   {parts.length ? ` (${parts.join(' – ')})` : ''}
                 </span>
               </span>

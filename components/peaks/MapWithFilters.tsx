@@ -7,7 +7,8 @@ import { useRouter } from 'next/navigation'
 import { Search, ChevronDown, ChevronUp, CheckCircle2, SlidersHorizontal, Users, ShieldCheck } from 'lucide-react'
 import type { EnrichedPeak } from '@/types'
 import { adminUpdatePeak } from '@/app/peaks/adminActions'
-import { nearestPeak, distanceToNearestHigher } from '@/lib/nearestPeaks'
+import { nearestPeak } from '@/lib/nearestPeaks'
+import { createClient } from '@/lib/supabase/client'
 import { usePeakFilters } from '@/lib/hooks/usePeakFilters'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { getNearbyPeaks } from '@/lib/nearbyPeaks'
@@ -169,6 +170,22 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
   const [editLng, setEditLng] = useState(0)
   const [saving, setSaving] = useState(false)
 
+  const [higherPeak, setHigherPeak] = useState<EnrichedPeak | null>(null)
+  useEffect(() => {
+    if (!selectedPeak?.nearest_higher_peak_id) { setHigherPeak(null); return }
+    const found = peaks.find(p => p.id === selectedPeak.nearest_higher_peak_id)
+    if (found) { setHigherPeak(found); return }
+    let cancelled = false
+    const supabase = createClient()
+    supabase
+      .from('peaks')
+      .select('*')
+      .eq('id', selectedPeak.nearest_higher_peak_id)
+      .single()
+      .then(({ data }) => { if (!cancelled) setHigherPeak((data as EnrichedPeak) ?? null) })
+    return () => { cancelled = true }
+  }, [selectedPeak?.nearest_higher_peak_id, peaks])
+
   useEffect(() => {
     setAscentDate(new Date().toISOString().split('T')[0])
     setConfirmOpen(false)
@@ -192,13 +209,14 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
 
   const nearest = useMemo(() => {
     if (!selectedPeak) return null
-    return nearestPeak(selectedPeak, peaks)
-  }, [selectedPeak, peaks])
+    return nearestPeak(selectedPeak, peaks, activeCollection?.nearestHigherMinHeight ?? 0)
+  }, [selectedPeak, peaks, activeCollection?.nearestHigherMinHeight])
 
-  const distToHigher = useMemo(
-    () => selectedPeak ? distanceToNearestHigher(selectedPeak, peaks) : null,
-    [selectedPeak, peaks]
-  )
+  const distToHigher = useMemo(() => {
+    if (!selectedPeak?.nearest_higher_peak_id || selectedPeak.lat == null || selectedPeak.lng == null) return null
+    if (!higherPeak || higherPeak.lat == null || higherPeak.lng == null) return null
+    return haversineKm(selectedPeak.lat, selectedPeak.lng, higherPeak.lat, higherPeak.lng)
+  }, [selectedPeak, higherPeak])
 
   const filteredWithAscended = useMemo(
     () => showOnlyAscended ? filtered.filter(p => ascendedSet.has(p.id)) : filtered,
@@ -226,7 +244,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
     if (!selectedPeak?.lat || !selectedPeak?.lng) return null
     const from: [number, number] = [selectedPeak.lat, selectedPeak.lng]
 
-    const higherPeakEntry = peaks.find(p => p.id === selectedPeak.nearest_higher_peak_id)
+    const higherPeakEntry = higherPeak
     const toHigher = higherPeakEntry?.lat != null && higherPeakEntry?.lng != null
       ? [[from, [higherPeakEntry.lat, higherPeakEntry.lng]]] as [number, number][][]
       : null
@@ -241,7 +259,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
         }
       : null
 
-    const nearestResult = nearestPeak(selectedPeak, peaks)
+    const nearestResult = nearestPeak(selectedPeak, peaks, activeCollection?.nearestHigherMinHeight ?? 0)
     const toNearest2000 = nearestResult?.peak.lat != null && nearestResult?.peak.lng != null
       ? [[from, [nearestResult.peak.lat, nearestResult.peak.lng]]] as [number, number][][]
       : null
@@ -267,7 +285,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
     })
 
     return { toHigher, higherLabel, toNearest2000, nearest2000Label, toNearby, nearbyLabels }
-  }, [selectedPeak, peaks, nearbyPeaks])
+  }, [selectedPeak, peaks, nearbyPeaks, higherPeak, activeCollection?.nearestHigherMinHeight])
 
   function lineAvailable(lineType: LineType): boolean {
     if (lineType === 'higher')      return !!lineData?.toHigher
@@ -345,7 +363,9 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
         activeLines={activeLines}
         lineData={lineData}
         higherPeakId={higherPeakId}
+        higherPeak={higherPeak}
         nearest2000Id={nearest2000Id}
+        nearestHigherMinHeight={activeCollection?.nearestHigherMinHeight ?? 0}
         nearbyIds={nearbyIds}
         ascendedIds={ascendedSet}
         onProfileChange={setActiveProfile}
@@ -691,7 +711,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
 
             {/* Nærmeste høyere fjell */}
             {selectedPeak.nearest_higher_peak_id && distToHigher != null ? (() => {
-              const hp = peaks.find(p => p.id === selectedPeak.nearest_higher_peak_id)
+              const hp = higherPeak
               const parts: string[] = []
               if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
               parts.push(formatDist(distToHigher * 1000))
@@ -1044,7 +1064,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
               </p>
 
               {selectedPeak.nearest_higher_peak_id && distToHigher != null && (() => {
-                const hp = peaks.find(p => p.id === selectedPeak.nearest_higher_peak_id)
+                const hp = higherPeak
                 const parts: string[] = []
                 if (hp) parts.push(`${hp.height.toLocaleString('no')} moh`)
                 parts.push(formatDist(distToHigher * 1000))

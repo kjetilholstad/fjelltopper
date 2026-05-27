@@ -13,7 +13,7 @@ interface HomePeakCardProps {
 }
 
 export function HomePeakCard({ peak, rank, nearest, allPeaks, nearestHigherLabel }: HomePeakCardProps) {
-  const peakbaggerId = peak.peakbagger_id ?? 8916
+  const peakbaggerId = peak.peakbagger_id ?? null
 
   const distKm = distanceToNearestHigher(peak, allPeaks ?? [])
   const nearestHigherPeak = peak.nearest_higher_peak_id
@@ -70,16 +70,18 @@ export function HomePeakCard({ peak, rank, nearest, allPeaks, nearestHigherLabel
       </div>
 
       {/* Peakbagger link */}
-      <a
-        href={`https://www.peakbagger.com/peak.aspx?pid=${peakbaggerId}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 text-xs font-medium hover:underline"
-        style={{ color: '#8B6914' }}
-      >
-        <ExternalLink size={11} />
-        Se på Peakbagger
-      </a>
+      {peakbaggerId && (
+        <a
+          href={`https://www.peakbagger.com/peak.aspx?pid=${peakbaggerId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-xs font-medium hover:underline"
+          style={{ color: '#8B6914' }}
+        >
+          <ExternalLink size={11} />
+          Se på Peakbagger
+        </a>
+      )}
 
       {/* Detail link */}
       <Link
