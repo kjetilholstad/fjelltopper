@@ -108,7 +108,7 @@ export function PlannerPanel({
       {snapFailed && (
         <div className="flex items-start gap-2 mx-3 mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-amber-800">
           <AlertTriangle size={13} className="shrink-0 mt-0.5" />
-          <p className="text-xs leading-snug line-clamp-2">Snap til sti feilet — viser luftlinje. Sjekk at GraphHopper API-nøkkel er satt.</p>
+          <p className="text-xs leading-snug line-clamp-2">Ruteberegning feilet — viser luftlinje i stedet.</p>
         </div>
       )}
       {/* Kartlag */}
@@ -339,7 +339,7 @@ export function PlannerPanel({
       {snapFailed && (
         <div className="flex items-start gap-2 mx-3 mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-amber-800">
           <AlertTriangle size={13} className="shrink-0 mt-0.5" />
-          <p className="text-xs leading-snug line-clamp-2">Snap til sti feilet — viser luftlinje. Sjekk at GraphHopper API-nøkkel er satt.</p>
+          <p className="text-xs leading-snug line-clamp-2">Ruteberegning feilet — viser luftlinje i stedet.</p>
         </div>
       )}
       {/* Kartlag */}
