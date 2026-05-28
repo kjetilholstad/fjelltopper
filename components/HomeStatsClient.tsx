@@ -42,7 +42,7 @@ export function HomeStatsClient() {
     return () => { cancelled = true }
   }, [activeCollection?.id])
 
-  const STAT_LABELS = ['Topper registrert', 'PF over 30 m', 'PF over 50 m', 'PF over 100 m']
+  const STAT_LABELS = ['Topper', 'PF over 30 m', 'PF over 50 m', 'PF over 100 m']
 
   const items = stats
     ? [
