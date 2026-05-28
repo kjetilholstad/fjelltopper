@@ -402,6 +402,9 @@ export default function InfoPage() {
               </p>
             </div>
           </div>
+          <p className="mt-4 text-xs text-[#6B6560] bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9] leading-relaxed">
+            Merk: Feltet «Nærmeste over 2 000 m» gjelder for 2000m-samlingen. I andre samlinger kan dette feltet ha et annet navn og en annen høydegrense.
+          </p>
         </section>
 
         {/* ── 3. Høydeprofil og gangtidsestimat ── */}
@@ -411,11 +414,22 @@ export default function InfoPage() {
             Høydeprofil og gangtidsestimat
           </h2>
           <p className="text-sm text-[#6B6560] leading-relaxed mb-3">
-            Luftlinjeavstand forteller ikke hele historien mellom to topper. For et bedre bilde
-            beregnes en høydeprofil ved å sample <strong className="text-[#1A1A1A] font-medium">50 jevnt fordelte punkter</strong> langs
-            luftlinjen og hente høyden i hvert punkt fra Kartverkets høydedataAPI. Dette gir en kurve
-            over terrenget mellom toppene — vist som de grønne punktene under.
+            Luftlinjeavstand forteller ikke hele historien mellom to topper. Appen beregner høydeprofil på to måter, avhengig av etappe-modus:
           </p>
+          <div className="flex flex-col gap-2 mb-3">
+            <div className="flex items-start gap-3 bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
+              <span className="text-sm font-bold text-[#2D5016] shrink-0 mt-0.5">~</span>
+              <p className="text-sm text-[#6B6560] leading-relaxed">
+                <strong className="text-[#1A1A1A] font-medium">Snap PÅ (rute langs sti):</strong> OpenRouteService returnerer høydedata direkte for alle rutepunkter — ingen ekstern høyde-API trengs.
+              </p>
+            </div>
+            <div className="flex items-start gap-3 bg-[#F7F4EF] rounded-lg px-4 py-3 border border-[#E8E2D9]">
+              <span className="text-sm font-bold text-[#A89F96] shrink-0 mt-0.5">—</span>
+              <p className="text-sm text-[#6B6560] leading-relaxed">
+                <strong className="text-[#1A1A1A] font-medium">Snap AV (luftlinje):</strong> <strong className="text-[#1A1A1A] font-medium">50 jevnt fordelte punkter</strong> langs luftlinjen, høyde fra Kartverkets høyde-API (ett kall per etappe).
+              </p>
+            </div>
+          </div>
           <p className="text-sm text-[#6B6560] leading-relaxed mb-4">
             Fra profilen beregnes <strong className="text-[#1A1A1A] font-medium">akkumulert stigning og nedstigning</strong>,
             og både kartsiden og turplanleggeren beregner gangtid med tre forskjellige metoder:
@@ -450,6 +464,9 @@ export default function InfoPage() {
           <HoydeprofilSVG />
           <p className="text-xs text-[#6B6560] text-center mt-3 italic">
             Grønne punkter = 50 samplingspunkter langs luftlinjen. Høyde fra Kartverkets API.
+          </p>
+          <p className="mt-2 text-xs text-[#6B6560] bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9] leading-relaxed">
+            Illustrasjonen gjelder luftlinje-etapper (snap av). For snap-etapper langs sti hentes høydedata direkte fra OpenRouteService.
           </p>
           <p className="mt-4 text-xs text-[#6B6560] bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9] leading-relaxed">
             Estimatene forutsetter jevnt terreng — reell gangtid kan variere avhengig av underlag og rute.
@@ -560,7 +577,7 @@ export default function InfoPage() {
                 {[
                   'Gå til Profilsiden din.',
                   'Last opp en .gpx-fil fra turen din.',
-                  'Appen analyserer sporet og foreslår topper over 2 000 moh som er innenfor 300 m fra sporet.',
+                  'Appen analyserer sporet og foreslår topper i den aktive samlingen som er innenfor 300 m fra sporet.',
                   'Bekreft forslagene og velg dato.',
                 ].map((step, i) => (
                   <li key={i} className="flex items-start gap-2.5 text-sm text-[#6B6560] leading-snug">
@@ -666,6 +683,9 @@ export default function InfoPage() {
               </p>
             </div>
           </div>
+          <p className="mt-4 text-xs text-[#6B6560] bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9] leading-relaxed">
+            Merk: «Nærmeste over 2 000 m»-raden gjelder for 2000m-samlingen. I andre samlinger kan denne raden ha et annet navn og en annen høydegrense.
+          </p>
         </section>
 
         {/* ── 7. Turplanlegger ── */}
@@ -723,7 +743,7 @@ export default function InfoPage() {
                   <span className="text-sm font-semibold text-[#1A1A1A]">Rute langs sti</span>
                 </div>
                 <p className="text-xs text-[#6B6560] leading-relaxed">
-                  GraphHopper beregner korteste vei langs merkede stier og veier. Viser reell gangdistanse og
+                  OpenRouteService beregner korteste vei langs merkede stier og veier. Viser reell gangdistanse og
                   korrekt høydeprofil. Krever nettforbindelse. Vises som heltrukken linje på kartet.
                 </p>
               </div>
@@ -741,6 +761,7 @@ export default function InfoPage() {
             <p className="mt-2 text-xs text-[#6B6560] bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9]">
               Når et vegpunkt er plassert utenfor en merkede sti, vil snap-ruten inkludere en stiplet oransje linje
               fra vegpunktet bort til nærmeste sti — slik at ruten alltid går fra ditt faktiske vegpunkt.
+              I avsidesliggende fjellterreng uten kartlagte stier kan snap falle tilbake til luftlinje automatisk.
             </p>
           </div>
 
