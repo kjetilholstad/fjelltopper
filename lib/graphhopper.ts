@@ -29,7 +29,7 @@ export async function fetchSnapRoute(
     throw new Error('ORS API key missing')
   }
 
-  const url = 'https://api.openrouteservice.org/v2/directions/foot-hiking'
+  const url = 'https://api.openrouteservice.org/v2/directions/foot-hiking/geojson'
   const body = JSON.stringify({
     coordinates: [[from.lng, from.lat], [to.lng, to.lat]],
     elevation: true,
