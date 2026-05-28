@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { MapPin, Mountain } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -66,10 +66,25 @@ export function HomeHeroClient() {
     : isVerden
     ? <>Utforsk verdens<br />høydepunkter</>
     : <>Utforsk Norges<br />høyeste topper</>
-  const subtext = isSenja
+  const subtext: React.ReactNode = isSenja
     ? `Søk, filtrer og utforsk alle ${collectionPeaks.length || ''} topper på Senja-øya. Kart med koordinater, primærfaktor og mer.`
     : isVerden
-    ? `Søk, filtrer og utforsk det høyeste fjellet i ${collectionPeaks.length || ''} land. Kart med koordinater, primærfaktor og mer.`
+    ? <>
+        Søk, filtrer og utforsk det høyeste fjellet i {collectionPeaks.length || ''} land. Kart med koordinater, primærfaktor og mer.{' '}
+        <br />
+        <span className="text-xs" style={{ color: '#8B6914' }}>
+          Basert på{' '}
+          <a
+            href="https://peakbagger.com/list.aspx?lid=1100"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:opacity-80"
+          >
+            Peakbagger liste
+          </a>
+          {' '}fra 28. mai 2026.
+        </span>
+      </>
     : `Søk, filtrer og utforsk alle ${collectionPeaks.length || ''} topper over 2000 moh. Kart med koordinater, primærfaktor og mer.`
 
   const nearest = featured ? nearestPeak(featured, collectionPeaks, activeCollection?.nearestHigherMinHeight ?? 0) : null
