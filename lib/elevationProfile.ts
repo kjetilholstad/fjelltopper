@@ -49,21 +49,46 @@ export async function fetchElevationProfile(
   return { points, distanceKm }
 }
 
+function resamplePoints(
+  points: Array<{ dist: number; elevation: number }>,
+  n: number
+): Array<{ dist: number; elevation: number }> {
+  if (points.length < 2) return points
+  const totalDist = points[points.length - 1].dist
+  if (totalDist <= 0) return points
+  const result: Array<{ dist: number; elevation: number }> = []
+  for (let i = 0; i < n; i++) {
+    const targetDist = (i / (n - 1)) * totalDist
+    let lo = 0, hi = points.length - 1
+    while (hi - lo > 1) {
+      const mid = (lo + hi) >> 1
+      if (points[mid].dist <= targetDist) lo = mid
+      else hi = mid
+    }
+    const p0 = points[lo], p1 = points[hi]
+    const span = p1.dist - p0.dist
+    const t = span > 0 ? (targetDist - p0.dist) / span : 0
+    result.push({ dist: targetDist, elevation: p0.elevation + t * (p1.elevation - p0.elevation) })
+  }
+  return result
+}
+
 export function toblerTime(
   points: Array<{ dist: number; elevation: number }>,
   totalKm: number,
   A: number, B: number, C: number
 ): number {
   if (points.length < 2) return totalKm / (A * Math.exp(-B * Math.abs(C)))
-  const scale = points[points.length - 1].dist > 0
-    ? totalKm / points[points.length - 1].dist : 1
+  const sampled = resamplePoints(points, 100)
+  const scale = sampled[sampled.length - 1].dist > 0
+    ? totalKm / sampled[sampled.length - 1].dist : 1
   let h = 0
-  for (let i = 1; i < points.length; i++) {
-    const dDist = (points[i].dist - points[i - 1].dist) * scale
+  for (let i = 1; i < sampled.length; i++) {
+    const dDist = (sampled[i].dist - sampled[i - 1].dist) * scale
     if (dDist < 0.0005) continue   // < 0.5 m, numerisk støy
-    const dElev = points[i].elevation - points[i - 1].elevation
+    const dElev = sampled[i].elevation - sampled[i - 1].elevation
     const sRaw = (dElev / 1000) / dDist
-    const s = Math.max(-1.5, Math.min(1.5, sRaw))
+    const s = Math.max(-0.5, Math.min(0.5, sRaw))
     h += dDist / (A * Math.exp(-B * Math.abs(s + C)))
   }
   return h
