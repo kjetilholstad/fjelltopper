@@ -471,6 +471,9 @@ export default function InfoPage() {
           <p className="mt-4 text-xs text-[#6B6560] bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9] leading-relaxed">
             Estimatene forutsetter jevnt terreng — reell gangtid kan variere avhengig av underlag og rute.
           </p>
+          <p className="mt-2 text-xs text-[#6B6560] bg-[#F7F4EF] rounded-lg px-3 py-2 border border-[#E8E2D9] leading-relaxed">
+            For luftlinje-etapper i svært bratt terreng (over ~50 % helning) kan Tobler-estimatene være optimistisk lave. Ingen ville gå rett opp en fjellvegg — reell rute vil ha knekkpunkter og ta betydelig lenger tid. Bruk sti-ruting (snap) for mer realistiske estimater der det finnes kartlagte stier.
+          </p>
 
           <div className="mt-5 border-t border-[#E8E2D9] pt-4">
             <p className="text-sm font-semibold text-[#1A1A1A] mb-3">Slik åpner du høydeprofil i kartet</p>
