@@ -88,17 +88,7 @@ export async function calcLeg(
           console.warn('[plannerLegs] Retry failed, falling back to straight-line:', retryErr)
         }
       } else {
-        console.warn('[plannerLegs] ORS failed, retrying:', err)
-        if (!signal?.aborted) {
-          try {
-            const result = await fetchSnapRoute(from, to, signal)
-            return buildSnapLeg(result, from, to)
-          } catch (retryErr) {
-            if (retryErr instanceof CreditExhaustedError) throw retryErr
-            if (retryErr instanceof DOMException && (retryErr as DOMException).name === 'AbortError') throw retryErr
-            console.warn('[plannerLegs] CH-disabled retry also failed, falling back to straight-line:', retryErr)
-          }
-        }
+        console.warn('[plannerLegs] ORS failed, falling back to straight-line:', err)
       }
     }
   }
