@@ -60,9 +60,10 @@ export function toblerTime(
   let h = 0
   for (let i = 1; i < points.length; i++) {
     const dDist = (points[i].dist - points[i - 1].dist) * scale
+    if (dDist < 0.0005) continue   // < 0.5 m, numerisk støy
     const dElev = points[i].elevation - points[i - 1].elevation
-    if (dDist <= 0) continue
-    const s = (dElev / 1000) / dDist
+    const sRaw = (dElev / 1000) / dDist
+    const s = Math.max(-1.5, Math.min(1.5, sRaw))
     h += dDist / (A * Math.exp(-B * Math.abs(s + C)))
   }
   return h
