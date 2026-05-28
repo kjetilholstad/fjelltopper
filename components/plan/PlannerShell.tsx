@@ -37,7 +37,8 @@ interface PlannerShellProps {
 
 export function PlannerShell({ peaks }: PlannerShellProps) {
   const { activeCollection } = useCollection()
-  const skipElevation = activeCollection?.slug === 'verden'
+  const isVerden = activeCollection?.slug === 'verden'
+  const skipElevation = isVerden
 
   const [waypoints, setWaypoints]             = useState<Waypoint[]>([])
   const [legs, setLegs]                       = useState<(LegStats | null)[]>([])
@@ -64,6 +65,11 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
     }
     setHydrated(true)
   }, [])
+
+  useEffect(() => {
+    if (!hydrated) return
+    if (isVerden) setActiveLayer('topo2')
+  }, [isVerden, hydrated])
 
   // Recalculate legs when waypoints change — each leg uses its own waypoints[i].snapToNext
   useEffect(() => {
@@ -244,6 +250,7 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
         onMoveDown={moveDown}
         onToggleLegSnap={toggleLegSnap}
         snapFailed={snapFailed}
+        isVerden={isVerden}
         mobileProfile={hasProfile ? (
           <PlannerProfile
             legs={legs}

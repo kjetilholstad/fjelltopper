@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import L from 'leaflet'
 import type { Peak } from '@/types'
 import { makeIcon } from '@/lib/mapIcons'
+import { useCollection } from '@/context/CollectionContext'
 import 'leaflet/dist/leaflet.css'
 
 const ICON_SELECTED = makeIcon(14, '#1A3A0A', 'white')
@@ -17,6 +18,8 @@ interface PeakDetailMapProps {
 
 export default function PeakDetailMap({ peak, nearbyPeaks }: PeakDetailMapProps) {
   const router = useRouter()
+  const { activeCollection } = useCollection()
+  const isVerden = activeCollection?.slug === 'verden'
 
   return (
     <MapContainer
@@ -25,8 +28,11 @@ export default function PeakDetailMap({ peak, nearbyPeaks }: PeakDetailMapProps)
       style={{ height: '100%', width: '100%' }}
     >
       <TileLayer
-        attribution="© Kartverket"
-        url="https://cache.kartverket.no/v1/wmts/1.0.0/topo/default/webmercator/{z}/{y}/{x}.png"
+        attribution={isVerden ? '© OpenTopoMap (CC-BY-SA)' : '© Kartverket'}
+        url={isVerden
+          ? 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
+          : 'https://cache.kartverket.no/v1/wmts/1.0.0/topo/default/webmercator/{z}/{y}/{x}.png'}
+        {...(isVerden ? { subdomains: 'abc' } : {})}
       />
       <Marker
         position={[peak.lat!, peak.lng!]}

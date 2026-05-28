@@ -76,12 +76,13 @@ interface PlannerPanelProps {
   onMoveDown: (index: number) => void
   onToggleLegSnap: (waypointIndex: number) => void
   snapFailed: boolean
+  isVerden?: boolean
   mobileProfile?: ReactNode
 }
 
 export function PlannerPanel({
   waypoints, legs, totalTime, activeLayer, minHeight, minPF, loading,
-  peakCount, totalPeakCount, snapFailed, mobileProfile,
+  peakCount, totalPeakCount, snapFailed, isVerden = false, mobileProfile,
   onLayerChange, onMinHeightChange, onMinPFChange, onRemoveWaypoint, onClearAll, onMoveUp, onMoveDown,
   onToggleLegSnap,
 }: PlannerPanelProps) {
@@ -115,7 +116,7 @@ export function PlannerPanel({
       <div className="flex items-center justify-between px-4 py-3 border-b border-[#E8E2D9]">
         <p className="text-xs font-semibold text-[#1A1A1A]">Kartlag</p>
         <div className="flex gap-1">
-          {(['topo', 'topo2'] as const).map(key => (
+          {(['topo', 'topo2'] as const).filter(key => isVerden ? key === 'topo2' : true).map(key => (
             <button
               key={key}
               onClick={() => onLayerChange(key)}
@@ -346,7 +347,7 @@ export function PlannerPanel({
       <div className="flex items-center justify-between px-4 py-3 border-b border-[#E8E2D9]">
         <p className="text-xs font-semibold text-[#1A1A1A]">Kartlag</p>
         <div className="flex gap-1">
-          {(['topo', 'topo2'] as const).map(key => (
+          {(['topo', 'topo2'] as const).filter(key => isVerden ? key === 'topo2' : true).map(key => (
             <button
               key={key}
               onClick={() => onLayerChange(key)}

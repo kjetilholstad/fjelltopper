@@ -103,7 +103,7 @@ export function NavbarClient({ userEmail, isLoggedIn }: NavbarClientProps) {
                               : 'text-text-warm border border-border-warm hover:border-forest hover:text-forest'
                           }`}
                         >
-                          {c.slug === 'norges-2000m' ? '2000m' : c.name}
+                          {c.slug === 'norges-2000m' ? '2000m' : c.slug === 'verden' ? 'Verden' : c.name}
                         </button>
                       ))}
                     </div>
@@ -223,7 +223,7 @@ export function NavbarClient({ userEmail, isLoggedIn }: NavbarClientProps) {
                         : 'text-text-warm border border-border-warm hover:border-forest hover:text-forest'
                     }`}
                   >
-                    {c.slug === 'norges-2000m' ? 'Norske 2000m' : c.name}
+                    {c.slug === 'norges-2000m' ? 'Norske 2000m' : c.slug === 'verden' ? 'Verden' : c.name}
                   </button>
                 ))}
               </div>

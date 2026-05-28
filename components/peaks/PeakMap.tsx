@@ -8,6 +8,7 @@ import type { EnrichedPeak } from '@/types'
 import { nearestPeak, haversineKm } from '@/lib/nearestPeaks'
 import { formatDist } from '@/lib/utils'
 import { makeIcon } from '@/lib/mapIcons'
+import { useCollection } from '@/context/CollectionContext'
 import 'leaflet/dist/leaflet.css'
 
 const LAYERS = [
@@ -193,9 +194,17 @@ export function PeakMap({
   onMarkerDragEnd,
   nearestHigherMinHeight = 0,
 }: PeakMapProps) {
-  const [activeLayerId, setActiveLayerId] = useState('topo')
+  const { activeCollection } = useCollection()
+  const isVerden = activeCollection?.slug === 'verden'
+
+  const [activeLayerId, setActiveLayerId] = useState<string>('topo')
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const selectorRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (isVerden) setActiveLayerId('topo2')
+    else setActiveLayerId('topo')
+  }, [isVerden])
 
   const [compareMode, setCompareMode] = useState(false)
   const [compareFrom, setCompareFrom] = useState<EnrichedPeak | null>(null)
@@ -469,7 +478,7 @@ export function PeakMap({
 
             {dropdownOpen && (
               <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-md border border-border-warm overflow-hidden min-w-[160px] z-10">
-                {LAYERS.map(layer => (
+                {LAYERS.filter(layer => isVerden ? layer.id === 'topo2' : true).map(layer => (
                   <button
                     key={layer.id}
                     onClick={() => { setActiveLayerId(layer.id); setDropdownOpen(false) }}
