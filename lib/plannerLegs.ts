@@ -45,7 +45,23 @@ function buildSnapLeg(result: SnapRouteResult, from: Waypoint, to: Waypoint): Le
   }
 }
 
-async function calcLegStraight(from: Waypoint, to: Waypoint, signal?: AbortSignal): Promise<LegStats> {
+async function calcLegStraight(from: Waypoint, to: Waypoint, signal?: AbortSignal, skipElevation?: boolean): Promise<LegStats> {
+  if (skipElevation) {
+    const distanceKm = haversineKm(from.lat, from.lng, to.lat, to.lng)
+    return {
+      distanceKm,
+      ascentM: 0,
+      descentM: 0,
+      timeEstimates: {
+        naismith:  distanceKm / 5,
+        toblerStd: distanceKm / 5,
+        toblerCal: distanceKm / 5,
+      },
+      geometry: [[from.lat, from.lng], [to.lat, to.lng]],
+      elevationPoints: [],
+      snapped: false,
+    }
+  }
   const { points, distanceKm } = await fetchElevationProfile(from.lat, from.lng, to.lat, to.lng, 50, signal)
   const stats = calcProfileStats(points, distanceKm)
   const elevationPoints = points.map((p, i) => ({
@@ -67,7 +83,8 @@ export async function calcLeg(
   from: Waypoint,
   to: Waypoint,
   snap: boolean,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  skipElevation?: boolean,
 ): Promise<LegStats> {
   if (snap) {
     try {
@@ -78,7 +95,7 @@ export async function calcLeg(
       if (err instanceof DOMException && err.name === 'AbortError') throw err
       if (err instanceof RateLimitedError) {
         await sleep(2000)
-        if (signal?.aborted) return calcLegStraight(from, to, signal)
+        if (signal?.aborted) return calcLegStraight(from, to, signal, skipElevation)
         try {
           const result = await fetchSnapRoute(from, to, signal)
           return buildSnapLeg(result, from, to)
@@ -92,5 +109,5 @@ export async function calcLeg(
       }
     }
   }
-  return calcLegStraight(from, to, signal)
+  return calcLegStraight(from, to, signal, skipElevation)
 }

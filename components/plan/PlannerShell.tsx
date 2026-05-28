@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import { PlannerPanel } from './PlannerPanel'
 import { PlannerProfile } from './PlannerProfile'
 import { calcLeg, CreditExhaustedError } from '@/lib/plannerLegs'
+import { useCollection } from '@/context/CollectionContext'
 import type { Waypoint, LegStats } from '@/types/planner'
 import type { Peak } from '@/types'
 
@@ -35,6 +36,9 @@ interface PlannerShellProps {
 }
 
 export function PlannerShell({ peaks }: PlannerShellProps) {
+  const { activeCollection } = useCollection()
+  const skipElevation = activeCollection?.slug === 'verden'
+
   const [waypoints, setWaypoints]             = useState<Waypoint[]>([])
   const [legs, setLegs]                       = useState<(LegStats | null)[]>([])
   const [activeLayer, setActiveLayer]         = useState<LayerKey>('topo')
@@ -86,12 +90,12 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
       waypoints.slice(1).map(async (to, i) => {
         const useSnap = waypoints[i].snapToNext ?? false
         try {
-          return await calcLeg(waypoints[i], to, useSnap, controller.signal)
+          return await calcLeg(waypoints[i], to, useSnap, controller.signal, skipElevation)
         } catch (err) {
           if (err instanceof DOMException && err.name === 'AbortError') return null
           if (err instanceof CreditExhaustedError) {
             setCreditExhausted(true)
-            try { return await calcLeg(waypoints[i], to, false) } catch { return null }
+            try { return await calcLeg(waypoints[i], to, false, undefined, skipElevation) } catch { return null }
           }
           setSnapFailed(true)
           return null

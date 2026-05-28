@@ -10,9 +10,10 @@ interface HomePeakCardProps {
   nearest?: { peak: Peak; distanceKm: number } | null
   allPeaks?: Peak[]
   nearestHigherLabel?: string
+  collectionSlug?: string
 }
 
-export function HomePeakCard({ peak, rank, nearest, allPeaks, nearestHigherLabel }: HomePeakCardProps) {
+export function HomePeakCard({ peak, rank, nearest, allPeaks, nearestHigherLabel, collectionSlug }: HomePeakCardProps) {
   const peakbaggerId = peak.peakbagger_id ?? null
 
   const distKm = distanceToNearestHigher(peak, allPeaks ?? [])
@@ -27,11 +28,12 @@ export function HomePeakCard({ peak, rank, nearest, allPeaks, nearestHigherLabel
     ? `${nearest.peak.name} (${nearest.peak.height.toLocaleString('no')} moh – ${formatDist(nearest.distanceKm * 1000)})`
     : null
 
+  const isVerden = collectionSlug === 'verden'
   const stats = [
     { label: 'Primærfaktor', value: peak.primary_factor != null ? `${peak.primary_factor.toLocaleString('no')} m` : '—' },
     { label: 'Nærmeste høyere fjell', value: nearestHigherValue },
-    { label: 'Kommune', value: peak.municipality && peak.municipality !== 'Ukjent' ? peak.municipality : '—' },
-    { label: 'Fylke', value: peak.county ?? '—' },
+    ...(!isVerden ? [{ label: 'Kommune', value: peak.municipality && peak.municipality !== 'Ukjent' ? peak.municipality : '—' }] : []),
+    { label: isVerden ? 'Land' : 'Fylke', value: peak.county ?? '—' },
   ]
 
   return (

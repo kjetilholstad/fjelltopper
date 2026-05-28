@@ -59,12 +59,17 @@ export function HomeHeroClient() {
   }, [activeCollection?.id])
 
   const isSenja = activeCollection?.slug === 'senja'
-  const badgeText = isSenja ? '▲ Senja' : '▲ Norges fjelltopper'
+  const isVerden = activeCollection?.slug === 'verden'
+  const badgeText = isSenja ? '▲ Senja' : isVerden ? '▲ Verden' : '▲ Norges fjelltopper'
   const headline = isSenja
     ? <>Utforsk Senjas<br />topper</>
+    : isVerden
+    ? <>Utforsk verdens<br />høydepunkter</>
     : <>Utforsk Norges<br />høyeste topper</>
   const subtext = isSenja
     ? `Søk, filtrer og utforsk alle ${collectionPeaks.length || ''} topper på Senja-øya. Kart med koordinater, primærfaktor og mer.`
+    : isVerden
+    ? `Søk, filtrer og utforsk det høyeste fjellet i ${collectionPeaks.length || ''} land. Kart med koordinater, primærfaktor og mer.`
     : `Søk, filtrer og utforsk alle ${collectionPeaks.length || ''} topper over 2000 moh. Kart med koordinater, primærfaktor og mer.`
 
   const nearest = featured ? nearestPeak(featured, collectionPeaks, activeCollection?.nearestHigherMinHeight ?? 0) : null
@@ -119,6 +124,7 @@ export function HomeHeroClient() {
             nearest={nearest ?? null}
             allPeaks={collectionPeaks}
             nearestHigherLabel={activeCollection?.nearestHigherLabel}
+            collectionSlug={activeCollection?.slug}
           />
         ) : (
           <div

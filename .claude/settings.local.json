@@ -37,7 +37,10 @@
       "Bash(Get-Content C:\\\\Users\\\\kjho\\\\fjelltopper\\\\package.json)",
       "Bash(Select-String -Pattern \"anthropic|supabase|tsx\")",
       "Bash(npx tsx *)",
-      "Bash(Remove-Item *)"
+      "Bash(Remove-Item *)",
+      "Bash(git -C C:\\\\Users\\\\kjho\\\\fjelltopper add lib/graphhopper.ts)",
+      "Bash(git -C C:\\\\Users\\\\kjho\\\\fjelltopper commit -m \"fix: bytt GraphHopper profile fra hike til foot \\(hike ikke støttet på gratiskonto\\)\")",
+      "Bash(git -C C:\\\\Users\\\\kjho\\\\fjelltopper push)"
     ]
   }
 }
