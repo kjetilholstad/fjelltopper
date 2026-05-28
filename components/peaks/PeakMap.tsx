@@ -283,6 +283,7 @@ export function PeakMap({
       <MapContainer
         center={[61.6, 8.3]}
         zoom={8}
+        minZoom={2}
         style={{ height: '100%', width: '100%' }}
         zoomControl={false}
       >

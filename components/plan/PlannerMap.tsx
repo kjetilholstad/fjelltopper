@@ -112,6 +112,7 @@ export function PlannerMap({
       <MapContainer
         center={[61.6, 8.3]}
         zoom={7}
+        minZoom={2}
         style={{ height: '100%', width: '100%' }}
         zoomControl={false}
       >
