@@ -33,8 +33,8 @@ export async function fetchSnapRoute(
   const url =
     `https://graphhopper.com/api/1/route` +
     `?point=${from.lat},${from.lng}&point=${to.lat},${to.lng}` +
-    `&profile=hike&locale=no&points_encoded=false&elevation=true` +
-    `&avoid=ferry&avoid=motorway&avoid=trunk&key=${key}${extra}`
+    `&profile=foot&locale=no&points_encoded=false&elevation=true` +
+    `&avoid=ferry&key=${key}${extra}`
 
   console.log('[GraphHopper] GET', url.replace(key ?? '', '<KEY>'), options?.disableCH ? '(CH disabled)' : '')
 
