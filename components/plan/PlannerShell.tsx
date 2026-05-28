@@ -101,6 +101,10 @@ export function PlannerShell({ peaks }: PlannerShellProps) {
       if (batchRef.current === batchId) {
         setLegs(results)
         setLoading(false)
+        const anyFellBack = results.some((leg, i) =>
+          leg !== null && !leg.snapped && (waypoints[i]?.snapToNext ?? false)
+        )
+        if (anyFellBack) setSnapFailed(true)
       }
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
