@@ -5,6 +5,9 @@ on:
     - cron: '0 */3 * * *'  # Every 3 hours
   workflow_dispatch:        # Allow manual trigger from GitHub UI
 
+permissions:
+  actions: write            # needed so the job can re-enable its own workflow
+
 jobs:
   ping:
     runs-on: ubuntu-latest
@@ -49,3 +52,9 @@ jobs:
             exit 1
           fi
           echo "All queries succeeded"
+
+      - name: Keep this workflow from being auto-disabled
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow enable "Keep Supabase alive" --repo "${{ github.repository }}"
