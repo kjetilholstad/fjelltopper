@@ -53,7 +53,7 @@ jobs:
           fi
           echo "All queries succeeded"
 
-        - name: Keep this workflow from being auto-disabled
+      - name: Keep this workflow from being auto-disabled
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
