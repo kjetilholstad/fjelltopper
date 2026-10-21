@@ -140,6 +140,7 @@ function FitBoundsToProfile({ bounds }: {
 
 type LineType = 'higher' | 'nearest2000' | 'nearby'
 
+
 interface PeakMapProps {
   peaks: EnrichedPeak[]
   selectedPeakId: string | null
@@ -169,6 +170,42 @@ interface PeakMapProps {
   onToggleAdmin?: () => void
   onMarkerDragEnd?: (peak: EnrichedPeak, lat: number, lng: number) => void
   nearestHigherMinHeight?: number
+}
+
+// Zoomer til linjen som sist ble skrudd på. Står flere på, følger zoomen rekkefølgen de ble skrudd på.
+function FitToToggledLine({ activeLines, lineData }: {
+  activeLines: Set<LineType>
+  lineData: PeakMapProps['lineData']
+}) {
+  const map = useMap()
+  const prevLines = useRef<Set<LineType>>(new Set())
+  const pending = useRef<LineType | null>(null)
+
+  useEffect(() => {
+    Array.from(activeLines).forEach(t => {
+      if (!prevLines.current.has(t)) pending.current = t
+    })
+    prevLines.current = new Set(activeLines)
+
+    const type = pending.current
+    if (!type || !activeLines.has(type)) { pending.current = null; return }
+
+    const segments =
+      type === 'higher' ? lineData?.toHigher :
+      type === 'nearest2000' ? lineData?.toNearest2000 :
+      lineData?.toNearby
+    const points = (segments ?? []).flat()
+    if (points.length < 2) return // venter på data (f.eks. nærmeste høyere som hentes)
+
+    pending.current = null
+    const isMobile = window.innerWidth < 640
+    map.fitBounds(L.latLngBounds(points), {
+      paddingTopLeft: [40, 60],
+      paddingBottomRight: [40, isMobile ? Math.round(window.innerHeight * 0.65) : 40],
+      maxZoom: type === 'nearby' ? 14 : 13,
+    })
+  }, [activeLines, lineData, map])
+  return null
 }
 
 export function PeakMap({
@@ -308,6 +345,7 @@ export function PeakMap({
         <MapClickHandler onMapClick={handleMapClick} />
         <FlyToSelected peaks={peaks} selectedPeakId={selectedPeakId} bottomOffsetPx={flyBottomOffsetPx} adminMode={adminMode} />
         <FitBoundsToProfile bounds={activeProfileBounds ?? null} />
+        <FitToToggledLine activeLines={activeLines} lineData={lineData} />
         <FitBoundsToCollection bounds={collectionBounds ?? null} fitToken={fitToken} />
 
         {peaks.map(peak => (
