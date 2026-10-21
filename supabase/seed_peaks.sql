@@ -1,3 +1,10 @@
+-- =============================================================================
+-- ⚠️  ALDRI KJØR DENNE FILEN MOT PROD.
+-- Filen inneholder «delete from public.peaks where height > 0». ascents.peak_id har
+-- ON DELETE CASCADE, så ALLE brukeres loggede bestigninger slettes uten mulighet for å
+-- angre. Beholdt kun som historikk.
+-- =============================================================================
+
 -- Migration: add new columns to peaks table
 alter table public.peaks add column if not exists primary_factor integer;
 alter table public.peaks add column if not exists secondary_factor integer;

@@ -1,3 +1,10 @@
+-- =============================================================================
+-- ⚠️  ALDRI KJØR DENNE FILEN MOT PROD.
+-- Filen inneholder «delete from public.peaks where height > 0». ascents.peak_id har
+-- ON DELETE CASCADE, så ALLE brukeres loggede bestigninger slettes uten mulighet for å
+-- angre. Beholdt kun som historikk.
+-- =============================================================================
+
 -- Seed: Norwegian peaks from Wikipedia (filtered)
 -- 989 topper
 
