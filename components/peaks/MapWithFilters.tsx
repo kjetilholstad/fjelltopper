@@ -167,8 +167,8 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
   const [editingPeak, setEditingPeak] = useState<EnrichedPeak | null>(null)
   const [editName, setEditName] = useState('')
   const [editHeight, setEditHeight] = useState(0)
-  const [editLat, setEditLat] = useState(0)
-  const [editLng, setEditLng] = useState(0)
+  const [editLat, setEditLat] = useState<number | null>(null)
+  const [editLng, setEditLng] = useState<number | null>(null)
   const [saving, setSaving] = useState(false)
 
   const [higherPeak, setHigherPeak] = useState<EnrichedPeak | null>(null)
@@ -328,6 +328,10 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
 
   async function handleSavePeak() {
     if (!editingPeak) return
+    if (editLat == null || editLng == null) {
+      alert('Feil ved lagring: Koordinatene må fylles ut')
+      return
+    }
     setSaving(true)
     const { error } = await adminUpdatePeak({
       id: editingPeak.id,
@@ -355,8 +359,8 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
             setEditingPeak(peak)
             setEditName(peak.name)
             setEditHeight(peak.height)
-            setEditLat(peak.lat ?? 0)
-            setEditLng(peak.lng ?? 0)
+            setEditLat(peak.lat)
+            setEditLng(peak.lng)
           }
           setSelectedPeak(peak)
           if (peak) { setPanelOpen(true); setSheetExpanded(true) }
@@ -431,8 +435,8 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                   <input
                     type="number"
                     step="0.000001"
-                    value={editLat}
-                    onChange={e => setEditLat(Number(e.target.value))}
+                    value={editLat ?? ''}
+                    onChange={e => setEditLat(e.target.value === '' ? null : Number(e.target.value))}
                     className="w-full bg-parchment border border-border-warm rounded-md px-2 py-1.5 text-xs text-[#1A1A1A] focus:outline-none focus:border-forest"
                   />
                 </div>
@@ -441,8 +445,8 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                   <input
                     type="number"
                     step="0.000001"
-                    value={editLng}
-                    onChange={e => setEditLng(Number(e.target.value))}
+                    value={editLng ?? ''}
+                    onChange={e => setEditLng(e.target.value === '' ? null : Number(e.target.value))}
                     className="w-full bg-parchment border border-border-warm rounded-md px-2 py-1.5 text-xs text-[#1A1A1A] focus:outline-none focus:border-forest"
                   />
                 </div>
@@ -504,8 +508,8 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                 <input
                   type="number"
                   step="0.000001"
-                  value={editLat}
-                  onChange={e => setEditLat(Number(e.target.value))}
+                  value={editLat ?? ''}
+                  onChange={e => setEditLat(e.target.value === '' ? null : Number(e.target.value))}
                   className="w-full bg-parchment border border-border-warm rounded-md px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest"
                 />
               </div>
@@ -514,8 +518,8 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                 <input
                   type="number"
                   step="0.000001"
-                  value={editLng}
-                  onChange={e => setEditLng(Number(e.target.value))}
+                  value={editLng ?? ''}
+                  onChange={e => setEditLng(e.target.value === '' ? null : Number(e.target.value))}
                   className="w-full bg-parchment border border-border-warm rounded-md px-3 py-2 text-sm text-[#1A1A1A] focus:outline-none focus:border-forest"
                 />
               </div>
