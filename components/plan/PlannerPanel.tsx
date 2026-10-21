@@ -4,6 +4,7 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { ChevronUp, ChevronDown, Trash2, Download, RotateCcw, Route, Minus, AlertTriangle } from 'lucide-react'
 import type { Waypoint, LegStats } from '@/types/planner'
+import { formatTime } from '@/lib/formatters'
 
 const HEIGHT_OPTIONS = [
   { label: 'Alle høyder',    value: '0'    },
@@ -25,9 +26,6 @@ const PF_OPTIONS = [
   { label: 'PF over 1500 m',      value: '1500' },
   { label: 'PF over 2000 m',      value: '2000' },
 ]
-
-const formatTime = (h: number) =>
-  `${Math.floor(h)}t ${Math.round((h % 1) * 60)}min`
 
 function exportGPX(waypoints: Waypoint[], legs: (LegStats | null)[], name: string) {
   const safeName = name.trim().replace(/[^\w\s\-æøåÆØÅ]/g, '').trim() || 'turplan'

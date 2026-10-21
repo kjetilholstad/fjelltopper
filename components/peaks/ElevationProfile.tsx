@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { fetchElevationProfile, calcProfileStats, ProfileStats } from '@/lib/elevationProfile'
+import { formatTime } from '@/lib/formatters'
 
 interface Props {
   fromName: string
@@ -175,20 +176,15 @@ export default function ElevationProfile({ fromName, toName, fromLat, fromLng, t
       .finally(() => setLoading(false))
   }, [fromLat, fromLng, toLat, toLng])
 
-  const formatTime = (h: number) => {
-    const hh = Math.floor(h), mm = Math.round((h - hh) * 60)
-    return hh > 0 ? `${hh}t ${mm}min` : `${mm}min`
-  }
-
   const svgData = points.length && stats ? { points, distanceKm: stats.distanceKm } : null
 
   const chips: Array<{ label: string; value: string; highlight?: boolean }> = stats ? [
     { label: 'Luftlinje',   value: `${stats.distanceKm.toFixed(1)} km` },
     { label: 'Stigning',    value: `${stats.ascentM} m` },
     { label: 'Nedstigning', value: `${stats.descentM} m` },
-    { label: 'Naismith',    value: formatTime(stats.timeEstimates.naismith) },
-    { label: 'Tobler',      value: formatTime(stats.timeEstimates.toblerStd) },
-    { label: 'Kalibrert ↗', value: formatTime(stats.timeEstimates.toblerCal), highlight: true },
+    { label: 'Naismith',    value: formatTime(stats.timeEstimates.naismith, true) },
+    { label: 'Tobler',      value: formatTime(stats.timeEstimates.toblerStd, true) },
+    { label: 'Kalibrert ↗', value: formatTime(stats.timeEstimates.toblerCal, true), highlight: true },
   ] : []
 
   return (
