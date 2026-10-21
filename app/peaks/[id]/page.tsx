@@ -190,7 +190,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
       {nearest && (
         <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
           <div className="bg-white rounded-lg border p-4">
-            <p className="text-stone-500 mb-1">Nærmeste over {NEAREST_MIN_HEIGHT.toLocaleString('no')} m (PF ≥ 30 m)</p>
+            <p className="text-stone-500 mb-1">Nærmeste over {NEAREST_MIN_HEIGHT} m (PF ≥ 30 m)</p>
             <p className="font-semibold text-stone-800">
               <Link href={`/peaks/${nearest.peak.id}`} className="hover:underline">
                 {nearest.peak.name}
