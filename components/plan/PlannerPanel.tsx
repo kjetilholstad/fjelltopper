@@ -135,7 +135,7 @@ export function PlannerPanel({
       {/* Peak height filter */}
       <div className="px-4 py-3 border-b border-[#E8E2D9]">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-xs font-semibold text-[#1A1A1A]">Vis fjelltoppar</p>
+          <p className="text-xs font-semibold text-[#1A1A1A]">Vis fjelltopper</p>
           <span className="text-[10px] text-[#A89F96]">{peakCount} av {totalPeakCount}</span>
         </div>
         <div className="relative">
@@ -366,7 +366,7 @@ export function PlannerPanel({
       {/* Peak height filter */}
       <div className="px-4 py-3 border-b border-[#E8E2D9]">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-xs font-semibold text-[#1A1A1A]">Vis fjelltoppar</p>
+          <p className="text-xs font-semibold text-[#1A1A1A]">Vis fjelltopper</p>
           <span className="text-[10px] text-[#A89F96]">{peakCount} av {totalPeakCount}</span>
         </div>
         <div className="relative">

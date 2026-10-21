@@ -163,7 +163,7 @@ export function PlannerProfile({ legs, waypointLabels, peaks, expanded, onExpand
   // ── Legend label per waypoint ──
   function legendLabel(wpLabel: string, idx: number): string {
     if (idx === 0) return 'Startpunkt'
-    if (idx === waypointLabels.length - 1) return 'Sluttunkt'
+    if (idx === waypointLabels.length - 1) return 'Sluttpunkt'
     return peakNameSet.has(wpLabel) ? wpLabel : `Punkt ${idx + 1}`
   }
 

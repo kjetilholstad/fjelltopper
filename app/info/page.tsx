@@ -829,7 +829,7 @@ export default function InfoPage() {
           </h2>
           <p className="text-sm text-[#6B6560] leading-relaxed mb-4">
             En <strong className="text-[#1A1A1A] font-medium">samling</strong> er et kuratert sett med topper med egne kriterier.
-            Alt i appen — topplisten, kartet, planleggeren, topplisten og profilstatistikk — filtreres automatisk til den aktive samlingen.
+            Alt i appen — oversikten over topper, kartet, planleggeren, topplisten og profilstatistikk — filtreres automatisk til den aktive samlingen.
           </p>
 
           {/* Samlingskort */}
