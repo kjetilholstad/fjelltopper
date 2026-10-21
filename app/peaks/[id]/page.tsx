@@ -18,6 +18,9 @@ const PeakDetailMap = dynamic(
   { ssr: false }
 )
 
+// Siden vet ikke aktiv samling (den ligger i localStorage), så terskelen følger etiketten under
+const NEAREST_MIN_HEIGHT = 2000
+
 interface PeakPageProps {
   params: Promise<{ id: string }>
 }
@@ -48,7 +51,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
   const allPeaks = (allData ?? []) as Peak[]
 
   const nearbyPeaks = getNearbyPeaks(peak, allPeaks)
-  const nearest = nearbyPeaks.length > 0 ? null : nearestPeak(peak, allPeaks)
+  const nearest = nearbyPeaks.length > 0 ? null : nearestPeak(peak, allPeaks, NEAREST_MIN_HEIGHT)
   const distanceToHigher = distanceToNearestHigher(peak, allPeaks)
   const ascent = ascentData as Ascent | null
   const today = todayLocal()
@@ -187,7 +190,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
       {nearest && (
         <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
           <div className="bg-white rounded-lg border p-4">
-            <p className="text-stone-500 mb-1">Nærmeste over 2000 m (PF ≥ 30 m)</p>
+            <p className="text-stone-500 mb-1">Nærmeste over {NEAREST_MIN_HEIGHT.toLocaleString('no')} m (PF ≥ 30 m)</p>
             <p className="font-semibold text-stone-800">
               <Link href={`/peaks/${nearest.peak.id}`} className="hover:underline">
                 {nearest.peak.name}
