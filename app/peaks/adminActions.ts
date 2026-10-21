@@ -25,17 +25,25 @@ export async function adminUpdatePeak(update: PeakUpdate): Promise<{ error: stri
 
   if (!profile?.is_admin) return { error: 'Ikke admin' }
 
-  const { error } = await supabase
+  const name = typeof update.name === 'string' ? update.name.trim() : ''
+  if (!name) return { error: 'Navn kan ikke være tomt' }
+  if (!Number.isFinite(update.height) || update.height <= 0) return { error: 'Ugyldig høyde' }
+  if (!Number.isFinite(update.lat) || update.lat < -90 || update.lat > 90) return { error: 'Ugyldig breddegrad' }
+  if (!Number.isFinite(update.lng) || update.lng < -180 || update.lng > 180) return { error: 'Ugyldig lengdegrad' }
+
+  const { data: updated, error } = await supabase
     .from('peaks')
     .update({
-      name: update.name,
+      name,
       height: update.height,
       lat: update.lat,
       lng: update.lng,
     })
     .eq('id', update.id)
+    .select('id')
 
   if (error) return { error: error.message }
+  if (!updated || updated.length === 0) return { error: 'Ingen topp ble oppdatert (finnes ikke, eller mangler tilgang)' }
 
   revalidatePath('/map')
   revalidatePath('/peaks')
