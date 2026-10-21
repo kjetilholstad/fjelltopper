@@ -61,7 +61,7 @@ export function GpxUploader({ ascendedIds }: GpxUploaderProps) {
         lat: parseFloat(pt.getAttribute('lat') ?? '0'),
         lon: parseFloat(pt.getAttribute('lon') ?? '0'),
       }))
-      .filter(p => p.lat !== 0 || p.lon !== 0)
+      .filter(p => Number.isFinite(p.lat) && Number.isFinite(p.lon) && (p.lat !== 0 || p.lon !== 0))
 
     const firstTimeText = trkpts.find(pt => pt.querySelector('time'))?.querySelector('time')?.textContent
     const firstTime = firstTimeText ? new Date(firstTimeText) : null
