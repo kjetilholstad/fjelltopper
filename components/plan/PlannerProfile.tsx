@@ -238,7 +238,7 @@ export function PlannerProfile({ legs, waypointLabels, peaks, expanded, onExpand
           >
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-semibold text-[#1A1A1A]">Høydeprofil</p>
-              <button onClick={() => onExpandChange(false)} className="text-[#A89F96] hover:text-[#1A1A1A] transition-colors">
+              <button aria-label="Lukk" onClick={() => onExpandChange(false)} className="text-[#A89F96] hover:text-[#1A1A1A] transition-colors">
                 <X size={16} />
               </button>
             </div>

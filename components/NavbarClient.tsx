@@ -74,6 +74,8 @@ export function NavbarClient({ userEmail, isLoggedIn }: NavbarClientProps) {
           <div className="relative ml-2" onClick={e => e.stopPropagation()}>
             <button
               onClick={() => setProfileOpen(o => !o)}
+              aria-expanded={profileOpen}
+              aria-haspopup="true"
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-text-warm hover:text-forest hover:bg-forest-50 transition-colors"
               aria-label="Profil og innstillinger"
             >
@@ -153,6 +155,7 @@ export function NavbarClient({ userEmail, isLoggedIn }: NavbarClientProps) {
           onClick={(e) => { if (e.detail === 0) return; setOpen(o => !o) }}
           className="sm:hidden p-2 rounded-lg text-text-warm hover:text-forest hover:bg-forest-50 transition-colors"
           aria-label="Meny"
+          aria-expanded={open}
         >
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>

@@ -228,6 +228,7 @@ export function PlannerPanel({
                 <div className="flex items-center gap-0.5">
                   <button
                     onClick={() => onMoveUp(i)}
+                    aria-label="Flytt vegpunkt opp"
                     disabled={i === 0}
                     className="p-0.5 text-[#A89F96] hover:text-[#1A1A1A] disabled:opacity-25 transition-colors"
                   >
@@ -235,6 +236,7 @@ export function PlannerPanel({
                   </button>
                   <button
                     onClick={() => onMoveDown(i)}
+                    aria-label="Flytt vegpunkt ned"
                     disabled={i === waypoints.length - 1}
                     className="p-0.5 text-[#A89F96] hover:text-[#1A1A1A] disabled:opacity-25 transition-colors"
                   >
@@ -256,6 +258,7 @@ export function PlannerPanel({
                   )}
                   <button
                     onClick={() => onRemoveWaypoint(wp.id)}
+                    aria-label="Slett vegpunkt"
                     className="p-0.5 text-[#A89F96] hover:text-red-500 transition-colors"
                   >
                     <Trash2 size={13} />
@@ -312,6 +315,7 @@ export function PlannerPanel({
                 </button>
                 <button
                   onClick={() => setGpxDialogOpen(false)}
+                  aria-label="Lukk"
                   className="text-[#A89F96] hover:text-[#1A1A1A] transition-colors"
                 >
                   ✕
@@ -462,6 +466,7 @@ export function PlannerPanel({
                 <div className="flex items-center gap-0.5">
                   <button
                     onClick={() => onMoveUp(i)}
+                    aria-label="Flytt vegpunkt opp"
                     disabled={i === 0}
                     className="p-0.5 text-[#A89F96] hover:text-[#1A1A1A] disabled:opacity-25 transition-colors"
                   >
@@ -469,6 +474,7 @@ export function PlannerPanel({
                   </button>
                   <button
                     onClick={() => onMoveDown(i)}
+                    aria-label="Flytt vegpunkt ned"
                     disabled={i === waypoints.length - 1}
                     className="p-0.5 text-[#A89F96] hover:text-[#1A1A1A] disabled:opacity-25 transition-colors"
                   >
@@ -490,6 +496,7 @@ export function PlannerPanel({
                   )}
                   <button
                     onClick={() => onRemoveWaypoint(wp.id)}
+                    aria-label="Slett vegpunkt"
                     className="p-0.5 text-[#A89F96] hover:text-red-500 transition-colors"
                   >
                     <Trash2 size={13} />
@@ -547,6 +554,7 @@ export function PlannerPanel({
                 </button>
                 <button
                   onClick={() => setGpxDialogOpen(false)}
+                  aria-label="Lukk"
                   className="text-[#A89F96] hover:text-[#1A1A1A] transition-colors"
                 >
                   ✕

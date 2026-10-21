@@ -400,7 +400,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                 {editingPeak ? 'Rediger topp' : 'Admin-modus'}
               </span>
               {editingPeak && (
-                <button onClick={() => setEditingPeak(null)} className="text-text-warm hover:text-[#1A1A1A] text-sm">✕</button>
+                <button onClick={() => setEditingPeak(null)} aria-label="Lukk" className="text-text-warm hover:text-[#1A1A1A] text-sm">✕</button>
               )}
             </div>
             {!editingPeak ? (
@@ -474,7 +474,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
                 {editingPeak ? 'Rediger topp' : 'Admin-modus'}
               </span>
               {editingPeak && (
-                <button onClick={() => setEditingPeak(null)} className="text-text-warm hover:text-[#1A1A1A]">✕</button>
+                <button onClick={() => setEditingPeak(null)} aria-label="Lukk" className="text-text-warm hover:text-[#1A1A1A]">✕</button>
               )}
             </div>
             {!editingPeak ? (

@@ -195,7 +195,7 @@ export default function ElevationProfile({ fromName, toName, fromLat, fromLng, t
           <p className="text-xs font-semibold text-[#1A1A1A] truncate pr-2">
             {fromName} → {toName}
           </p>
-          <button onClick={onClose} className="text-[#A89F96] hover:text-[#6B6560] text-xs shrink-0">✕</button>
+          <button onClick={onClose} aria-label="Lukk" className="text-[#A89F96] hover:text-[#6B6560] text-xs shrink-0">✕</button>
         </div>
 
         {loading && <div className="h-24 bg-[#F7F4EF] rounded-lg animate-pulse mb-3" />}
@@ -245,6 +245,7 @@ export default function ElevationProfile({ fromName, toName, fromLat, fromLng, t
               </p>
               <button
                 onClick={() => setExpanded(false)}
+                aria-label="Lukk"
                 className="text-[#A89F96] hover:text-[#1A1A1A] text-lg leading-none shrink-0"
               >
                 ✕
