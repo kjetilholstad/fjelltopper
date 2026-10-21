@@ -10,6 +10,7 @@ import { getAscentCounts } from '@/lib/ascentCounts'
 import { logAscent, deleteAscent } from '@/app/ascents/actions'
 import { EditAscentButton } from '@/components/profile/EditAscentButton'
 import { formatDist } from '@/lib/utils'
+import { todayLocal } from '@/lib/dates'
 import type { Peak, Ascent } from '@/types'
 
 const PeakDetailMap = dynamic(
@@ -50,7 +51,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
   const nearest = nearbyPeaks.length > 0 ? null : nearestPeak(peak, allPeaks)
   const distanceToHigher = distanceToNearestHigher(peak, allPeaks)
   const ascent = ascentData as Ascent | null
-  const today = new Date().toISOString().split('T')[0]
+  const today = todayLocal()
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">

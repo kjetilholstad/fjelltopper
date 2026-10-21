@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Upload, CheckCircle2, Mountain, Lock } from 'lucide-react'
 import { logAscent } from '@/app/ascents/actions'
 import { useCollection } from '@/context/CollectionContext'
+import { dateLocal, todayLocal } from '@/lib/dates'
 
 interface SuggestedPeak {
   id: string
@@ -31,7 +32,7 @@ export function GpxUploader({ ascendedIds }: GpxUploaderProps) {
   const [isPending, startTransition] = useTransition()
 
   const ascendedSet = new Set([...ascendedIds, ...Array.from(localAscended)])
-  const today = new Date().toISOString().split('T')[0]
+  const today = todayLocal()
 
   async function handleFile(file: File) {
     if (!file.name.toLowerCase().endsWith('.gpx')) {
@@ -63,7 +64,8 @@ export function GpxUploader({ ascendedIds }: GpxUploaderProps) {
       .filter(p => p.lat !== 0 || p.lon !== 0)
 
     const firstTimeText = trkpts.find(pt => pt.querySelector('time'))?.querySelector('time')?.textContent
-    const gpxDate = firstTimeText ? firstTimeText.slice(0, 10) : today
+    const firstTime = firstTimeText ? new Date(firstTimeText) : null
+    const gpxDate = firstTime && !isNaN(firstTime.getTime()) ? dateLocal(firstTime) : today
 
     setStatus('loading')
 

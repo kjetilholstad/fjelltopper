@@ -12,6 +12,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { EditAscentButton } from '@/components/profile/EditAscentButton'
 import { formatDist } from '@/lib/utils'
 import { useCollection } from '@/context/CollectionContext'
+import { todayLocal } from '@/lib/dates'
 
 interface PeakCardProps {
   peak: EnrichedPeak
@@ -153,7 +154,7 @@ export function PeakCard({ peak, rank, isAscended = false, ascentId = null, asce
                 <input
                   type="date"
                   name="date"
-                  defaultValue={new Date().toISOString().split('T')[0]}
+                  defaultValue={todayLocal()}
                   onClick={e => e.stopPropagation()}
                   className="w-full bg-white border border-border-warm rounded-md px-2 py-1 text-xs text-[#1A1A1A] focus:outline-none focus:border-forest transition-colors"
                 />

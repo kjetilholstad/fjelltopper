@@ -16,6 +16,7 @@ import { haversineKm } from '@/lib/nearestPeaks'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { formatDist } from '@/lib/utils'
 import { useCollection } from '@/context/CollectionContext'
+import { todayLocal } from '@/lib/dates'
 
 const PeakMap = dynamic(
   () => import('./PeakMap').then((m) => m.PeakMap),
@@ -159,7 +160,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
     setSheetExpanded(false)
   }
   const [showOnlyAscended, setShowOnlyAscended] = useState(false)
-  const [ascentDate, setAscentDate] = useState(new Date().toISOString().split('T')[0])
+  const [ascentDate, setAscentDate] = useState(todayLocal())
   const [confirmOpen, setConfirmOpen] = useState(false)
 
   const [adminMode, setAdminMode] = useState(false)
@@ -187,7 +188,7 @@ export function MapWithFilters({ peaks, ascendedMap = {}, isLoggedIn = false, us
   }, [selectedPeak?.nearest_higher_peak_id, peaks])
 
   useEffect(() => {
-    setAscentDate(new Date().toISOString().split('T')[0])
+    setAscentDate(todayLocal())
     setConfirmOpen(false)
   }, [selectedPeak?.id])
 
