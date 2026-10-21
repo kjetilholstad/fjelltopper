@@ -13,18 +13,38 @@ import requests
 import json
 import time
 import re
+import os
 import sys
 import argparse
 
-SUPABASE_URL = "https://enrbraxvxnytyfeuewqq.supabase.co"
-SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVucmJyYXh2eG55dHlmZXVld3FxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODg2ODY3MCwiZXhwIjoyMDk0NDQ0NjcwfQ.4vxGMgeIoBZEh9PoLcZdxq0-00jOMiIjyOUR7JHX-6s"
+def _load_env_file(path=".env.local"):
+    try:
+        with open(path, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, _, value = line.partition("=")
+                os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+    except FileNotFoundError:
+        pass
+
+
+_load_env_file()
+
+SUPABASE_URL = os.environ.get("NEXT_PUBLIC_SUPABASE_URL")
+SECRET_KEY = os.environ.get("SUPABASE_SECRET_KEY")
+if not SUPABASE_URL or not SECRET_KEY:
+    sys.exit("Mangler NEXT_PUBLIC_SUPABASE_URL og/eller SUPABASE_SECRET_KEY (sett dem i .env.local eller miljøet).")
 
 HEADERS = {
-    "apikey": SERVICE_KEY,
-    "Authorization": f"Bearer {SERVICE_KEY}",
+    "apikey": SECRET_KEY,
     "Content-Type": "application/json",
     "Prefer": "return=minimal"
 }
+# Nye sb_secret_-nøkler er ikke JWT-er og sendes kun i apikey-headeren
+if not SECRET_KEY.startswith("sb_"):
+    HEADERS["Authorization"] = f"Bearer {SECRET_KEY}"
 
 
 # ---------------------------------------------------------------------------

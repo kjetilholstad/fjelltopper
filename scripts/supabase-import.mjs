@@ -9,8 +9,13 @@ import { dirname, join } from 'path'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-const SUPABASE_URL = 'https://enrbraxvxnytyfeuewqq.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVucmJyYXh2eG55dHlmZXVld3FxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4Njg2NzAsImV4cCI6MjA5NDQ0NDY3MH0.SW2D-4bm3KgcdNHNNbzLS6Hxt1cCi3hbCbnghvxReVA'
+try { process.loadEnvFile(".env.local") } catch {}
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  console.error("Mangler NEXT_PUBLIC_SUPABASE_URL og/eller NEXT_PUBLIC_SUPABASE_ANON_KEY (sett dem i .env.local eller miljøet).")
+  process.exit(1)
+}
 
 async function main() {
   const dataPath = join(__dirname, '..', 'data', 'peaks_full.json')

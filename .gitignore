@@ -25,8 +25,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
+# local env files (hemmeligheter — aldri commit)
+.env
+.env.*
+!.env.local.example
 
 # vercel
 .vercel
@@ -39,3 +41,6 @@ next-env.d.ts
 public/sw.js
 public/workbox-*.js
 public/swe-worker-*.js
+
+# Claude Code lokale innstillinger (kan inneholde nøkler)
+.claude/settings.local.json
