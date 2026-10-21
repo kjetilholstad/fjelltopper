@@ -79,7 +79,7 @@ export default async function PeakPage({ params }: PeakPageProps) {
         </div>
       )}
       {peak.description && (
-        <p className="text-secondary mt-3 text-sm leading-relaxed">{peak.description}</p>
+        <p className="text-text-warm mt-3 text-sm leading-relaxed">{peak.description}</p>
       )}
 
       {peak.lat != null && peak.lng != null && (
