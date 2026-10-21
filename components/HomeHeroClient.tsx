@@ -27,7 +27,7 @@ export function HomeHeroClient() {
       try {
         const { data } = await supabase
           .from('collection_peaks')
-          .select('peaks(*)')
+          .select('peaks(id, name, height, county, municipality, lat, lng, primary_factor, nearest_higher_peak_id, peakbagger_id)')
           .eq('collection_id', activeCollection!.id)
 
         if (cancelled) return

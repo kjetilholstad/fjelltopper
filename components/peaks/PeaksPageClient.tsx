@@ -26,7 +26,7 @@ export function PeaksPageClient({ ascendedMap, userId, countMap }: Props) {
     const supabase = createClient()
     supabase
       .from('collection_peaks')
-      .select('peaks(*)')
+      .select('peaks(id, name, height, county, municipality, lat, lng, primary_factor, nearest_higher_peak_id, peakbagger_id, peakbook_id)')
       .eq('collection_id', activeCollection.id)
       .then(({ data, error: err }) => {
         if (cancelled) return

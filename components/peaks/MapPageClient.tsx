@@ -33,7 +33,7 @@ export function MapPageClient({ isLoggedIn, userId, isAdmin }: Props) {
     const supabase = createClient()
 
     Promise.all([
-      supabase.from('collection_peaks').select('peaks(*)').eq('collection_id', activeCollection.id),
+      supabase.from('collection_peaks').select('peaks(id, name, height, county, municipality, lat, lng, primary_factor, nearest_higher_peak_id)').eq('collection_id', activeCollection.id),
       userId
         ? supabase.from('ascents').select('id, peak_id, date, notes, weather').eq('user_id', userId)
         : Promise.resolve({ data: [] as AscentEntry[] }),
