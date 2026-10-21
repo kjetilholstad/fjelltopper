@@ -40,7 +40,9 @@ export function MapPageClient({ isLoggedIn, userId, isAdmin }: Props) {
       supabase.rpc('get_peak_ascent_counts'),
     ]).then(([{ data: peaksData }, { data: ascentsData }, { data: rpcData }]) => {
       if (cancelled) return
-      const raw = (peaksData ?? []).map((row: any) => row.peaks).filter(Boolean) as Peak[]
+      const raw = (peaksData ?? [])
+        .map((row: any) => row.peaks)
+        .filter((p: any) => p && p.lat != null && p.lng != null) as Peak[]
       setPeaks(enrichPeaks(raw))
 
       const map: Record<string, { id: string; date: string; notes: string | null; weather: string | null }> = {}
