@@ -134,7 +134,7 @@ export function GpxUploader({ ascendedIds }: GpxUploaderProps) {
 
       <p className="flex items-center gap-1.5 text-xs text-text-warm mt-3">
         <Lock size={11} className="shrink-0" strokeWidth={1.75} />
-        GPX-filen lagres ikke. Sporet analyseres kun i nettleseren din og kastes umiddelbart etter at forslagene er generert.
+        GPX-filen lagres ikke. Sporet leses i nettleseren din og sendes til serveren for å finne topper nær sporet. Serveren lagrer det ikke.
       </p>
 
       {status === 'error' && errorMsg && (
